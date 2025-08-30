@@ -23,7 +23,7 @@ jobs:
           version: 10
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install -g --frozen-lockfile
 
       - name: Run Prettier check
         run: pnpm prettier-check
