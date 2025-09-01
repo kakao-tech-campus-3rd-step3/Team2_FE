@@ -1,0 +1,379 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* globals css와 tokens.css 를 나눌 이유가 아직 없어서 추후 나눌수도? */
+@theme inline {
+  /* 디자인 토큰 */
+  /* PULL IT에 사용되는 모든 컬러 목록*/
+  --color-background: oklch(0.985 0.000 0.0);
+  --color-foreground: oklch(0.205 0.000 0.0);
+
+  --color-card: oklch(1.000 0.000 0.0);
+  --color-card-foreground: oklch(0.205 0.000 0.0);
+
+  --color-popover: oklch(1.000 0.000 0.0);
+  --color-popover-foreground: oklch(0.205 0.000 0.0);
+
+  --color-primary: oklch(0.627 0.170 149.2);           /* #16a34a */
+  --color-primary-foreground: oklch(1.000 0.000 0.0);  /* #ffffff */
+
+  --color-secondary: oklch(0.970 0.000 0.0);           /* #f5f5f5 */
+  --color-secondary-foreground: oklch(0.556 0.000 0.0);/* #737373 */
+
+  --color-muted: oklch(0.970 0.000 0.0);               /* #f5f5f5 */
+  --color-muted-foreground: oklch(0.556 0.000 0.0);    /* #737373 */
+
+  --color-accent: oklch(0.970 0.000 0.0);              /* #f5f5f5 */
+  --color-accent-foreground: oklch(0.371 0.000 0.0);   /* #404040 */
+
+  --color-destructive: oklch(0.637 0.208 25.3);        /* #ef4444 */
+  --color-destructive-foreground: oklch(1.000 0.000 0.0); /* #ffffff */
+
+  --color-border: oklch(0.872 0.000 0.0);              /* #d1d5db */
+  --color-input: oklch(1.000 0.000 0.0);               /* #ffffff */
+  --color-input-background: oklch(1.000 0.000 0.0);    /* #ffffff */
+  --color-switch-background: oklch(0.922 0.000 0.0);   /* #e5e5e5 */
+
+  --color-ring: oklch(0.627 0.170 149.2);              /* #16a34a */
+
+  /* charts */
+  --color-chart-1: oklch(0.627 0.170 149.2);           /* #16a34a */
+  --color-chart-2: oklch(0.371 0.000 0.0);             /* #404040 */
+  --color-chart-3: oklch(0.556 0.000 0.0);             /* #737373 */
+  --color-chart-4: oklch(0.715 0.000 0.0);             /* #a3a3a3 */
+  --color-chart-5: oklch(0.870 0.000 0.0);             /* #d4d4d4 */
+
+  /* sidebar */
+  --color-sidebar: oklch(1.000 0.000 0.0);             /* #ffffff */
+  --color-sidebar-foreground: oklch(0.205 0.000 0.0);  /* #171717 */
+  --color-sidebar-primary: oklch(0.627 0.170 149.2);   /* #16a34a */
+  --color-sidebar-primary-foreground: oklch(1.000 0.000 0.0); /* #ffffff */
+  --color-sidebar-accent: oklch(0.970 0.000 0.0);      /* #f5f5f5 */
+  --color-sidebar-accent-foreground: oklch(0.371 0.000 0.0);  /* #404040 */
+  --color-sidebar-border: oklch(0.922 0.000 0.0);      /* #e5e5e5 */
+  --color-sidebar-ring: oklch(0.627 0.170 149.2);      /* #16a34a */
+
+  /* ───── Gray ───── */
+  --color-gray-0:    oklch(1 0 0);
+  --color-gray-100:  oklch(0.98 0.001 270); 
+  --color-gray-200:  oklch(0.96 0.001 270);
+  --color-gray-300:  oklch(0.92 0.002 270);
+  --color-gray-400:  oklch(0.87 0.003 270);
+  --color-gray-500:  oklch(0.8 0.004 270);
+  --color-gray-600:  oklch(0.7 0.005 270);
+  --color-gray-700:  oklch(0.55 0.006 270);
+  --color-gray-800:  oklch(0.4 0.007 270);
+  --color-gray-900:  oklch(0.25 0.008 270);
+  --color-gray-1000: oklch(0.15 0.009 270);
+
+
+  /* ───── Yellow  ───── */
+  --color-yellow-50:   oklch(0.98 0.03 102.2);
+  --color-yellow-100:  oklch(0.95 0.07 102.2);
+  --color-yellow-200:  oklch(0.93 0.12 102.2);
+  --color-yellow-300:  oklch(0.93 0.16 102.2);
+  --color-yellow-400:  oklch(0.93 0.18 102.2);
+  --color-yellow-500:  oklch(0.922 0.199 102.2);
+  --color-yellow-600:  oklch(0.82 0.18 102.2);
+  --color-yellow-700:  oklch(0.72 0.16 102.2);
+  --color-yellow-800:  oklch(0.62 0.14 102.2);
+  --color-yellow-900:  oklch(0.52 0.12 102.2);
+
+  /* ───── Brown ───── */
+  --color-brown-100: oklch(0.95 0.03 60);
+  --color-brown-200: oklch(0.9 0.06 60);
+  --color-brown-300: oklch(0.8 0.1 60);
+  --color-brown-400: oklch(0.7 0.12 60);
+  --color-brown-500: oklch(0.6 0.13 60);
+  --color-brown-600: oklch(0.5 0.14 60);
+  --color-brown-700: oklch(0.4 0.15 60);
+  --color-brown-800: oklch(0.3 0.15 60); 
+  --color-brown-900: oklch(0.2 0.14 60);
+
+  /* ───── Blue ───── */
+  --color-blue-100: oklch(0.95 0.05 250);
+  --color-blue-200: oklch(0.9 0.1 250);
+  --color-blue-300: oklch(0.82 0.15 250);
+  --color-blue-400: oklch(0.75 0.18 250);
+  --color-blue-500: oklch(0.7 0.2 250);
+  --color-blue-600: oklch(0.62 0.22 250);
+  --color-blue-700: oklch(0.55 0.22 250);
+  --color-blue-800: oklch(0.45 0.22 250);
+  --color-blue-900: oklch(0.35 0.2 250);
+
+  /* ───── Red ───── */
+  --color-red-100: oklch(0.95 0.05 25);
+  --color-red-200: oklch(0.9 0.1 25);
+  --color-red-300: oklch(0.82 0.15 25);
+  --color-red-400: oklch(0.75 0.2 25);
+  --color-red-500: oklch(0.7 0.23 25);
+  --color-red-600: oklch(0.62 0.25 25);
+  --color-red-700: oklch(0.55 0.25 25);
+  --color-red-800: oklch(0.45 0.23 25);
+  --color-red-900: oklch(0.35 0.2 25);
+
+  /* ───── Brand Aliases ───── */
+  --color-brand-yellow: var(--color-yellow-500);
+  --color-brand-brown:  var(--color-brown-800);
+
+  /* ───── State Aliases ───── */
+  --color-state-critical: var(--color-red-600);
+  --color-state-info:     var(--color-blue-600);
+
+  /* ───── Spacing (사용법: p-s4, px-s8) ───── */
+  --spacing-s0: 0px;
+  --spacing-s1: 4px;
+  --spacing-s2: 8px;
+  --spacing-s3: 12px;
+  --spacing-s4: 16px;
+  --spacing-s5: 20px;
+  --spacing-s6: 24px;
+  --spacing-s8: 32px;
+  --spacing-s10: 40px;
+  --spacing-s12: 48px;
+  --spacing-s16: 64px;
+
+  /* ───── Radius ───── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Font sizes → text-XXX 로 사용 */
+  --text-title1:   1.25rem;   /* 20px */
+  --text-title2:   1rem;      /* 16px */
+  --text-subtitle1:1rem;      /* 16px */
+  --text-subtitle2:0.875rem;  /* 14px */
+  --text-body1:    1rem;      /* 16px */
+  --text-body2:    0.875rem;  /* 14px */
+  --text-label1:   0.875rem;  /* 14px */
+  --text-label2:   0.75rem;   /* 12px */
+
+  /* Line-heights → leading-[var(--…)] 로 사용 */
+  --leading-title1:    1.6875rem; /* 27px */
+  --leading-title2:    1.5rem;    /* 24px */
+  --leading-subtitle1: 1.375rem;  /* 22px */
+  --leading-subtitle2: 1.1875rem; /* 19px */
+  --leading-body1:     1.375rem;  /* 22px */
+  --leading-body2:     1.1875rem; /* 19px */
+  --leading-label1:    1.1875rem; /* 19px */
+  --leading-label2:    1rem;      /* 16px */
+
+  /* Weights → font-[var(--…)] 로 사용 */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold:600;
+  --font-weight-bold:    700;
+  
+  /* Shadcn 기본 토큰값 */
+
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --radius-md: calc(var(--radius) - 2px);
+
+  --radius-lg: var(--radius);
+
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+
+  --color-border: var(--border);
+
+  --color-input: var(--input);
+
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+
+  --color-chart-2: var(--chart-2);
+
+  --color-chart-3: var(--chart-3);
+
+  --color-chart-4: var(--chart-4);
+
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-sidebar-primary: var(--sidebar-primary);
+
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  --color-sidebar-accent: var(--sidebar-accent);
+
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(1 0 0);
+
+  --foreground: oklch(0.145 0 0);
+
+  --card: oklch(1 0 0);
+
+  --card-foreground: oklch(0.145 0 0);
+
+  --popover: oklch(1 0 0);
+
+  --popover-foreground: oklch(0.145 0 0);
+
+  --primary: oklch(0.205 0 0);
+
+  --primary-foreground: oklch(0.985 0 0);
+
+  --secondary: oklch(0.97 0 0);
+
+  --secondary-foreground: oklch(0.205 0 0);
+
+  --muted: oklch(0.97 0 0);
+
+  --muted-foreground: oklch(0.556 0 0);
+
+  --accent: oklch(0.97 0 0);
+
+  --accent-foreground: oklch(0.205 0 0);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --border: oklch(0.922 0 0);
+
+  --input: oklch(0.922 0 0);
+
+  --ring: oklch(0.708 0 0);
+
+  --chart-1: oklch(0.646 0.222 41.116);
+
+  --chart-2: oklch(0.6 0.118 184.704);
+
+  --chart-3: oklch(0.398 0.07 227.392);
+
+  --chart-4: oklch(0.828 0.189 84.429);
+
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  --sidebar: oklch(0.985 0 0);
+
+  --sidebar-foreground: oklch(0.145 0 0);
+
+  --sidebar-primary: oklch(0.205 0 0);
+
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+
+  --sidebar-accent: oklch(0.97 0 0);
+
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+
+  --sidebar-border: oklch(0.922 0 0);
+
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+
+  --foreground: oklch(0.985 0 0);
+
+  --card: oklch(0.205 0 0);
+
+  --card-foreground: oklch(0.985 0 0);
+
+  --popover: oklch(0.205 0 0);
+
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.922 0 0);
+
+  --primary-foreground: oklch(0.205 0 0);
+
+  --secondary: oklch(0.269 0 0);
+
+  --secondary-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.269 0 0);
+
+  --muted-foreground: oklch(0.708 0 0);
+
+  --accent: oklch(0.269 0 0);
+
+  --accent-foreground: oklch(0.985 0 0);
+
+  --destructive: oklch(0.704 0.191 22.216);
+
+  --border: oklch(1 0 0 / 10%);
+
+  --input: oklch(1 0 0 / 15%);
+
+  --ring: oklch(0.556 0 0);
+
+  --chart-1: oklch(0.488 0.243 264.376);
+
+  --chart-2: oklch(0.696 0.17 162.48);
+
+  --chart-3: oklch(0.769 0.188 70.08);
+
+  --chart-4: oklch(0.627 0.265 303.9);
+
+  --chart-5: oklch(0.645 0.246 16.439);
+
+  --sidebar: oklch(0.205 0 0);
+
+  --sidebar-foreground: oklch(0.985 0 0);
+
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+
+  --sidebar-accent: oklch(0.269 0 0);
+
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+
+  --sidebar-border: oklch(1 0 0 / 10%);
+
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
