@@ -25,10 +25,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/shared/styles/emotion.d.ts"]
 }
