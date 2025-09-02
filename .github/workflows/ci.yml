@@ -15,12 +15,12 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-           node-version: 22
-           cache: pnpm
+          node-version: 22
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -33,5 +33,4 @@ jobs:
 
       - name: Run TSC check
         run: pnpm tsc-check
-        
 # package.json에 prettier, eslint, tsc스크립트가 명시되어있음

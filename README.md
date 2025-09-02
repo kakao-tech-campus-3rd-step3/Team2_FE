@@ -61,14 +61,19 @@
 ### PR
 
 제목 템플릿
+
 ```
 [작업번호]: 제목
 ```
+
 예시
+
 ```
 FTSK-1: ts 기반 리액트 프로젝트를 세팅하고 추가 라이브러리 설치와 github action을 설정
 ```
+
 본문 템플릿
+
 ```
 PR 설명
 - [PR 설명]
@@ -79,7 +84,9 @@ PR 설명
 기타사항 / 참고사항
 - [기타사항 / 참고사항]
 ```
+
 예시
+
 ```
 ## PR 설명
 
@@ -110,32 +117,34 @@ PR 설명
 출처: https://github.com/airbnb/javascript<br/>
 
 ## Folder Structures
+
 ### Feature-based 구조
+
 ```
 src/
 ├─ app/
-│  ├─ routes/                
-│  ├─ index.tsx              
-│  └─ routePaths.ts          
-│  
+│  ├─ routes/
+│  ├─ index.tsx
+│  └─ routePaths.ts
 │
-├─ pages/                       
+│
+├─ pages/
 │  ├─ HomePage.tsx
-│  ├─ LoginPage.tsx             
-│  ├─ ProductListPage.tsx       
+│  ├─ LoginPage.tsx
+│  ├─ ProductListPage.tsx
 │  ├─ ProductDetailPage.tsx
-│  ├─ OrderPage.tsx             
+│  ├─ OrderPage.tsx
 │  ├─ NotFoundPage.tsx
-│  └─ _layout/                  
-│     └─ AppLayout.tsx          
-│      
+│  └─ _layout/
+│     └─ AppLayout.tsx
 │
-├─ features/                    
+│
+├─ features/
 │  ├─ auth/
 │  │  ├─ components/
 │  │  ├─ hooks/
 │  │  ├─ services/
-│  │  └─ index.ts               
+│  │  └─ index.ts
 │  ├─ order/
 │  │  ├─ components/
 │  │  ├─ hooks/
@@ -147,13 +156,13 @@ src/
 │     ├─ services/
 │     └─ index.ts
 │
-├─ shared/                      
-│  ├─ components/               
+├─ shared/
+│  ├─ components/
 │  ├─ hooks/
 │  ├─ utils/
-│  ├─ api/                      
-│  ├─ styles/                   
-│  └─ config/                   
+│  ├─ api/
+│  ├─ styles/
+│  └─ config/
 │
 └─ main.tsx
 ```
