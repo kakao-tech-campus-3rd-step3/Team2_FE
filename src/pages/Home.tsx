@@ -1,14 +1,26 @@
-import { Button } from '@/components/ui/button';
+import { Button, HStack } from '@chakra-ui/react'
+import styled from '@emotion/styled';
+
+import { ColorModeButton } from '@/components/ui/color-mode'
+
+const Test = styled.div`
+    width: 100px;
+    height: 100px;
+    background-color:red;
+`
 
 function Home() {
 
     return (
         <>
-            <div className="flex min-h-svh flex-col items-center justify-center">
-                <Button className='p-16'>Shadcn + tailwind css 적용 잘됨</Button>
-                <h1 className="text-red-500 bg-yellow-500">디자인 토큰 적용 잘됨!</h1>
-            </div>
+            <HStack>
+                <Button>Click me</Button>
+                <Button>Click me</Button>
+                {/* <Test></Test> */}
+                <ColorModeButton></ColorModeButton>
+            </HStack>
         </>
+
     )
 }
 
