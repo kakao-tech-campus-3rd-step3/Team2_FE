@@ -11,4 +11,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    host: 'local.pull.it.kr', // ← 추가
+    port: 5173,               // (원하는 포트, 기본 5173인데 3000으로 고정해도 됨)
+  },
 });
