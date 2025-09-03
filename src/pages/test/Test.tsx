@@ -73,7 +73,7 @@ const highlightJSON = (obj: unknown): string => {
 
 function Test() {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiUrl, setApiUrl] = useState('http://api-qa.pull.it.kr/api/');
+  const [apiUrl, setApiUrl] = useState('https://api-qa.pull.it.kr/api/');
   const [transaction, setTransaction] = useState<ApiTransaction | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [errorRaw, setErrorRaw] = useState<unknown>(null);
