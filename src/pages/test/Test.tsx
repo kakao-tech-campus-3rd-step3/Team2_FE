@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { Global, css } from '@emotion/react';
-import type { AxiosRequestConfig,RawAxiosResponseHeaders,AxiosResponseHeaders } from 'axios';
+import type { AxiosRequestConfig, RawAxiosResponseHeaders, AxiosResponseHeaders } from 'axios';
 
 // API 요청 정보를 담을 타입
 interface ApiRequestData {
@@ -70,7 +70,6 @@ const highlightJSON = (obj: unknown): string => {
     return String(obj);
   }
 };
-
 
 function Test() {
   const [isLoading, setIsLoading] = useState(false);
@@ -274,9 +273,7 @@ function Test() {
           },
           response: null,
         });
-        setErrorText(
-          `응답은 수신되지 않았습니다.\\n요청 설정 에러: ${errorMessage}`,
-        );
+        setErrorText(`응답은 수신되지 않았습니다.\\n요청 설정 에러: ${errorMessage}`);
         setErrorRaw({ name: errorName, message: errorMessage });
       }
     } finally {
