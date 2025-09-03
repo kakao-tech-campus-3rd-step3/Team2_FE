@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/app/routePaths';
-import BenefitList from './BenefitList';
+import BenefitList from '@/features/login/components/BenefitList';
 
 const RightSide = styled.div`
   width: 50%;
