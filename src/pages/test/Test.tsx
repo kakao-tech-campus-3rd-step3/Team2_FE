@@ -74,7 +74,7 @@ const highlightJSON = (obj: unknown): string => {
 
 function Test() {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiUrl, setApiUrl] = useState('/api/');
+  const [apiUrl, setApiUrl] = useState('/');
   const [transaction, setTransaction] = useState<ApiTransaction | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [errorRaw, setErrorRaw] = useState<unknown>(null);
@@ -325,7 +325,7 @@ function Test() {
             </Select>
           </InputLeftAddon>
           <Input
-            placeholder="/api/ (상대 경로)"
+            placeholder="/ (상대 경로)"
             value={apiUrl}
             onChange={(e) => setApiUrl(e.target.value)}
             onKeyDown={(e) => {
