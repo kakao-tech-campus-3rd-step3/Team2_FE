@@ -5,7 +5,7 @@ import { BarChart3, CheckCircle, FileText, Target } from 'lucide-react';
 const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #ffffff;
 `;
 

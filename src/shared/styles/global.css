@@ -184,4 +184,5 @@ table {
 }
 body {
   min-width: 1024px;
+  min-height: 100dvh;
 }
