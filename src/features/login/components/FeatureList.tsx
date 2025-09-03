@@ -32,13 +32,13 @@ const TextWrapper = styled.div``;
 
 const FeatureTitle = styled.h3`
   font-weight: 600;
-  color: #111827;
+  color: ${(props) => props.theme.colors.cardTitle};
   margin: 0;
 `;
 
 const FeatureDescription = styled.p`
   font-size: 0.875rem;
-  color: #4b5563;
+  color: ${(props) => props.theme.colors.cardDescription};
   margin: 0.25rem 0 0 0;
 `;
 

@@ -5,7 +5,7 @@ import BenefitList from '@/features/login/components/BenefitList';
 
 const RightSide = styled.div`
   width: 50%;
-  background-color: #ffffffc0;
+  background-color: ${(props) => props.theme.colors.rightsideBackground};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,12 +29,12 @@ const CardHeader = styled.div`
 
 const CardTitle = styled.h2`
   font-size: 1.5rem;
-  color: #111827;
+  color: ${(props) => props.theme.colors.cardTitle};
   margin: 0;
 `;
 
 const CardDescription = styled.p`
-  color: #4b5563;
+  color: ${(props) => props.theme.colors.CardDescription};
   margin: 0;
 `;
 
@@ -48,9 +48,9 @@ const Button = styled.button`
   width: 100%;
   height: 3.5rem;
   border: none;
-  background-color: #fee500;
+  background-color: ${(props) => props.theme.colors.kakaoYellow};
   color: black;
-  font-weight: 500;
+  font-weight: ${(props) => props.theme.textStyles.subtitle2Bold.fontWeight};
   font-size: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
@@ -73,13 +73,13 @@ const KakaoButtonContent = styled.div`
 const TermsText = styled.div`
   text-align: center;
   font-size: 0.875rem;
-  color: #919191ff;
+  color: ${(props) => props.theme.colors.termsTextColor};
   line-height: 1.6;
   margin-top: 20px;
 `;
 
 const LinkButton = styled.button`
-  color: #16a34a;
+  color: ${(props) => props.theme.colors.primary};
   font-weight: 500;
   background: none;
   border: none;

@@ -3,13 +3,14 @@ import { CheckCircle } from 'lucide-react';
 
 const BenefitSection = styled.div`
   padding-top: 1.5rem;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid ${(props) => props.theme.colors.borderTop};
 `;
 
 const BenefitTitle = styled.h4`
-  font-weight: 600;
-  color: #111827;
-  font-size: 0.925rem;
+  font-weight: ${(props) => props.theme.textStyles.title2Bold.fontWeight};
+  color: ${(props) => props.theme.colors.cardTitle};
+  font-size: ${(props) => props.theme.textStyles.title2Bold.fontSize};
+  font-height: ${(props) => props.theme.textStyles.title2Bold.fontHeight};
   text-align: center;
   margin-bottom: 1rem;
 `;
@@ -18,15 +19,15 @@ const BenefitItem = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.875rem;
+  font-size: ${(props) => props.theme.textStyles.label1Regular.fontSize};
   margin-bottom: 5px;
-  color: #4b5563;
+  color: ${(props) => props.theme.colors.CardDescription};
 `;
 
 const Icon = styled(CheckCircle)`
   width: 1rem;
   height: 1rem;
-  color: #10b981;
+  color: ${(props) => props.theme.colors.checkCircle};
 `;
 
 const BenefitList = () => (

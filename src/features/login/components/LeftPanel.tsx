@@ -4,7 +4,7 @@ import FeatureList from '@/features/login/components/FeatureList';
 
 const LeftSide = styled.div`
   width: 50%;
-  background-color: #e2ffeaff;
+  background-color: ${(props) => props.theme.colors.leftsideBackground};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,21 +21,21 @@ const LogoWrapper = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
+  font-size: ${(props) => props.theme.textStyles.title1Bold.fontSize};
   padding: 20px 0px;
 `;
 
 const Subtitle = styled.span`
   font-size: 13px;
   padding: 0px 0px 20px 0px;
-  color: #16a34a;
+  color: ${(props) => props.theme.colors.primary};
 `;
 
 const Description = styled.p`
   line-height: 1.875rem;
   font-size: 1.125rem;
   margin-bottom: 20px;
-  color: #464646ff;
+  color: ${(props) => props.theme.colors.cardDescription};
 `;
 
 const LeftPanel = () => (
