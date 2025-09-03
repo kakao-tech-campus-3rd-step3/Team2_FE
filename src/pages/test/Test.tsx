@@ -1,4 +1,16 @@
-import { Box, Button, Text, Stack, Spinner, Input, InputGroup, InputLeftAddon, Select, Textarea, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Text,
+  Stack,
+  Spinner,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  Select,
+  Textarea,
+  VStack,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import axios from 'axios';
 import { Global, css } from '@emotion/react';
@@ -9,21 +21,24 @@ const highlightJSON = (obj: any): string => {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"\s*:)|"(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g, (match) => {
-        if (/^".*"\s*:/.test(match)) {
-          return `<span class=\"json-key\">${match}</span>`;
-        }
-        if (/^".*"$/.test(match)) {
-          return `<span class=\"json-string\">${match}</span>`;
-        }
-        if (/true|false/.test(match)) {
-          return `<span class=\"json-boolean\">${match}</span>`;
-        }
-        if (/null/.test(match)) {
-          return `<span class=\"json-null\">${match}</span>`;
-        }
-        return `<span class=\"json-number\">${match}</span>`;
-      });
+      .replace(
+        /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"\s*:)|"(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g,
+        (match) => {
+          if (/^".*"\s*:/.test(match)) {
+            return `<span class=\"json-key\">${match}</span>`;
+          }
+          if (/^".*"$/.test(match)) {
+            return `<span class=\"json-string\">${match}</span>`;
+          }
+          if (/true|false/.test(match)) {
+            return `<span class=\"json-boolean\">${match}</span>`;
+          }
+          if (/null/.test(match)) {
+            return `<span class=\"json-null\">${match}</span>`;
+          }
+          return `<span class=\"json-number\">${match}</span>`;
+        },
+      );
     return json;
   } catch {
     return String(obj);
@@ -95,7 +110,12 @@ function Test() {
       }
     }
 
-    const finalConfig: any = { ...parsedConfig, method: methodUpper, url: apiUrl, data: requestData };
+    const finalConfig: any = {
+      ...parsedConfig,
+      method: methodUpper,
+      url: apiUrl,
+      data: requestData,
+    };
 
     try {
       const axiosResponse = await axios.request(finalConfig);
@@ -121,7 +141,6 @@ function Test() {
       });
       setErrorText(null);
       setErrorRaw(null);
-
     } catch (err: any) {
       console.error('API 요청 에러:', err);
 
@@ -150,8 +169,17 @@ function Test() {
           name: err?.name,
           message: err?.message,
           code: err?.code,
-          config: err?.config ? { method: err.config.method, url: err.config.url, headers: err.config.headers } : undefined,
-          response: err?.response ? { status: err.response.status, statusText: err.response.statusText, headers: err.response.headers, data: err.response.data } : undefined,
+          config: err?.config
+            ? { method: err.config.method, url: err.config.url, headers: err.config.headers }
+            : undefined,
+          response: err?.response
+            ? {
+                status: err.response.status,
+                statusText: err.response.statusText,
+                headers: err.response.headers,
+                data: err.response.data,
+              }
+            : undefined,
         });
       } else if (err.request) {
         setTransaction({
@@ -192,7 +220,9 @@ function Test() {
           },
           response: null,
         });
-        setErrorText(`응답은 수신되지 않았습니다.\\n요청 설정 에러: ${err.message || '알 수 없는 에러'}`);
+        setErrorText(
+          `응답은 수신되지 않았습니다.\\n요청 설정 에러: ${err.message || '알 수 없는 에러'}`,
+        );
         setErrorRaw({ name: err?.name, message: err?.message });
       }
     } finally {
@@ -205,13 +235,28 @@ function Test() {
 
   return (
     <>
-      <Global styles={css`
-        .json-key { color: #1e40af; font-weight: 600; }
-        .json-string { color:rgb(255, 0, 0); }
-        .json-number { color: #b45309; }
-        .json-boolean { color: #be123c; font-weight: 600; }
-        .json-null { color: #6b7280; font-style: italic; }
-      `} />
+      <Global
+        styles={css`
+          .json-key {
+            color: #1e40af;
+            font-weight: 600;
+          }
+          .json-string {
+            color: rgb(255, 0, 0);
+          }
+          .json-number {
+            color: #b45309;
+          }
+          .json-boolean {
+            color: #be123c;
+            font-weight: 600;
+          }
+          .json-null {
+            color: #6b7280;
+            font-style: italic;
+          }
+        `}
+      />
       <Stack spacing={6} p={6} align="center">
         <Box bg="gray.100" p={4} borderRadius="md">
           <Text fontSize="2xl" color="teal.600" fontWeight="bold">
@@ -261,7 +306,9 @@ function Test() {
 
         <VStack w="100%" spacing={4} align="stretch">
           <Box>
-            <Text mb={2} fontWeight="semibold">Axios Config (JSON)</Text>
+            <Text mb={2} fontWeight="semibold">
+              Axios Config (JSON)
+            </Text>
             <Textarea
               value={configText}
               onChange={(e) => setConfigText(e.target.value)}
@@ -273,7 +320,9 @@ function Test() {
 
           {hasBody && (
             <Box>
-              <Text mb={2} fontWeight="semibold">Request Body (JSON or Text)</Text>
+              <Text mb={2} fontWeight="semibold">
+                Request Body (JSON or Text)
+              </Text>
               <Textarea
                 value={requestBodyText}
                 onChange={(e) => setRequestBodyText(e.target.value)}
@@ -298,12 +347,27 @@ function Test() {
 
         {/* 전체 트랜잭션 JSON (Request + Response) */}
         {transaction && (
-          <Box w="100%" p={5} bg="gray.50" borderRadius="lg" border="1px solid" borderColor="gray.200" boxShadow="sm">
+          <Box
+            w="100%"
+            p={5}
+            bg="gray.50"
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="gray.200"
+            boxShadow="sm"
+          >
             <Text fontWeight="bold" color="gray.700" mb={2}>
               전체 요청/응답 (JSON)
             </Text>
             <Box fontFamily="mono" fontSize="md" bg="white" p={3} borderRadius="md">
-              <Box as="pre" color="gray.800" fontSize="md" lineHeight="1.6" className="json-root" dangerouslySetInnerHTML={{ __html: highlightJSON(transaction) }} />
+              <Box
+                as="pre"
+                color="gray.800"
+                fontSize="md"
+                lineHeight="1.6"
+                className="json-root"
+                dangerouslySetInnerHTML={{ __html: highlightJSON(transaction) }}
+              />
             </Box>
           </Box>
         )}
@@ -312,18 +376,52 @@ function Test() {
         {transaction && (
           <>
             {/* 전체 요청 */}
-            <Box w="100%" p={4} bg="blue.50" borderRadius="md" border="1px solid" borderColor="blue.200">
-              <Text fontWeight="bold" color="blue.700" mb={2}>전체 요청</Text>
+            <Box
+              w="100%"
+              p={4}
+              bg="blue.50"
+              borderRadius="md"
+              border="1px solid"
+              borderColor="blue.200"
+            >
+              <Text fontWeight="bold" color="blue.700" mb={2}>
+                전체 요청
+              </Text>
               <Box fontFamily="mono" fontSize="md" bg="white" p={3} borderRadius="md">
-                <Box as="pre" color="gray.800" fontSize="md" lineHeight="1.6" className="json-root" dangerouslySetInnerHTML={{ __html: highlightJSON(transaction.request) }} />
+                <Box
+                  as="pre"
+                  color="gray.800"
+                  fontSize="md"
+                  lineHeight="1.6"
+                  className="json-root"
+                  dangerouslySetInnerHTML={{ __html: highlightJSON(transaction.request) }}
+                />
               </Box>
             </Box>
 
             {/* 전체 응답 */}
-            <Box w="100%" p={4} bg="green.50" borderRadius="md" border="1px solid" borderColor="green.200">
-              <Text fontWeight="bold" color="green.700" mb={2}>전체 응답</Text>
+            <Box
+              w="100%"
+              p={4}
+              bg="green.50"
+              borderRadius="md"
+              border="1px solid"
+              borderColor="green.200"
+            >
+              <Text fontWeight="bold" color="green.700" mb={2}>
+                전체 응답
+              </Text>
               <Box fontFamily="mono" fontSize="md" bg="white" p={3} borderRadius="md">
-                <Box as="pre" color="gray.800" fontSize="md" lineHeight="1.6" className="json-root" dangerouslySetInnerHTML={{ __html: highlightJSON(transaction.response ?? '(응답 수신 안됨)') }} />
+                <Box
+                  as="pre"
+                  color="gray.800"
+                  fontSize="md"
+                  lineHeight="1.6"
+                  className="json-root"
+                  dangerouslySetInnerHTML={{
+                    __html: highlightJSON(transaction.response ?? '(응답 수신 안됨)'),
+                  }}
+                />
               </Box>
             </Box>
           </>
@@ -331,20 +429,47 @@ function Test() {
 
         {/* 응답을 받지 못한 경우, 별도 설명 텍스트 */}
         {errorText && (
-          <Box w="100%" p={4} bg="orange.50" borderRadius="md" border="1px solid" borderColor="orange.200">
-            <Text fontWeight="bold" color="orange.700" mb={2}>응답은 수신되지 않았습니다</Text>
+          <Box
+            w="100%"
+            p={4}
+            bg="orange.50"
+            borderRadius="md"
+            border="1px solid"
+            borderColor="orange.200"
+          >
+            <Text fontWeight="bold" color="orange.700" mb={2}>
+              응답은 수신되지 않았습니다
+            </Text>
             <Box fontFamily="mono" fontSize="sm" bg="white" p={3} borderRadius="md">
-              <Text whiteSpace="pre-wrap" color="gray.800">{errorText}</Text>
+              <Text whiteSpace="pre-wrap" color="gray.800">
+                {errorText}
+              </Text>
             </Box>
           </Box>
         )}
 
         {/* Axios 에러 원본(요청자가 원본 확인 원할 때) */}
         {errorRaw && (
-          <Box w="100%" p={4} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.200">
-            <Text fontWeight="bold" color="red.700" mb={2}>에러 원본 (Axios Error dump)</Text>
+          <Box
+            w="100%"
+            p={4}
+            bg="red.50"
+            borderRadius="md"
+            border="1px solid"
+            borderColor="red.200"
+          >
+            <Text fontWeight="bold" color="red.700" mb={2}>
+              에러 원본 (Axios Error dump)
+            </Text>
             <Box fontFamily="mono" fontSize="sm" bg="white" p={3} borderRadius="md">
-              <Box as="pre" color="gray.800" fontSize="sm" lineHeight="1.6" className="json-root" dangerouslySetInnerHTML={{ __html: highlightJSON(errorRaw) }} />
+              <Box
+                as="pre"
+                color="gray.800"
+                fontSize="sm"
+                lineHeight="1.6"
+                className="json-root"
+                dangerouslySetInnerHTML={{ __html: highlightJSON(errorRaw) }}
+              />
             </Box>
           </Box>
         )}
