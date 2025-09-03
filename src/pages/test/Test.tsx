@@ -12,31 +12,57 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { Global, css } from '@emotion/react';
+import type { AxiosRequestConfig,RawAxiosResponseHeaders,AxiosResponseHeaders } from 'axios';
 
-const highlightJSON = (obj: any): string => {
+// API 요청 정보를 담을 타입
+interface ApiRequestData {
+  method?: string;
+  url?: string;
+  headers?: RawAxiosResponseHeaders | AxiosResponseHeaders;
+  params?: Record<string, unknown> | URLSearchParams;
+  withCredentials?: boolean;
+  timeout?: number;
+  data?: unknown;
+}
+
+// API 응답 정보를 담을 타입
+interface ApiResponseData {
+  status: number;
+  statusText: string;
+  headers: RawAxiosResponseHeaders | AxiosResponseHeaders;
+  data: unknown;
+}
+
+// 요청과 응답을 모두 포함하는 전체 트랜잭션 타입
+interface ApiTransaction {
+  request: ApiRequestData;
+  response: ApiResponseData | null; // 응답은 없을 수도 있으므로 | null
+}
+
+const highlightJSON = (obj: unknown): string => {
   try {
     const json = JSON.stringify(obj, null, 2)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(
-        /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"\s*:)|"(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g,
+        /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"\s*:)|"(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g,
         (match) => {
           if (/^".*"\s*:/.test(match)) {
-            return `<span class=\"json-key\">${match}</span>`;
+            return `<span class="json-key">${match}</span>`;
           }
           if (/^".*"$/.test(match)) {
-            return `<span class=\"json-string\">${match}</span>`;
+            return `<span class="json-string">${match}</span>`;
           }
           if (/true|false/.test(match)) {
-            return `<span class=\"json-boolean\">${match}</span>`;
+            return `<span class="json-boolean">${match}</span>`;
           }
           if (/null/.test(match)) {
-            return `<span class=\"json-null\">${match}</span>`;
+            return `<span class="json-null">${match}</span>`;
           }
-          return `<span class=\"json-number\">${match}</span>`;
+          return `<span class="json-number">${match}</span>`;
         },
       );
     return json;
@@ -45,12 +71,13 @@ const highlightJSON = (obj: any): string => {
   }
 };
 
+
 function Test() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiUrl, setApiUrl] = useState('http://api-qa.pull.it.kr/api/');
-  const [transaction, setTransaction] = useState<any>(null);
+  const [transaction, setTransaction] = useState<ApiTransaction | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
-  const [errorRaw, setErrorRaw] = useState<any>(null);
+  const [errorRaw, setErrorRaw] = useState<unknown>(null);
   const [authToken, setAuthToken] = useState<string>('');
   const [requestMethod, setRequestMethod] = useState<string>('GET');
   const [configText, setConfigText] = useState<string>(
@@ -78,16 +105,18 @@ function Test() {
     setErrorRaw(null);
 
     // 사용자 config 파싱
-    let parsedConfig: any = {};
+    let parsedConfig: AxiosRequestConfig = {};
     try {
       if (configText && configText.trim().length > 0) {
         parsedConfig = JSON.parse(configText);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       setIsLoading(false);
       setTransaction(null);
-      setErrorText(`Config JSON 파싱 실패: ${e?.message || ''}`);
-      setErrorRaw({ name: e?.name, message: e?.message });
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      const errorName = e instanceof Error ? e.name : 'Unknown Error';
+      setErrorText(`Config JSON 파싱 실패: ${errorMessage}`);
+      setErrorRaw({ name: errorName, message: errorMessage });
       return;
     }
 
@@ -101,7 +130,7 @@ function Test() {
 
     const methodUpper = (requestMethod || 'GET').toUpperCase();
     const hasBody = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(methodUpper);
-    let requestData: any = undefined;
+    let requestData: unknown = undefined;
     if (hasBody && requestBodyText && requestBodyText.trim().length > 0) {
       try {
         requestData = JSON.parse(requestBodyText);
@@ -110,7 +139,7 @@ function Test() {
       }
     }
 
-    const finalConfig: any = {
+    const finalConfig: AxiosRequestConfig = {
       ...parsedConfig,
       method: methodUpper,
       url: apiUrl,
@@ -141,48 +170,99 @@ function Test() {
       });
       setErrorText(null);
       setErrorRaw(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('API 요청 에러:', err);
 
-      if (err.response) {
-        const requestDump = {
-          method: err.config?.method?.toUpperCase(),
-          url: err.config?.url || apiUrl,
-          headers: err.config?.headers,
-          params: err.config?.params,
-          withCredentials: err.config?.withCredentials,
-          timeout: err.config?.timeout,
-          data: hasBody ? requestData : undefined,
-        } as const;
+      if (isAxiosError(err)) {
+        const hasResponse = !!err.response;
+        const hasRequest = !!err.request;
+
+        if (hasResponse) {
+          const requestDump = {
+            method: err.config?.method?.toUpperCase(),
+            url: err.config?.url || apiUrl,
+            headers: err.config?.headers,
+            params: err.config?.params,
+            withCredentials: err.config?.withCredentials,
+            timeout: err.config?.timeout,
+            data: hasBody ? requestData : undefined,
+          } as const;
+
+          setTransaction({
+            request: requestDump,
+            response: {
+              status: err.response!.status,
+              statusText: err.response!.statusText,
+              headers: err.response!.headers,
+              data: err.response!.data,
+            },
+          });
+          setErrorText(null);
+          setErrorRaw({
+            name: err.name,
+            message: err.message,
+            code: err.code,
+            config: err.config
+              ? { method: err.config.method, url: err.config.url, headers: err.config.headers }
+              : undefined,
+            response: err.response
+              ? {
+                  status: err.response.status,
+                  statusText: err.response.statusText,
+                  headers: err.response.headers,
+                  data: err.response.data,
+                }
+              : undefined,
+          });
+        } else if (hasRequest) {
+          setTransaction({
+            request: {
+              method: methodUpper,
+              url: apiUrl,
+              headers: parsedConfig?.headers,
+              params: parsedConfig?.params,
+              withCredentials: parsedConfig?.withCredentials,
+              timeout: parsedConfig?.timeout,
+              data: hasBody ? requestData : undefined,
+            },
+            response: null,
+          });
+          setErrorText(
+            [
+              '응답은 수신되지 않았습니다. (브라우저 CORS 정책으로 응답 접근이 차단된 것으로 보입니다)',
+              `code: ${err.code || 'ERR_NETWORK'}`,
+              `message: ${err.message || ''}`,
+              `조치: 프론트는 hosts 파일을 확인하고, http://local.pull.it.kr:5173으로 접속했는지 확인. \\n 서버는 Access-Control-Allow-Origin: ${window.location.origin} (필요 시 Access-Control-Allow-Credentials: true) 설정 및 OPTIONS/해당 경로 모두에 동일 정책 적용 여부 확인`,
+            ].join('\n'),
+          );
+          setErrorRaw({
+            name: err.name,
+            message: err.message,
+            code: err.code,
+          });
+        } else {
+          // AxiosError 이지만 response/request 둘 다 없는 경우
+          setTransaction({
+            request: {
+              method: methodUpper,
+              url: apiUrl,
+              headers: parsedConfig?.headers,
+              params: parsedConfig?.params,
+              withCredentials: parsedConfig?.withCredentials,
+              timeout: parsedConfig?.timeout,
+              data: hasBody ? requestData : undefined,
+            },
+            response: null,
+          });
+          setErrorText('알 수 없는 Axios 에러가 발생했습니다.');
+          setErrorRaw({ name: err.name, message: err.message, code: err.code });
+        }
+      } else {
+        // AxiosError 가 아님 → 일반 Error 안전 처리
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        const errorName = err instanceof Error ? err.name : 'Unknown Error';
 
         setTransaction({
-          request: requestDump,
-          response: {
-            status: err.response.status,
-            statusText: err.response.statusText,
-            headers: err.response.headers,
-            data: err.response.data,
-          },
-        });
-        setErrorText(null);
-        setErrorRaw({
-          name: err?.name,
-          message: err?.message,
-          code: err?.code,
-          config: err?.config
-            ? { method: err.config.method, url: err.config.url, headers: err.config.headers }
-            : undefined,
-          response: err?.response
-            ? {
-                status: err.response.status,
-                statusText: err.response.statusText,
-                headers: err.response.headers,
-                data: err.response.data,
-              }
-            : undefined,
-        });
-      } else if (err.request) {
-        setTransaction({
           request: {
             method: methodUpper,
             url: apiUrl,
@@ -195,35 +275,9 @@ function Test() {
           response: null,
         });
         setErrorText(
-          [
-            '응답은 수신되지 않았습니다. (브라우저 CORS 정책으로 응답 접근이 차단된 것으로 보입니다)',
-            `code: ${err?.code || 'ERR_NETWORK'}`,
-            `message: ${err?.message || ''}`,
-            `조치: 프론트는 hosts 파일을 확인하고, http://local.pull.it.kr:5173으로 접속했는지 확인. \\n 서버는 Access-Control-Allow-Origin: ${window.location.origin} (필요 시 Access-Control-Allow-Credentials: true) 설정 및 OPTIONS/해당 경로 모두에 동일 정책 적용 여부 확인`,
-          ].join('\n'),
+          `응답은 수신되지 않았습니다.\\n요청 설정 에러: ${errorMessage}`,
         );
-        setErrorRaw({
-          name: err?.name,
-          message: err?.message,
-          code: err?.code,
-        });
-      } else {
-        setTransaction({
-          request: {
-            method: methodUpper,
-            url: apiUrl,
-            headers: parsedConfig?.headers,
-            params: parsedConfig?.params,
-            withCredentials: parsedConfig?.withCredentials,
-            timeout: parsedConfig?.timeout,
-            data: hasBody ? requestData : undefined,
-          },
-          response: null,
-        });
-        setErrorText(
-          `응답은 수신되지 않았습니다.\\n요청 설정 에러: ${err.message || '알 수 없는 에러'}`,
-        );
-        setErrorRaw({ name: err?.name, message: err?.message });
+        setErrorRaw({ name: errorName, message: errorMessage });
       }
     } finally {
       setIsLoading(false);
@@ -346,7 +400,7 @@ function Test() {
         </Button>
 
         {/* 전체 트랜잭션 JSON (Request + Response) */}
-        {transaction && (
+        {!!transaction && (
           <Box
             w="100%"
             p={5}
@@ -373,7 +427,7 @@ function Test() {
         )}
 
         {/* API 요청/응답 결과 (원하는 경우 섹션별로도 확인) */}
-        {transaction && (
+        {!!transaction && (
           <>
             {/* 전체 요청 */}
             <Box
@@ -449,7 +503,7 @@ function Test() {
         )}
 
         {/* Axios 에러 원본(요청자가 원본 확인 원할 때) */}
-        {errorRaw && (
+        {!!errorRaw && (
           <Box
             w="100%"
             p={4}
