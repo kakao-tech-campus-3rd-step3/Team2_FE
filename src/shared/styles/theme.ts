@@ -35,6 +35,16 @@ const colors = {
 
   ring: '#16a34a',
 
+  // 로그인 페이지
+  leftsideBackground: '#e2ffeaff',
+  rightsideBackground: '#ffffffc0',
+  termsTextColor: '#919191ff',
+  kakaoYellow: '#fee500',
+  cardTitle: '#111827',
+  cardDescription: '#4b5563',
+  checkCircle: '#10b981',
+  borderTop: '#f3f4f6',
+
   // 차트 색상들
   chart: {
     1: '#16a34a',

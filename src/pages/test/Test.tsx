@@ -12,9 +12,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import axios, { isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import { Global, css } from '@emotion/react';
 import type { AxiosRequestConfig, RawAxiosResponseHeaders, AxiosResponseHeaders } from 'axios';
+import { api, isLocal } from '@/shared/api/axiosClient';
 
 // API 요청 정보를 담을 타입
 interface ApiRequestData {
@@ -73,11 +74,11 @@ const highlightJSON = (obj: unknown): string => {
 
 function Test() {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiUrl, setApiUrl] = useState('http://api-qa.pull.it.kr/api/');
+  const [apiUrl, setApiUrl] = useState('/');
   const [transaction, setTransaction] = useState<ApiTransaction | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [errorRaw, setErrorRaw] = useState<unknown>(null);
-  const [authToken, setAuthToken] = useState<string>('');
+  const [authToken, setAuthToken] = useState<string>(''); // 수동 Authorization 입력(우선 적용)
   const [requestMethod, setRequestMethod] = useState<string>('GET');
   const [configText, setConfigText] = useState<string>(
     JSON.stringify(
@@ -119,10 +120,10 @@ function Test() {
       return;
     }
 
-    // Auth 토큰이 있으면 헤더에 추가 (사용자 입력이 우선)
+    // 수동 Authorization 입력이 있으면 우선 적용 (없으면 인터셉터가 Basic 자동 주입)
     if (authToken.trim()) {
       parsedConfig.headers = {
-        ...parsedConfig.headers,
+        ...(parsedConfig.headers as Record<string, unknown> | undefined),
         Authorization: authToken.trim(),
       };
     }
@@ -146,7 +147,7 @@ function Test() {
     };
 
     try {
-      const axiosResponse = await axios.request(finalConfig);
+      const axiosResponse = await api.request(finalConfig);
 
       const requestDump = {
         method: axiosResponse.config.method?.toUpperCase(),
@@ -171,11 +172,9 @@ function Test() {
       setErrorRaw(null);
     } catch (err: unknown) {
       console.error('API 요청 에러:', err);
-
       if (isAxiosError(err)) {
         const hasResponse = !!err.response;
         const hasRequest = !!err.request;
-
         if (hasResponse) {
           const requestDump = {
             method: err.config?.method?.toUpperCase(),
@@ -186,7 +185,6 @@ function Test() {
             timeout: err.config?.timeout,
             data: hasBody ? requestData : undefined,
           } as const;
-
           setTransaction({
             request: requestDump,
             response: {
@@ -231,16 +229,11 @@ function Test() {
               '응답은 수신되지 않았습니다. (브라우저 CORS 정책으로 응답 접근이 차단된 것으로 보입니다)',
               `code: ${err.code || 'ERR_NETWORK'}`,
               `message: ${err.message || ''}`,
-              `조치: 프론트는 hosts 파일을 확인하고, http://local.pull.it.kr:5173으로 접속했는지 확인. \\n 서버는 Access-Control-Allow-Origin: ${window.location.origin} (필요 시 Access-Control-Allow-Credentials: true) 설정 및 OPTIONS/해당 경로 모두에 동일 정책 적용 여부 확인`,
+              `조치: 프론트는 hosts 파일을 확인하고, http://local.pull.it.kr:5173으로 접속했는지 확인. \n 서버는 Access-Control-Allow-Origin: ${window.location.origin} (필요 시 Access-Control-Allow-Credentials: true) 설정 및 OPTIONS/해당 경로 모두에 동일 정책 적용 여부 확인`,
             ].join('\n'),
           );
-          setErrorRaw({
-            name: err.name,
-            message: err.message,
-            code: err.code,
-          });
+          setErrorRaw({ name: err.name, message: err.message, code: err.code });
         } else {
-          // AxiosError 이지만 response/request 둘 다 없는 경우
           setTransaction({
             request: {
               method: methodUpper,
@@ -257,10 +250,8 @@ function Test() {
           setErrorRaw({ name: err.name, message: err.message, code: err.code });
         }
       } else {
-        // AxiosError 가 아님 → 일반 Error 안전 처리
         const errorMessage = err instanceof Error ? err.message : String(err);
         const errorName = err instanceof Error ? err.name : 'Unknown Error';
-
         setTransaction({
           request: {
             method: methodUpper,
@@ -273,7 +264,7 @@ function Test() {
           },
           response: null,
         });
-        setErrorText(`응답은 수신되지 않았습니다.\\n요청 설정 에러: ${errorMessage}`);
+        setErrorText(`응답은 수신되지 않았습니다.\n요청 설정 에러: ${errorMessage}`);
         setErrorRaw({ name: errorName, message: errorMessage });
       }
     } finally {
@@ -315,6 +306,7 @@ function Test() {
           </Text>
         </Box>
 
+        {/* 메서드 + URL */}
         <InputGroup size="md">
           <InputLeftAddon width="140px">
             <Select
@@ -333,7 +325,7 @@ function Test() {
             </Select>
           </InputLeftAddon>
           <Input
-            placeholder="http://api-qa.pull.it.kr/api/"
+            placeholder="/ (상대 경로)"
             value={apiUrl}
             onChange={(e) => setApiUrl(e.target.value)}
             onKeyDown={(e) => {
@@ -345,10 +337,41 @@ function Test() {
           />
         </InputGroup>
 
+        {/* 로컬 환경용 Basic Auth 로그인 (인터셉터 자동 첨부) */}
+        {isLocal() && (
+          <Box
+            w="100%"
+            p={4}
+            bg="gray.50"
+            borderRadius="md"
+            border="1px solid"
+            borderColor="gray.200"
+          >
+            <Text fontWeight="bold" mb={2}>
+              로컬 개발자 안내
+            </Text>
+            <Text fontSize="sm" color="gray.700" sx={{ whiteSpace: 'pre-line' }}>
+              로컬에서는 URL을 <b>상대경로(/)</b>로 호출하세요. Vite dev proxy가{' '}
+              <b>env(.env.local)</b>에 설정된 Basic Auth를 서버로 전달합니다.
+              {'\n'}VITE_API_BASE_URL=https://api-qa.pull.it.kr{'\n'}VITE_BASIC_USER=아이디{'\n'}
+              VITE_BASIC_PASS=비밀번호 이런식으로 설정하세요.
+            </Text>
+            <Text fontSize="sm" color="gray.700" mt={2}>
+              수동 Authorization 입력란에 값을 넣으면 그 값이 우선 적용됩니다. 비워두면 프록시가
+              설정한 값을 사용합니다.
+            </Text>
+            <Text fontSize="sm" color="gray.700" mt={2}>
+              사용 가능한 api{'\n'}
+              GET / POST /echo1 POST /echo2
+            </Text>
+          </Box>
+        )}
+
+        {/* 수동 Authorization 입력 (옵션) */}
         <InputGroup size="md">
           <InputLeftAddon width="140px">Authorization</InputLeftAddon>
           <Input
-            placeholder="Bearer ey..."
+            placeholder="Bearer ey... 또는 Basic base64(id:pw)"
             value={authToken}
             onChange={(e) => setAuthToken(e.target.value)}
             fontFamily="mono"
