@@ -1,6 +1,5 @@
 export const ROUTES = {
-  HOME: '/',
+  HOME: '/home',
+  LOGIN: '/',
   TEST_CORS: '/test/cors',
-  LOGIN: '/login',
-  MAIN: '/main',
 } as const;

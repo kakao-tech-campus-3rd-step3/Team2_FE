@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
 
 import { FileText, Sidebar, Settings, LayoutDashboard, Plus, BookOpen, CircleX } from 'lucide-react';
-import { useMenu } from "@/shared/hooks/SideBarContext/MenuContext";
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
@@ -159,11 +157,15 @@ const SideBarUserInfoEmail = styled.p`
 
 const menus = ["대시보드", "학습소스 관리", "문제집 생성", "나의 문제집", "오답노트"];
 
+interface SideBarProps {
+  selectedMenu: string;
+  setSelectedMenu: (menu: string) => void;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-function SideBar() {
-    const { selectedMenu, setSelectedMenu } = useMenu();
-    const [isOpen, setIsOpen] = useState(true);
-
+function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarProps) {
+    
     return (
         <SideBarWrapper isOpen={isOpen}>
             {/* 사이드바 헤더 부분 */}
@@ -179,30 +181,30 @@ function SideBar() {
                         </ItemTitleWrapper>
                     </IconTitleWrapper>
                     {/* 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
-                    <Sidebar size={16} onClick={() => setIsOpen((prev) => !prev)}/> 
+                    <Sidebar size={16} onClick={() => setIsOpen(false)}/> 
                 </SideBarHeaderItemWrapper>
             </SideBarHeader>
 
             {/* 사이드바 메인 부분 */}
             <SideBarMain>
                 <SideBarNav>
-                    <SideBarNavItem onClick={() => setSelectedMenu(menus[0] as any)} active={menus[0] === selectedMenu}>
+                    <SideBarNavItem onClick={() => setSelectedMenu(menus[0])} active={menus[0] === selectedMenu}>
                         <LayoutDashboard size={14} />
                         <SideBarNavTxt>대시보드</SideBarNavTxt>
                     </SideBarNavItem>
-                    <SideBarNavItem onClick={() => setSelectedMenu(menus[1] as any)} active={menus[1] === selectedMenu}>
+                    <SideBarNavItem onClick={() => setSelectedMenu(menus[1])} active={menus[1] === selectedMenu}>
                         <FileText size={14} />
                         <SideBarNavTxt>학습소스 관리</SideBarNavTxt>
                     </SideBarNavItem>
-                    <SideBarNavItem onClick={() => setSelectedMenu(menus[2] as any)} active={menus[2] === selectedMenu}>
+                    <SideBarNavItem onClick={() => setSelectedMenu(menus[2])} active={menus[2] === selectedMenu}>
                         <Plus size={14} />
                         <SideBarNavTxt>문제집 생성</SideBarNavTxt>
                     </SideBarNavItem>
-                    <SideBarNavItem onClick={() => setSelectedMenu(menus[3] as any)} active={menus[3] === selectedMenu}>
+                    <SideBarNavItem onClick={() => setSelectedMenu(menus[3])} active={menus[3] === selectedMenu}>
                         <BookOpen size={14} />
                         <SideBarNavTxt>나의 문제집</SideBarNavTxt>
                     </SideBarNavItem>
-                    <SideBarNavItem onClick={() => setSelectedMenu(menus[4] as any)} active={menus[4] === selectedMenu}>
+                    <SideBarNavItem onClick={() => setSelectedMenu(menus[4])} active={menus[4] === selectedMenu}>
                         <CircleX size={14} />
                         <SideBarNavTxt>오답노트</SideBarNavTxt>
                     </SideBarNavItem>

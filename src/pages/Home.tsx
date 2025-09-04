@@ -9,12 +9,11 @@ import Create from "./HomeSection/Create";
 import Quiz from "./HomeSection/Quiz";
 import Wrong from "./HomeSection/Wrong";
 
-
-import { useMenu } from "@/shared/hooks/SideBarContext/MenuContext";
+import { useState } from "react";
 
 function Home() {
-    const { selectedMenu } = useMenu();
-
+    const [ selectedMenu, setSelectedMenu ] = useState("대시보드");
+    const [ isOpen, setIsOpen] = useState(true);
     const renderContent = () => {
         switch (selectedMenu) {
             case "대시보드":
@@ -33,12 +32,11 @@ function Home() {
     };
 
 
-
     return (
         <AppLayout>
-            <SideBar />
+            <SideBar selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} isOpen={isOpen} setIsOpen={setIsOpen}/>
             <PageLayout>
-                <PageHeader />
+                <PageHeader selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} isOpen={isOpen} setIsOpen={setIsOpen}/>
                 {renderContent()}
             </PageLayout>
         </AppLayout>
