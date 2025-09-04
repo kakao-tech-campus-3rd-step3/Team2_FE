@@ -1,15 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-<<<<<<< HEAD
-import { ROUTES } from '../routePaths';
-
-import Home from '@/pages/Home';
-import Test from '@/pages/test/Test';
-=======
 import Test from '@/pages/test/Test';
 import Login from '@/pages/Login';
 import Home from '@/pages/Home';
-import { ROUTES } from '../routePaths';
->>>>>>> develop
+import { ROUTES } from '@/app/routePaths';
 
 function AppRoutes() {
   return (
