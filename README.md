@@ -166,3 +166,8 @@ src/
 │
 └─ main.tsx
 ```
+
+### eslint와 prettier명령어
+
+- pnpm exec eslint . --ext .js,.jsx,.ts,.tsx --fix
+- pnpm exec prettier . --write
