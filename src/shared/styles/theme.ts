@@ -266,7 +266,6 @@ const space = {
   spacing98: '392px',
   spacing99: '396px',
   spacing100: '400px',
-
 };
 
 const radius = {
