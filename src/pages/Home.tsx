@@ -1,25 +1,48 @@
-import styled from '@emotion/styled';
-import { Box, Button, Text, Stack } from '@chakra-ui/react';
+import SideBar from "@/shared/components/SideBar/SideBar";
+import AppLayout from './layout/AppLayout';
+import PageLayout from "./layout/PageLayout";
+import PageHeader from "@/shared/components/PageHeader/PageHeader";
 
-const Test = styled.div`
-  width: 100px;
-  height: 100px;
-  background-color: ${(props) => props.theme.colors.primary};
-`;
+import Dashboard from "./HomeSection/Dashboard";
+import Source from "./HomeSection/Source";
+import Create from "./HomeSection/Create";
+import Quiz from "./HomeSection/Quiz";
+import Wrong from "./HomeSection/Wrong";
+
+
+import { useMenu } from "@/shared/hooks/SideBarContext/MenuContext";
+
 function Home() {
-  return (
-    <>
-      <Test></Test>
-      <Stack spacing={4} p={6} align="center">
-        <Box bg="gray.100" p={4} borderRadius="md">
-          <Text fontSize="xl" color="teal.500">
-            Chakra UI v2 Example
-          </Text>
-        </Box>
-        <Button colorScheme="teal">Click Me</Button>
-      </Stack>
-    </>
-  );
+    const { selectedMenu } = useMenu();
+
+    const renderContent = () => {
+        switch (selectedMenu) {
+            case "대시보드":
+                return <Dashboard />;
+            case "학습소스 관리":
+                return <Source />;
+            case "문제집 생성":
+                return <Create />;
+            case "나의 문제집":
+                return <Quiz />;
+            case "오답노트":
+                return <Wrong />;
+            default:
+                return <Dashboard />;
+        }
+    };
+
+
+
+    return (
+        <AppLayout>
+            <SideBar />
+            <PageLayout>
+                <PageHeader />
+                {renderContent()}
+            </PageLayout>
+        </AppLayout>
+    )
 }
 
 export default Home;

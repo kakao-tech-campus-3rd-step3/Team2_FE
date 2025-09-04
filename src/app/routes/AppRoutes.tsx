@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
+import { ROUTES } from '../routePaths';
+
 import Home from '@/pages/Home';
 import Test from '@/pages/test/Test';
-import { ROUTES } from '../routePaths';
 
 function AppRoutes() {
   return (
