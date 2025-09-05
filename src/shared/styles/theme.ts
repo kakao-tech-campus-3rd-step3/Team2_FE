@@ -1,17 +1,89 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
-// 색상 토큰
 const colors = {
-  background: '#fafafa',
-  foreground: '#171717',
+  semantic: {
+    primary: '#16a34a', // 메인 버튼, 주요 아이콘 등
+  },
+  
+  background: {
+    background: '#f7f8f9', // 전체 페이지 배경색 (가장 연한 회색)
+    foreground: '#ffffff', // 카드, 모달 배경색
+    sidebar: '#ffffff', // 사이드바 배경색
+    sidebarHover: '#f3f4f6', // 사이드바 아이템 호버 시 배경색
+    overlay: '#00000080', // 모달 뒷 배경의 반투명 오버레이
+  },
 
+  text: {
+    title: '#171717', // 대시보드, 대제목 텍스트
+    default: '#1f2937', // 일반적인 텍스트
+    subtitle: '#4b5563', // 학습 현황 설명, 사이드바 메뉴 텍스트
+    lightGray: '#9ca3af', // 연출 학습량, 오늘 학습량, "없음" 텍스트
+  },
+
+  border: {
+    default: '#d1d5db', // 카드, 구분선
+    listItem: '#e5e7eb', // 리스트 아이템 구분선
+  },
+
+  state: {
+    success: '#16a34a', // 학습 진행, 성공 지표 (연속 학습일 아이콘, 학습 활동 차트)
+    info: '#8b5cf6', // 총 문제 수 아이콘
+    warning: '#f97316', // 이전 주 문제 아이콘
+  },
+
+  gray: {
+    gray0: '#ffffff', // 흰색
+    gray1: '#f7f8f9', // 새로운 가장 연한 배경색
+    gray2: '#fafafa', // 기존 가장 연한 배경색
+    gray3: '#f3f4f6', // 연한 회색 (호버)
+    gray4: '#e5e7eb', // 중간 연한 회색 (테두리)
+    gray5: '#d1d5db', // 중간 회색 (테두리, 아이콘)
+    gray6: '#9ca3af', // 연한 회색 텍스트
+    gray7: '#4b5563', // 중간 회색 텍스트
+    gray8: '#171717', // 진한 회색 텍스트 (거의 검정)
+    gray9: '#0a0a0a', // 새로운 진한 검은색 (카카오 버튼 텍스트)
+  },
+
+  red: {
+    red0: '#ef4444',
+    red1: '#dc2626', // 어려움 뱃지 텍스트
+    red2: '#fecaca', // 어려움 뱃지 배경
+    red3: '#fef2f2', // 고급 뱃지 배경
+  },
+  
+  yellow: {
+    kakaoYellow: '#fee500',
+    kakaoHover: '#FFD700',
+    starFill: '#facc15', // 별 아이콘 채우기
+    starStroke: '#f59e0b', // 별 아이콘 테두리
+    yellow0: '#fffbeb', // 중급 뱃지 배경
+    yellow1: '#d97706', // 중급 뱃지 텍스트
+  },
+
+  green: {
+    green0: '#e2ffeaff', // 일러스트 배경의 가장 연한 초록색
+    green1: '#dcfce7', // 학습 활동 차트의 연한 초록색
+    green2: '#EFFCF3', // 선택된 아이템의 배경색
+    green3: '#bbf7d0', // 학습 활동 차트의 중간 초록색
+    green4: '#86efac', // 학습 활동 차트의 진한 초록색
+    green5: '#4ade80', // "정상" 뱃지
+    green6: '#16a34a', // 기본 초록색 (primary)
+  },
+
+  blue: {
+    blue0: '#3b82f6', // 태그/텍스트 색상
+    blue1: '#dbeafe', // 태그/배경 색상
+    blue2: '#60a5fa', // 폴더 옆 아이콘
+  },
+
+  // 밑에부터 위에걸로 바꾸면 지워도됨
   card: '#ffffff',
   cardForeground: '#171717',
 
   popover: '#ffffff',
   popoverForeground: '#171717',
 
-  primary: '#16a34a',
+  
   primaryForeground: '#ffffff',
 
   secondary: '#f5f5f5',
@@ -26,24 +98,14 @@ const colors = {
   destructive: '#ef4444',
   destructiveForeground: '#ffffff',
 
-  border: '#d1d5db',
+  
 
   input: '#ffffff',
   inputBackground: '#ffffff',
 
   switchBackground: '#e5e5e5',
 
-  ring: '#16a34a',
-
-  // 로그인 페이지
-  leftsideBackground: '#e2ffeaff',
-  rightsideBackground: '#ffffffc0',
-  termsTextColor: '#919191ff',
-  kakaoYellow: '#fee500',
-  cardTitle: '#111827',
-  cardDescription: '#4b5563',
-  checkCircle: '#10b981',
-  borderTop: '#f3f4f6',
+  
 
   // 차트 색상들
   chart: {
@@ -64,7 +126,148 @@ const colors = {
   sidebarAccentForeground: '#404040',
   sidebarBorder: '#e5e5e5',
   sidebarRing: '#16a34a',
+
+  // 로그인 페이지
+  leftsideBackground: '#e2ffeaff',
+  rightsideBackground: '#ffffffc0',
+  termsTextColor: '#919191ff',
+  kakaoYellow: '#fee500',
+  cardTitle: '#111827',
+  cardDescription: '#4b5563',
+  checkCircle: '#10b981',
+  borderTop: '#f3f4f6',
 };
+// 색상 토큰
+// const colors = {
+//   semantic: {
+//     primary: '#16a34a',
+//   },
+  
+//   background: {
+//     background: '#fafafa',
+//     foreground: '#171717',
+//   },
+
+//   text: {
+
+//   },
+
+//   border: {
+//     border: '#d1d5db',
+//   },
+
+//   state: {
+
+//   },
+
+  
+//   gray: {
+//     gray0: '#ffffff',
+//     gray1: '#ffffffc0',
+//     gray2: '#f5f5f5',
+//     gray3: '#f3f4f6',
+//     gray4: '#fafafa',
+//     gray5: '#e5e5e5',
+//     gray6: '#d4d4d4',
+//     gray7: '#d1d5db',
+//     gray8: '#a3a3a3',
+//     gray9: '#9ca3af',
+//     gray10: '#919191ff',
+//     gray11: '#4b5563',
+//     gray12: '#404040',
+//     gray13: '#525252',
+//     gray14: '#737373',
+//     gray15: '#0a0a0a',
+//     gray16: '#262626',
+//     gray17: '#171717',
+//     gray18: '#111827',
+//   },
+
+//   red: {
+//     red0: '#ef4444',
+//   },
+  
+//   yellow: {
+//     kakaoYellow: '#fee500',
+//     kakaoHover: '#FFD700',
+//   },
+
+//   green: {
+//     green0: '#e2ffeaff',
+//     green1: '#EFFCF3',
+//     green2: '#16a34a',
+//     green3: '#34d399',
+//     green4: '#22c55e',
+//     green5: '#10b981',
+//   },
+
+//   blue: {
+
+//   },
+
+
+
+//   // 밑에는 레거시
+//   card: '#ffffff',
+//   cardForeground: '#171717',
+
+//   popover: '#ffffff',
+//   popoverForeground: '#171717',
+
+  
+//   primaryForeground: '#ffffff',
+
+//   secondary: '#f5f5f5',
+//   secondaryForeground: '#737373',
+
+//   muted: '#f5f5f5',
+//   mutedForeground: '#737373',
+
+//   accent: '#f5f5f5',
+//   accentForeground: '#404040',
+
+//   destructive: '#ef4444',
+//   destructiveForeground: '#ffffff',
+
+  
+
+//   input: '#ffffff',
+//   inputBackground: '#ffffff',
+
+//   switchBackground: '#e5e5e5',
+
+  
+
+//   // 차트 색상들
+//   chart: {
+//     1: '#16a34a',
+//     2: '#404040',
+//     3: '#737373',
+//     4: '#a3a3a3',
+//     5: '#d4d4d4',
+//   },
+
+//   // 사이드바
+//   sidebar: '#ffffff',
+//   sidebarForeground: '#171717',
+//   sidebarPrimary: '#16a34a',
+//   sidebarPrimaryForeground: '#ffffff',
+//   sidebarAccent: '#f5f5f5',
+//   sidebarHover: '#fafafa',
+//   sidebarAccentForeground: '#404040',
+//   sidebarBorder: '#e5e5e5',
+//   sidebarRing: '#16a34a',
+
+//   // 로그인 페이지
+//   leftsideBackground: '#e2ffeaff',
+//   rightsideBackground: '#ffffffc0',
+//   termsTextColor: '#919191ff',
+//   kakaoYellow: '#fee500',
+//   cardTitle: '#111827',
+//   cardDescription: '#4b5563',
+//   checkCircle: '#10b981',
+//   borderTop: '#f3f4f6',
+// };
 
 // 차크라 UI 다크모드 설정값
 const config: ThemeConfig = {
