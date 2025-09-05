@@ -3,8 +3,8 @@ import { Sidebar } from 'lucide-react';
 
 const PageHeaderWrapper = styled.header`
   width: 100%;
-  height: 72px;
-  padding: 18px;
+  height: ${(props) => props.theme.space.spacing18};
+  padding: ${(props) => props.theme.space.spacing5};
   border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
   background-color: #fafafa;
   display: flex;

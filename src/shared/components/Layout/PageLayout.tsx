@@ -7,7 +7,7 @@ interface PageLayoutProps {
 
 const Container = styled.div`
   width: 100%;
-  min-height: 100dvh;
+  height: 100%;
   background-color: #f5f5f5ff;
   display: flex;
   justify-content: center;
@@ -16,7 +16,8 @@ const Container = styled.div`
 const ContentBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 700px;
+  height: 500px;
   background-color: #f5f5f5ff;
 `;
 

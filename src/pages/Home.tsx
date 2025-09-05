@@ -1,6 +1,6 @@
 import SideBar from '@/shared/components/SideBar/SideBar';
 import AppLayout from './layout/AppLayout';
-import PageLayout from './layout/PageLayout';
+import PageLayout from './layout/AppLayoutVertical';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 
 import Dashboard from './HomeSection/Dashboard';
@@ -12,7 +12,7 @@ import Wrong from './HomeSection/Wrong';
 import { useState } from 'react';
 
 function Home() {
-  const [selectedMenu, setSelectedMenu] = useState('대시보드');
+  const [selectedMenu, setSelectedMenu] = useState('문제집 생성');
   const [isOpen, setIsOpen] = useState(true);
   const renderContent = () => {
     switch (selectedMenu) {
