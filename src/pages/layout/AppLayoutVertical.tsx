@@ -1,11 +1,14 @@
+import { MIN_HEIGHT } from '@/shared/constants';
 import styled from '@emotion/styled';
 
-const PageLayout = styled.div`
+export const PageLayout = styled.div`
   width: 100%;
-  height: 100dvh;
   display: flex;
   flex-direction: column;
+  min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
 `;
-
-export default PageLayout;
+export const PageContent = styled.div`
+  width: 100%;
+  flex: 1;
+`;
