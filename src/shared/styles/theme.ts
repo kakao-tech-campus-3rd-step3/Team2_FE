@@ -4,7 +4,7 @@ const colors = {
   semantic: {
     primary: '#16a34a', // 메인 버튼, 주요 아이콘 등
   },
-  
+
   background: {
     background: '#f7f8f9', // 전체 페이지 배경색 (가장 연한 회색)
     foreground: '#ffffff', // 카드, 모달 배경색
@@ -50,7 +50,7 @@ const colors = {
     red2: '#fecaca', // 어려움 뱃지 배경
     red3: '#fef2f2', // 고급 뱃지 배경
   },
-  
+
   yellow: {
     kakaoYellow: '#fee500',
     kakaoHover: '#FFD700',
@@ -83,7 +83,6 @@ const colors = {
   popover: '#ffffff',
   popoverForeground: '#171717',
 
-  
   primaryForeground: '#ffffff',
 
   secondary: '#f5f5f5',
@@ -98,14 +97,10 @@ const colors = {
   destructive: '#ef4444',
   destructiveForeground: '#ffffff',
 
-  
-
   input: '#ffffff',
   inputBackground: '#ffffff',
 
   switchBackground: '#e5e5e5',
-
-  
 
   // 차트 색상들
   chart: {
@@ -142,7 +137,7 @@ const colors = {
 //   semantic: {
 //     primary: '#16a34a',
 //   },
-  
+
 //   background: {
 //     background: '#fafafa',
 //     foreground: '#171717',
@@ -160,7 +155,6 @@ const colors = {
 
 //   },
 
-  
 //   gray: {
 //     gray0: '#ffffff',
 //     gray1: '#ffffffc0',
@@ -186,7 +180,7 @@ const colors = {
 //   red: {
 //     red0: '#ef4444',
 //   },
-  
+
 //   yellow: {
 //     kakaoYellow: '#fee500',
 //     kakaoHover: '#FFD700',
@@ -205,8 +199,6 @@ const colors = {
 
 //   },
 
-
-
 //   // 밑에는 레거시
 //   card: '#ffffff',
 //   cardForeground: '#171717',
@@ -214,7 +206,6 @@ const colors = {
 //   popover: '#ffffff',
 //   popoverForeground: '#171717',
 
-  
 //   primaryForeground: '#ffffff',
 
 //   secondary: '#f5f5f5',
@@ -229,14 +220,10 @@ const colors = {
 //   destructive: '#ef4444',
 //   destructiveForeground: '#ffffff',
 
-  
-
 //   input: '#ffffff',
 //   inputBackground: '#ffffff',
 
 //   switchBackground: '#e5e5e5',
-
-  
 
 //   // 차트 색상들
 //   chart: {
