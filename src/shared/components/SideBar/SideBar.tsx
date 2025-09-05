@@ -13,8 +13,8 @@ import {
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? props.theme.space.spacing60 : '0px')};
-  height: 100dvh;
-  border: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+  height: 100%;
+  border-right: 1px solid ${(props) => props.theme.colors.sidebarBorder};
 
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
 
 // 사이드바 헤더
 const SideBarHeader = styled.header`
-  width: auto;
+  width: 100%;
   height: ${(props) => props.theme.space.spacing19};
   padding: ${(props) => props.theme.space.spacing5};
 
@@ -73,7 +73,7 @@ const SideBarDescription = styled.p`
 
 // 사이드바 메인
 const SideBarMain = styled.div`
-  width: auto;
+  width: 100%;
   height: 100%;
   padding: ${(props) => props.theme.space.spacing5};
 `;
@@ -110,11 +110,12 @@ const SideBarNavTxt = styled.p`
 
 // 사이드바 유저 정보
 const SideBarUserInfo = styled.div`
-  width: auto;
+  width: 100%;
   height: ${(props) => props.theme.space.spacing19};
   padding: ${(props) => props.theme.space.spacing5};
 
   border-top: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+  border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
 `;
 
 const SideBarUserInfoItemWrapper = styled.div`
@@ -181,7 +182,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
               <SideBarDescription>AI 학습 도구</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
-          {/* 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
+          {/* 성현: 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
           <Sidebar size={16} onClick={() => setIsOpen(false)} />
         </SideBarHeaderItemWrapper>
       </SideBarHeader>
