@@ -4,21 +4,7 @@ import styled from '@emotion/styled';
 
 import PdfFileList from '@/features/create/components/PdfFileList';
 import NavigationButtons from '@/features/create/components/NavigationButtons';
-
-const Container = styled.div`
-  width: 100%;
-  min-height: 100dvh;
-  background-color: #f5f5f5ff;
-  display: flex;
-  justify-content: center;
-`;
-
-const ContentBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 60%;
-  background-color: #f5f5f5ff;
-`;
+import PageLayout from '@/shared/components/Layout/PageLayout';
 
 const Title = styled.h2`
   width: 100%;
@@ -52,22 +38,20 @@ const Create = () => {
   });
 
   return (
-    <Container>
-      <ContentBox>
-        <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
-        <Title>PDF 파일을 선택하세요</Title>
-        <SubTitle>
-          하단의 PDF에서 선택하거나 새로운 PDF를 업로드 해 선택한 후 다음단계로 진행하세요
-        </SubTitle>
-        <Spacer12 />
-        <PdfFileList
-          fileList={mockFileList}
-          selectedIndex={selectedIndex}
-          onSelect={setSelectedIndex}
-        />
-        <NavigationButtons />
-      </ContentBox>
-    </Container>
+    <PageLayout>
+      <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
+      <Title>PDF 파일을 선택하세요</Title>
+      <SubTitle>
+        하단의 PDF에서 선택하거나 새로운 PDF를 업로드 해 선택한 후 다음단계로 진행하세요
+      </SubTitle>
+      <Spacer12 />
+      <PdfFileList
+        fileList={mockFileList}
+        selectedIndex={selectedIndex}
+        onSelect={setSelectedIndex}
+      />
+      <NavigationButtons />
+    </PageLayout>
   );
 };
 
