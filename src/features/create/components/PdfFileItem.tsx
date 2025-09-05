@@ -1,0 +1,77 @@
+import styled from '@emotion/styled';
+import { LucideFileText } from 'lucide-react';
+
+const FileContentBox = styled.div<{ isSelected: boolean }>`
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  height: 50px;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: ${({ isSelected }) => (isSelected ? '#d1fae5' : '#ffffff')};
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+`;
+
+const RadioInput = styled.input`
+  width: 10px;
+  height: 10px;
+`;
+
+const FileIcon = styled(LucideFileText)`
+  margin: 10px;
+`;
+
+const FileInfoBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const FileInfoUnderBox = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const FileName = styled.h4`
+  font-size: 0.85rem;
+`;
+
+const FileInfo = styled.span`
+  font-size: 0.7rem;
+  color: grey;
+`;
+
+interface FileItemProps {
+  file: {
+    name: string;
+    size: string;
+    pages: string;
+    date: string;
+  };
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
+  return (
+    <FileContentBox isSelected={isSelected} onClick={onClick}>
+      <RadioInput type="radio" name="pdf-selection" checked={isSelected} readOnly />
+      <FileIcon size={16} color="#16a34a" />
+      <FileInfoBox>
+        <FileName>{file.name}</FileName>
+        <FileInfoUnderBox>
+          <FileInfo>{file.size}</FileInfo>
+          <FileInfo>&nbsp;·&nbsp;</FileInfo>
+          <FileInfo>{file.pages}</FileInfo>
+          <FileInfo>&nbsp;·&nbsp;</FileInfo>
+          <FileInfo>{file.date}</FileInfo>
+        </FileInfoUnderBox>
+      </FileInfoBox>
+    </FileContentBox>
+  );
+};
+
+export default PdfFileItem;
