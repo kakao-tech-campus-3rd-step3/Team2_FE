@@ -1,6 +1,6 @@
 import SideBar from '@/shared/components/SideBar/SideBar';
 import AppLayout from './layout/AppLayout';
-import PageLayout from './layout/AppLayoutVertical';
+import { PageLayout, PageContent } from './layout/AppLayoutVertical';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 
 import Dashboard from './HomeSection/Dashboard';
@@ -46,7 +46,7 @@ function Home() {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
-        {renderContent()}
+        <PageContent>{renderContent()}</PageContent>
       </PageLayout>
     </AppLayout>
   );

@@ -184,5 +184,6 @@ table {
 }
 body {
   min-width: 1024px;
-  min-height: 100dvh;
+  min-height: 640px;
+  overflow: auto;
 }

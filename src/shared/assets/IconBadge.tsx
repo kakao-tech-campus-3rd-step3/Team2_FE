@@ -1,6 +1,14 @@
-const BrainIconWithBadge = () => {
-  const size = '4rem'; // 전체 컨테이너 크기
+import React from 'react';
 
+interface BrainIconWithBadgeProps {
+  size?: string; // 예: '4rem', '64px', '100%'
+  borderRadius?: string; // 예: '8px', '1rem', '50%'
+}
+
+const BrainIconWithBadge: React.FC<BrainIconWithBadgeProps> = ({
+  size = '4rem',
+  borderRadius = '1rem',
+}) => {
   return (
     <div
       style={{
@@ -14,7 +22,7 @@ const BrainIconWithBadge = () => {
           width: '75%',
           height: '75%',
           background: 'linear-gradient(to bottom right, #16a34a, #10b981)',
-          borderRadius: '1rem',
+          borderRadius,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

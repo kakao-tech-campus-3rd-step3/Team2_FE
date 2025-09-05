@@ -1,3 +1,5 @@
+import BrainIconWithBadge from '@/shared/assets/IconBadge';
+import { MIN_HEIGHT } from '@/shared/constants';
 import styled from '@emotion/styled';
 
 import {
@@ -13,9 +15,10 @@ import {
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? props.theme.space.spacing60 : '0px')};
-  height: 100%;
+  height: 100dvh;
+  min-height: ${MIN_HEIGHT};
   border-right: 1px solid ${(props) => props.theme.colors.sidebarBorder};
-
+  border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
   display: flex;
   flex-direction: column;
 
@@ -26,15 +29,16 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
 // 사이드바 헤더
 const SideBarHeader = styled.header`
   width: 100%;
-  height: ${(props) => props.theme.space.spacing19};
-  padding: ${(props) => props.theme.space.spacing5};
-
+  height: 76px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
 `;
 
 const SideBarHeaderItemWrapper = styled.div`
-  width: auto;
-
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,37 +48,27 @@ const IconTitleWrapper = styled.div`
   display: flex;
 `;
 
-const StyledIconContainer = styled.div`
-  background-color: #4caf50;
-  color: #ffffff;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const ItemTitleWrapper = styled.div`
   display: flex;
+  justify-content: center;
   flex-direction: column;
-  margin-left: 12px;
+  margin-left: 3px;
 `;
 
 const SideBarMainTitle = styled.h1`
-  font-size: 12px;
+  font-size: 15px;
   font-weight: bold;
 `;
 
 const SideBarDescription = styled.p`
-  font-size: 8px;
+  font-size: 10px;
   color: gray;
 `;
 
 // 사이드바 메인
 const SideBarMain = styled.div`
   width: 100%;
-  height: 100%;
+  flex: 1;
   padding: ${(props) => props.theme.space.spacing5};
 `;
 
@@ -111,16 +105,15 @@ const SideBarNavTxt = styled.p`
 // 사이드바 유저 정보
 const SideBarUserInfo = styled.div`
   width: 100%;
-  height: ${(props) => props.theme.space.spacing19};
-  padding: ${(props) => props.theme.space.spacing5};
-
+  height: 76px;
+  padding: 15px;
   border-top: 1px solid ${(props) => props.theme.colors.sidebarBorder};
   border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+  display: flex;
 `;
 
 const SideBarUserInfoItemWrapper = styled.div`
-  width: auto;
-
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -128,15 +121,15 @@ const SideBarUserInfoItemWrapper = styled.div`
 
 const SideBarUserInfoAvatarTextWrapper = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const SideBarUserInfoAvatar = styled.div`
   background-color: ${(props) => props.theme.colors.sidebarAccent};
   font-size: ${(props) => props.theme.textStyles.label2Regular.fontSize};
   border-radius: ${(props) => props.theme.radius.radiusFull};
-  width: ${(props) => props.theme.space.spacing7};
-  height: ${(props) => props.theme.space.spacing7};
-
+  width: 32px;
+  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,16 +138,16 @@ const SideBarUserInfoAvatar = styled.div`
 const SideBarUserInfoTextWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
+  margin-left: 8px;
 `;
 
 const SideBarUserInfoName = styled.p`
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
 `;
 
 const SideBarUserInfoEmail = styled.p`
-  font-size: 8px;
+  font-size: 9px;
   color: gray;
 `;
 
@@ -174,12 +167,10 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
       <SideBarHeader>
         <SideBarHeaderItemWrapper>
           <IconTitleWrapper>
-            <StyledIconContainer>
-              <FileText size={16} />
-            </StyledIconContainer>
+            <BrainIconWithBadge size="43px" borderRadius="0.4rem" />
             <ItemTitleWrapper>
               <SideBarMainTitle>PULL IT</SideBarMainTitle>
-              <SideBarDescription>AI 학습 도구</SideBarDescription>
+              <SideBarDescription>AI Learning Platform</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
           {/* 성현: 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
