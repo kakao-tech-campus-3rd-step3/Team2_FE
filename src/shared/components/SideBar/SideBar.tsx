@@ -22,7 +22,8 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 
-  display: flex;
+  display: ${({ isOpen }) => isOpen ? 'flex' : 'hidden'};
+
   flex-direction: column;
 
   overflow: hidden;
