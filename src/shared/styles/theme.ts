@@ -1,5 +1,7 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
+// 사용법: ${({ theme }) => theme.colors.gray.gray2};
+
 export const colors = {
   semantic: {
     primary: '#16a34a', // 메인 버튼, 주요 아이콘 등
