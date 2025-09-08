@@ -6,7 +6,7 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   min-height: 100dvh;
-  background-color: ${(props) => props.theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.background.background};
 `;
 
 const Login = () => {

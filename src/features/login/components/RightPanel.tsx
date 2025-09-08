@@ -5,7 +5,7 @@ import BenefitList from '@/features/login/components/BenefitList';
 
 const RightSide = styled.div`
   width: 50%;
-  background-color: ${(props) => props.theme.colors.rightsideBackground};
+  background-color: ${({ theme }) => theme.colors.gray.gray1};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +13,7 @@ const RightSide = styled.div`
 `;
 
 const Card = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
@@ -29,13 +29,13 @@ const CardHeader = styled.div`
 
 const CardTitle = styled.h2`
   font-size: 1.5rem;
-  color: ${(props) => props.theme.colors.cardTitle};
-  margin: 0;
+  color: ${({ theme }) => theme.colors.gray.gray10};
+  margin: ${({ theme }) => theme.spacing.spacing0};
 `;
 
 const CardDescription = styled.p`
-  color: ${(props) => props.theme.colors.CardDescription};
-  margin: 0;
+  color: ${({ theme }) => theme.colors.gray.gray7};
+  margin: ${({ theme }) => theme.spacing.spacing0};
 `;
 
 const CardContent = styled.div`
@@ -48,10 +48,13 @@ const Button = styled.button`
   width: 100%;
   height: 3.5rem;
   border: none;
-  background-color: ${(props) => props.theme.colors.kakaoYellow};
-  color: black;
-  font-weight: ${(props) => props.theme.textStyles.subtitle2Bold.fontWeight};
+  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+
+  color: ${({ theme }) => theme.colors.gray.gray10};
+
   font-size: 1rem;
+  font-weight: ${({ theme }) => theme.typography.subtitle2Bold.fontWeight};
+
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   cursor: pointer;
@@ -73,13 +76,16 @@ const KakaoButtonContent = styled.div`
 const TermsText = styled.div`
   text-align: center;
   font-size: 0.875rem;
-  color: ${(props) => props.theme.colors.termsTextColor};
+
+  color: ${({ theme }) => theme.colors.gray.gray10};
+
   line-height: 1.6;
-  margin-top: 20px;
+  margin-top: ${({ theme }) => theme.spacing.spacing5};
 `;
 
 const LinkButton = styled.button`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${({ theme }) => theme.colors.semantic.primary};
+
   font-weight: 500;
   background: none;
   border: none;
