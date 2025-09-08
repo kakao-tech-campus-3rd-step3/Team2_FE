@@ -10,7 +10,7 @@ const BenefitTitle = styled.h4`
   font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
-  
+
   color: ${({ theme }) => theme.colors.gray.gray10};
   text-align: center;
   margin-bottom: 1rem;
@@ -24,7 +24,7 @@ const BenefitItem = styled.div`
   font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
-  
+
   margin-bottom: 5px;
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;

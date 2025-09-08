@@ -42,14 +42,14 @@ export const colors = {
   },
 
   red: {
-    red0: '#fef2f2', 
-    red1: '#fecaca', 
+    red0: '#fef2f2',
+    red1: '#fecaca',
     red3: '#ef4444',
     red4: '#dc2626',
   },
 
   orange: {
-    orange0: '#f97316', 
+    orange0: '#f97316',
   },
 
   yellow: {
@@ -78,7 +78,7 @@ export const colors = {
   },
 
   purple: {
-    purple0: '#8b5cf6', 
+    purple0: '#8b5cf6',
   },
 } as const;
 

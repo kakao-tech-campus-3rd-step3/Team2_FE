@@ -13,7 +13,7 @@ const PageHeaderWrapper = styled.header`
 
 const PageTitle = styled.h1`
   color: ${({ theme }) => theme.colors.gray.gray10};
-  
+
   font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};

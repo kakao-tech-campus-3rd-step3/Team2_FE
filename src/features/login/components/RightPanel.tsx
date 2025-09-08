@@ -49,12 +49,12 @@ const Button = styled.button`
   height: 3.5rem;
   border: none;
   background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
-  
+
   color: ${({ theme }) => theme.colors.gray.gray10};
-  
+
   font-size: 1rem;
   font-weight: ${({ theme }) => theme.typography.subtitle2Bold.fontWeight};
-    
+
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   cursor: pointer;
@@ -78,14 +78,14 @@ const TermsText = styled.div`
   font-size: 0.875rem;
 
   color: ${({ theme }) => theme.colors.gray.gray10};
-  
+
   line-height: 1.6;
   margin-top: ${({ theme }) => theme.spacing.spacing5};
 `;
 
 const LinkButton = styled.button`
   color: ${({ theme }) => theme.colors.semantic.primary};
-  
+
   font-weight: 500;
   background: none;
   border: none;

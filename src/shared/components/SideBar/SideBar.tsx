@@ -1,7 +1,7 @@
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
 import { MIN_HEIGHT } from '@/shared/constants';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 import {
   FileText,
@@ -15,15 +15,15 @@ import {
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
-  width: ${({ isOpen }) => isOpen ? '240px' : '0px'};
+  width: ${({ isOpen }) => (isOpen ? '240px' : '0px')};
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
 
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
-  /* display: ${({ isOpen }) => isOpen ? 'flex' : 'hidden'}; */
-  opacity: ${({ isOpen }) => isOpen ? '1' : '0'};
+  /* display: ${({ isOpen }) => (isOpen ? 'flex' : 'hidden')}; */
+  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
   flex-direction: column;
 
   overflow: hidden;
@@ -93,8 +93,7 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
   padding: ${({ theme }) => theme.spacing.spacing1};
 
-  background-color: ${({ active, theme }) =>
-    active ? theme.colors.gray.gray3 : 'transparent'};
+  background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : 'transparent')};
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray.gray1};
@@ -105,7 +104,7 @@ const SideBarNavTxt = styled.p`
   font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
-  
+
   margin-left: ${({ theme }) => theme.spacing.spacing2};
 `;
 
@@ -174,7 +173,7 @@ interface SideBarProps {
 }
 
 function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <SideBarWrapper isOpen={isOpen}>
@@ -244,7 +243,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
               <SideBarUserInfoEmail>user@kakao.com</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
-          <Settings size={16} onClick={() => navigate('/')}/>
+          <Settings size={16} onClick={() => navigate('/')} />
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
     </SideBarWrapper>
