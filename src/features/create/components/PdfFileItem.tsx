@@ -56,6 +56,9 @@ interface FileItemProps {
 }
 
 const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
+  const FILE_INFO_SEPARATOR = ' · ';
+  const fileInfoItems = [file.size, file.pages, file.date];
+
   return (
     <FileContentBox isSelected={isSelected} onClick={onClick}>
       <RadioInput type="radio" name="pdf-selection" checked={isSelected} readOnly />
@@ -63,11 +66,7 @@ const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
       <FileInfoBox>
         <FileName>{file.name}</FileName>
         <FileInfoUnderBox>
-          <FileInfo>{file.size}</FileInfo>
-          <FileInfo>&nbsp;·&nbsp;</FileInfo>
-          <FileInfo>{file.pages}</FileInfo>
-          <FileInfo>&nbsp;·&nbsp;</FileInfo>
-          <FileInfo>{file.date}</FileInfo>
+          <FileInfo>{fileInfoItems.join(FILE_INFO_SEPARATOR)}</FileInfo>
         </FileInfoUnderBox>
       </FileInfoBox>
     </FileContentBox>

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
+import type { PdfFileListProps } from '@/features/create/types/types';
 
 const FileListBox = styled.div`
   background-color: #ffffff;
@@ -54,20 +55,8 @@ const Spacer12 = styled.div`
   height: 12px;
 `;
 
-interface FileData {
-  name: string;
-  size: string;
-  pages: string;
-  date: string;
-}
 
-interface PdfFileListProps {
-  fileList: FileData[];
-  selectedIndex: number | null;
-  onSelect: (index: number) => void;
-}
-
-const PdfFileList = ({ fileList, selectedIndex, onSelect }: PdfFileListProps) => {
+const PdfFileList = ({ fileList, selectedFileId, onSelect }: PdfFileListProps) => {
   return (
     <FileListBox>
       <FileListFirstBox>
@@ -79,12 +68,12 @@ const PdfFileList = ({ fileList, selectedIndex, onSelect }: PdfFileListProps) =>
         <FileListSearchInput placeholder="PDF 파일 검색" />
         <Spacer12 />
         <FileListDivWithScroll>
-          {fileList.map((file, index) => (
+          {fileList.map((file) => (
             <PdfFileItem
-              key={index}
+              key={file.id}
               file={file}
-              isSelected={selectedIndex === index}
-              onClick={() => onSelect(index)}
+              isSelected={selectedFileId === file.id}
+              onClick={() => onSelect(file.id)}
             />
           ))}
         </FileListDivWithScroll>
