@@ -1,4 +1,4 @@
-import { extendTheme, type Theme as ChakraTheme, type ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
 export const colors = {
   semantic: {
@@ -225,56 +225,6 @@ export const spacing = {
   spacing48: '192px',
   spacing49: '196px',
   spacing50: '200px',
-  spacing51: '204px',
-  spacing52: '208px',
-  spacing53: '212px',
-  spacing54: '216px',
-  spacing55: '220px',
-  spacing56: '224px',
-  spacing57: '228px',
-  spacing58: '232px',
-  spacing59: '236px',
-  spacing60: '240px',
-  spacing61: '244px',
-  spacing62: '248px',
-  spacing63: '252px',
-  spacing64: '256px',
-  spacing65: '260px',
-  spacing66: '264px',
-  spacing67: '268px',
-  spacing68: '272px',
-  spacing69: '276px',
-  spacing70: '280px',
-  spacing71: '284px',
-  spacing72: '288px',
-  spacing73: '292px',
-  spacing74: '296px',
-  spacing75: '300px',
-  spacing76: '304px',
-  spacing77: '308px',
-  spacing78: '312px',
-  spacing79: '316px',
-  spacing80: '320px',
-  spacing81: '324px',
-  spacing82: '328px',
-  spacing83: '332px',
-  spacing84: '336px',
-  spacing85: '340px',
-  spacing86: '344px',
-  spacing87: '348px',
-  spacing88: '352px',
-  spacing89: '356px',
-  spacing90: '360px',
-  spacing91: '364px',
-  spacing92: '368px',
-  spacing93: '372px',
-  spacing94: '376px',
-  spacing95: '380px',
-  spacing96: '384px',
-  spacing97: '388px',
-  spacing98: '392px',
-  spacing99: '396px',
-  spacing100: '400px',
 } as const;
 
 export const radius = {
@@ -307,14 +257,6 @@ export type AppTheme = {
   font: typeof font;
 };
 
-// export type AppTheme = ChakraTheme & {
-//   colors: typeof colors;
-//   textStyles: typeof typography;
-//   space: typeof spacing;
-//   radius: typeof radius;
-//   font: typeof font;
-// };
-
 export const theme = extendTheme({
   config,
   colors,
@@ -323,5 +265,3 @@ export const theme = extendTheme({
   radius,
   font,
 }) as AppTheme;
-
-// export type AppTheme = typeof theme;
