@@ -43,41 +43,35 @@ const FeatureDescription = styled.p`
   margin: 0.25rem 0 0 0;
 `;
 
+const features = [
+  {
+    icon: <FileText size={24} color="#10b981" />,
+    title: '스마트 PDF 분석',
+    description: 'AI가 자동으로 핵심 개념을 추출하고 문제를 생성합니다',
+  },
+  {
+    icon: <Target size={24} color="#10b981" />,
+    title: '맞춤형 문제 생성',
+    description: '난이도와 문제 유형을 선택해 최적화된 학습을 경험하세요',
+  },
+  {
+    icon: <BarChart3 size={24} color="#10b981" />,
+    title: '학습 분석 리포트',
+    description: '성취도와 약점을 분석해 효율적인 복습 계획을 제시합니다',
+  },
+];
+
 const FeatureList = () => (
   <FeatureGrid>
-    <FeatureItem>
-      <IconWrapper>
-        <FileText size={24} color="#10b981" />
-      </IconWrapper>
-      <TextWrapper>
-        <FeatureTitle>스마트 PDF 분석</FeatureTitle>
-        <FeatureDescription>
-          AI가 자동으로 핵심 개념을 추출하고 문제를 생성합니다
-        </FeatureDescription>
-      </TextWrapper>
-    </FeatureItem>
-    <FeatureItem>
-      <IconWrapper>
-        <Target size={24} color="#10b981" />
-      </IconWrapper>
-      <TextWrapper>
-        <FeatureTitle>맞춤형 문제 생성</FeatureTitle>
-        <FeatureDescription>
-          난이도와 문제 유형을 선택해 최적화된 학습을 경험하세요
-        </FeatureDescription>
-      </TextWrapper>
-    </FeatureItem>
-    <FeatureItem>
-      <IconWrapper>
-        <BarChart3 size={24} color="#10b981" />
-      </IconWrapper>
-      <TextWrapper>
-        <FeatureTitle>학습 분석 리포트</FeatureTitle>
-        <FeatureDescription>
-          성취도와 약점을 분석해 효율적인 복습 계획을 제시합니다
-        </FeatureDescription>
-      </TextWrapper>
-    </FeatureItem>
+    {features.map((feature, index) => (
+      <FeatureItem key={index}>
+        <IconWrapper>{feature.icon}</IconWrapper>
+        <TextWrapper>
+          <FeatureTitle>{feature.title}</FeatureTitle>
+          <FeatureDescription>{feature.description}</FeatureDescription>
+        </TextWrapper>
+      </FeatureItem>
+    ))}
   </FeatureGrid>
 );
 
