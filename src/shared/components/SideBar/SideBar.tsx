@@ -1,6 +1,7 @@
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
 import { MIN_HEIGHT } from '@/shared/constants';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom'
 
 import {
   FileText,
@@ -14,27 +15,30 @@ import {
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
-  width: ${(props) => (props.isOpen ? props.theme.space.spacing60 : '0px')};
+  width: ${({ isOpen }) => isOpen ? '240px' : '0px'};
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
-  border-right: 1px solid ${(props) => props.theme.colors.sidebarBorder};
-  border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+
+  border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+
   display: flex;
   flex-direction: column;
 
-  transition: width 0.3s ease-in-out;
   overflow: hidden;
+  transition: width 0.3s ease-in-out;
 `;
 
 // 사이드바 헤더
 const SideBarHeader = styled.header`
   width: 100%;
   height: 76px;
-  padding: 15px;
+  padding: ${({ theme }) => theme.spacing.spacing4};
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 `;
 
 const SideBarHeaderItemWrapper = styled.div`
@@ -52,24 +56,27 @@ const ItemTitleWrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin-left: 3px;
+  margin-left: ${({ theme }) => theme.spacing.spacing1};
 `;
 
 const SideBarMainTitle = styled.h1`
-  font-size: 15px;
-  font-weight: bold;
+  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize}; // 15px
+  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
 `;
 
 const SideBarDescription = styled.p`
-  font-size: 10px;
-  color: gray;
+  font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
 // 사이드바 메인
 const SideBarMain = styled.div`
   width: 100%;
   flex: 1;
-  padding: ${(props) => props.theme.space.spacing5};
+  padding: ${({ theme }) => theme.spacing.spacing5};
 `;
 
 const SideBarNav = styled.nav`
@@ -77,38 +84,37 @@ const SideBarNav = styled.nav`
   flex-direction: column;
 `;
 
-// props의 타입을 정의하는 인터페이스
-interface NavItemProps {
-  active: boolean;
-}
-
-const SideBarNavItem = styled.div<NavItemProps>`
+const SideBarNavItem = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
-  border-radius: ${(props) => props.theme.radius.radius2};
+  border-radius: ${({ theme }) => theme.radius.radius2};
 
-  margin-bottom: ${(props) => props.theme.space.spacing2};
-  padding: ${(props) => props.theme.space.spacing1};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+  padding: ${({ theme }) => theme.spacing.spacing1};
 
-  background-color: ${(props) => props.active && props.theme.colors.sidebarAccent};
+  background-color: ${({ active, theme }) =>
+    active ? theme.colors.gray.gray3 : 'transparent'};
 
   &:hover {
-    background-color: ${(props) => props.theme.colors.sidebarHover};
+    background-color: ${({ theme }) => theme.colors.gray.gray1};
   }
 `;
 
 const SideBarNavTxt = styled.p`
-  font-size: ${(props) => props.theme.textStyles.label1Bold.fontSize};
-  margin-left: ${(props) => props.theme.space.spacing2};
+  font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
+  
+  margin-left: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 // 사이드바 유저 정보
 const SideBarUserInfo = styled.div`
   width: 100%;
   height: 76px;
-  padding: 15px;
-  border-top: 1px solid ${(props) => props.theme.colors.sidebarBorder};
-  border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  border-top: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
 `;
 
@@ -125,9 +131,12 @@ const SideBarUserInfoAvatarTextWrapper = styled.div`
 `;
 
 const SideBarUserInfoAvatar = styled.div`
-  background-color: ${(props) => props.theme.colors.sidebarAccent};
-  font-size: ${(props) => props.theme.textStyles.label2Regular.fontSize};
-  border-radius: ${(props) => props.theme.radius.radiusFull};
+  background-color: ${({ theme }) => theme.colors.gray.gray4};
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+
+  border-radius: ${({ theme }) => theme.radius.radiusFull};
   width: 32px;
   height: 32px;
   display: flex;
@@ -138,17 +147,20 @@ const SideBarUserInfoAvatar = styled.div`
 const SideBarUserInfoTextWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 8px;
+  margin-left: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const SideBarUserInfoName = styled.p`
-  font-size: 13px;
-  font-weight: bold;
+  font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
 `;
 
 const SideBarUserInfoEmail = styled.p`
-  font-size: 9px;
-  color: gray;
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
 const menus = ['대시보드', '학습소스 관리', '문제집 생성', '나의 문제집', '오답노트'];
@@ -161,6 +173,8 @@ interface SideBarProps {
 }
 
 function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarProps) {
+  const navigate = useNavigate()
+
   return (
     <SideBarWrapper isOpen={isOpen}>
       {/* 사이드바 헤더 부분 */}
@@ -170,7 +184,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
             <BrainIconWithBadge size="43px" borderRadius="0.4rem" />
             <ItemTitleWrapper>
               <SideBarMainTitle>PULL IT</SideBarMainTitle>
-              <SideBarDescription>AI Learning Platform</SideBarDescription>
+              <SideBarDescription>AI 학습 도구</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
           {/* 성현: 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
@@ -229,7 +243,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
               <SideBarUserInfoEmail>user@kakao.com</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
-          <Settings size={16} />
+          <Settings size={16} onClick={() => navigate('/')}/>
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
     </SideBarWrapper>

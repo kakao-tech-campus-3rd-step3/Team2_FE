@@ -4,7 +4,7 @@ import FeatureList from '@/features/login/components/FeatureList';
 
 const LeftSide = styled.div`
   width: 50%;
-  background-color: ${(props) => props.theme.colors.leftsideBackground};
+  background-color: ${({ theme }) => theme.colors.green.green2};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,21 +21,27 @@ const LogoWrapper = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: ${(props) => props.theme.textStyles.title1Bold.fontSize};
-  padding: 20px 0px;
+  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
+  
+  padding: ${({ theme }) => theme.spacing.spacing5} ${({ theme }) => theme.spacing.spacing0};
+  /* padding: 20px 0px; */
 `;
 
 const Subtitle = styled.span`
-  font-size: 13px;
-  padding: 0px 0px 20px 0px;
-  color: ${(props) => props.theme.colors.primary};
+  font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
+  padding: 0px 0px ${({ theme }) => theme.spacing.spacing5} 0px;
+  color: ${({ theme }) => theme.colors.semantic.primary};
 `;
 
 const Description = styled.p`
   line-height: 1.875rem;
   font-size: 1.125rem;
-  margin-bottom: 20px;
-  color: ${(props) => props.theme.colors.cardDescription};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing5};
+  color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
 const LeftPanel = () => (

@@ -6,7 +6,8 @@ export const PageLayout = styled.div`
   display: flex;
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
-  border-bottom: 1px solid ${(props) => props.theme.colors.sidebarBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  flex:1;
 `;
 export const PageContent = styled.div`
   width: 100%;

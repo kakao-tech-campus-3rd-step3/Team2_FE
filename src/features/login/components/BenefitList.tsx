@@ -3,14 +3,15 @@ import { CheckCircle } from 'lucide-react';
 
 const BenefitSection = styled.div`
   padding-top: 1.5rem;
-  border-top: 1px solid ${(props) => props.theme.colors.borderTop};
+  border-top: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 `;
 
 const BenefitTitle = styled.h4`
-  font-weight: ${(props) => props.theme.textStyles.title2Bold.fontWeight};
-  color: ${(props) => props.theme.colors.cardTitle};
-  font-size: ${(props) => props.theme.textStyles.title2Bold.fontSize};
-  font-height: ${(props) => props.theme.textStyles.title2Bold.fontHeight};
+  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
+  
+  color: ${({ theme }) => theme.colors.gray.gray10};
   text-align: center;
   margin-bottom: 1rem;
 `;
@@ -19,15 +20,19 @@ const BenefitItem = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: ${(props) => props.theme.textStyles.label1Regular.fontSize};
+
+  font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
+  
   margin-bottom: 5px;
-  color: ${(props) => props.theme.colors.CardDescription};
+  color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
 const Icon = styled(CheckCircle)`
   width: 1rem;
   height: 1rem;
-  color: ${(props) => props.theme.colors.checkCircle};
+  color: ${({ theme }) => theme.colors.green.green4};
 `;
 
 const BenefitList = () => (

@@ -31,14 +31,15 @@ const IconWrapper = styled.div`
 const TextWrapper = styled.div``;
 
 const FeatureTitle = styled.h3`
-  font-weight: 600;
-  color: ${(props) => props.theme.colors.cardTitle};
-  margin: 0;
+  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
+  color: ${({ theme }) => theme.colors.gray.gray10};
+  margin: ${({ theme }) => theme.spacing.spacing0};
 `;
 
 const FeatureDescription = styled.p`
   font-size: 0.875rem;
-  color: ${(props) => props.theme.colors.cardDescription};
+  color: ${({ theme }) => theme.colors.gray.gray7};
   margin: 0.25rem 0 0 0;
 `;
 
