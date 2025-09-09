@@ -3,9 +3,9 @@ import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
 
 const FileListBox = styled.div`
-  background-color: #${({theme})=>theme.colors.background.foreground};
-  border-radius: ${({theme})=>theme.radius.radius2};
-  border: 1px solid ${({theme})=>theme.colors.border.border1};
+  background-color: #${({ theme }) => theme.colors.background.foreground};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
   width: 100%;
   padding: 10px 15px;
 `;
@@ -18,18 +18,18 @@ const FileListFirstBox = styled.div`
 `;
 
 const FileListBoxTitle = styled.span`
-  font-size: ${({theme})=>theme.typography.label2Regular.fontSize};
-  color: ${({theme})=>theme.colors.gray.gray6};
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
 const FileUploadButton = styled.button`
-  background-color: ${({theme})=>theme.colors.semantic.primary};
-  border-radius: ${({theme})=>theme.radius.radius1};
-  font-size: ${({theme})=>theme.typography.label2Bold.fontSize};
-  color: ${({theme})=>theme.colors.gray.gray0};
+  background-color: ${({ theme }) => theme.colors.semantic.primary};
+  border-radius: ${({ theme }) => theme.radius.radius1};
+  font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray0};
   width: 55px;
   padding: 5px;
-  font-weight: ${({theme})=>theme.typography.label2Bold.fontWeight};
+  font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
 `;
 
 const FileListSecondBox = styled.div`
@@ -37,24 +37,23 @@ const FileListSecondBox = styled.div`
 `;
 
 const FileListSearchInput = styled.input`
-  border: 1px solid ${({theme})=>theme.colors.gray.gray5};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray5};
   padding: 5px;
   width: 100%;
-  font-size: ${({theme})=>theme.typography.label2Bold.fontSize};
-  border-radius: ${({theme})=>theme.radius.radius2};
+  font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
+  border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
 const FileListDivWithScroll = styled.div`
   overflow: auto;
   width: 100%;
   height: 200px;
-  border-radius: ${({theme})=>theme.radius.radius2};
+  border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
 const Spacer12 = styled.div`
   height: 12px;
 `;
-
 
 const PdfFileList = ({ fileList, selectedFileId, onSelect }: PdfFileListProps) => {
   return (
