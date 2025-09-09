@@ -8,11 +8,12 @@ import Source from './HomeSection/Source';
 import Create from './HomeSection/Create';
 import Quiz from './HomeSection/Quiz';
 import Wrong from './HomeSection/Wrong';
+import SolvePage from './HomeSection/SolvePage';
 
 import { useState } from 'react';
 
 function Home() {
-  const [selectedMenu, setSelectedMenu] = useState('문제집 생성');
+  const [selectedMenu, setSelectedMenu] = useState('문제풀이');
   const [isOpen, setIsOpen] = useState(true);
   const renderContent = () => {
     switch (selectedMenu) {
@@ -26,6 +27,8 @@ function Home() {
         return <Quiz />;
       case '오답노트':
         return <Wrong />;
+      case '문제풀이':
+        return <SolvePage />;
       default:
         return <Dashboard />;
     }
