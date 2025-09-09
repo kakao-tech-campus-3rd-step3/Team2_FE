@@ -14,7 +14,7 @@ const RightSide = styled.div`
 
 const Card = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
-  border-radius: 1rem;
+  border-radius: ${({ theme }) => theme.radius.radius5};
   padding: 2rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 `;
@@ -28,7 +28,7 @@ const CardHeader = styled.div`
 `;
 
 const CardTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray10};
   margin: ${({ theme }) => theme.spacing.spacing0};
 `;
@@ -56,7 +56,7 @@ const Button = styled.button`
   font-weight: ${({ theme }) => theme.typography.subtitle2Bold.fontWeight};
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
+  border-radius: ${({ theme }) => theme.radius.radius1};
   cursor: pointer;
   transition: opacity 0.2s ease;
 
@@ -75,22 +75,17 @@ const KakaoButtonContent = styled.div`
 
 const TermsText = styled.div`
   text-align: center;
-  font-size: 0.875rem;
-
+  font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray10};
-
-  line-height: 1.6;
+  line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
   margin-top: ${({ theme }) => theme.spacing.spacing5};
 `;
 
 const LinkButton = styled.button`
   color: ${({ theme }) => theme.colors.semantic.primary};
-
-  font-weight: 500;
   background: none;
   border: none;
   cursor: pointer;
-
   &:hover {
     opacity: 0.8;
   }

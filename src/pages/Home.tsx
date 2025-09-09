@@ -3,11 +3,11 @@ import AppLayout from './layout/AppLayout';
 import { PageLayout, PageContent } from './layout/AppLayoutVertical';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 
-import Dashboard from './HomeSection/Dashboard';
-import Source from './HomeSection/Source';
-import Create from './HomeSection/Create';
-import Quiz from './HomeSection/Quiz';
-import Wrong from './HomeSection/Wrong';
+import Dashboard from '@/pages/HomeSection/Dashboard';
+import Source from '@/pages/HomeSection/Source';
+import Create from '@/pages/HomeSection/Create';
+import Quiz from '@/pages/HomeSection/Quiz';
+import Wrong from '@/pages/HomeSection/Wrong';
 
 import { useState } from 'react';
 

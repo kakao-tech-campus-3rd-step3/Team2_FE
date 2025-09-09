@@ -1,5 +1,7 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
+// 사용법: ${({ theme }) => theme.colors.gray.gray2};
+
 export const colors = {
   semantic: {
     primary: '#16a34a', // 메인 버튼, 주요 아이콘 등
@@ -146,6 +148,26 @@ export const typography = {
   },
   body2Regular: {
     fontSize: '0.875rem',
+    fontWeight: '400',
+    lineHeight: '1.1875rem',
+  },
+  body3Bold: {
+    fontSize: '0.85rem',
+    fontWeight: '700',
+    lineHeight: '1.1875rem',
+  },
+  body3Regular: {
+    fontSize: '0.85rem',
+    fontWeight: '400',
+    lineHeight: '1.1875rem',
+  },
+  body4Bold: {
+    fontSize: '0.7rem',
+    fontWeight: '700',
+    lineHeight: '1.1875rem',
+  },
+  body4Regular: {
+    fontSize: '0.7rem',
     fontWeight: '400',
     lineHeight: '1.1875rem',
   },
