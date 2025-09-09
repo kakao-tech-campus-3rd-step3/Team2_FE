@@ -181,7 +181,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
       <SideBarHeader>
         <SideBarHeaderItemWrapper>
           <IconTitleWrapper>
-            <BrainIconWithBadge size="43px" borderRadius="0.4rem" />
+            <BrainIconWithBadge size="47px" borderRadius="0.4rem" />
             <ItemTitleWrapper>
               <SideBarMainTitle>PULL IT</SideBarMainTitle>
               <SideBarDescription>AI 학습 도구</SideBarDescription>
