@@ -151,6 +151,26 @@ export const typography = {
     fontWeight: '400',
     lineHeight: '1.1875rem',
   },
+  body3Bold: {
+    fontSize: '0.85rem',
+    fontWeight: '700',
+    lineHeight: '1.1875rem',
+  },
+  body3Regular: {
+    fontSize: '0.85rem',
+    fontWeight: '400',
+    lineHeight: '1.1875rem',
+  },
+  body4Bold: {
+    fontSize: '0.7rem',
+    fontWeight: '700',
+    lineHeight: '1.1875rem',
+  },
+  body4Regular: {
+    fontSize: '0.7rem',
+    fontWeight: '400',
+    lineHeight: '1.1875rem',
+  },
 
   // 라벨 (Label)
   label1Bold: {

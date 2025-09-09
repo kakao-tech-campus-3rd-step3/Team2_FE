@@ -4,15 +4,15 @@ import { LucideFileText } from 'lucide-react';
 
 const FileContentBox = styled.div<{ isSelected: boolean }>`
   width: 100%;
-  border-radius: ${({theme})=>theme.radius.radius1};
-  border: 1px solid ${({theme})=>theme.colors.border.border1};
+  border-radius: ${({ theme }) => theme.radius.radius1};
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
   height: 50px;
   margin: 5px 0;
   display: flex;
   align-items: center;
   padding: 10px;
   background-color: ${({ isSelected, theme }) =>
-  isSelected ? theme.colors.green.green2 : theme.colors.gray.gray0};
+    isSelected ? theme.colors.green.green2 : theme.colors.gray.gray0};
   cursor: pointer;
   transition: background-color 0.2s ease;
 `;
@@ -38,12 +38,13 @@ const FileInfoUnderBox = styled.div`
 `;
 
 const FileName = styled.h4`
-  font-size: 0.85rem;
+  font-size: ${({ theme }) => theme.typography.body3Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body3Bold.fontWeight};
 `;
 
 const FileInfo = styled.span`
-  font-size: 0.7rem;
-  color: grey;
+  font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
 interface FileItemProps {

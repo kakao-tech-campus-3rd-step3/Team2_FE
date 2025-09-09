@@ -33,13 +33,13 @@ const Subtitle = styled.span`
   font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
-  padding: 0px 0px ${({ theme }) => theme.spacing.spacing5} 0px;
+  padding: 0px 0px 20px 0px;
   color: ${({ theme }) => theme.colors.semantic.primary};
 `;
 
 const Description = styled.p`
-  line-height: 1.875rem;
-  font-size: 1.125rem;
+  line-height: ${({ theme }) => theme.typography.title1Regular.lineHeight};
+  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
   margin-bottom: ${({ theme }) => theme.spacing.spacing5};
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;
