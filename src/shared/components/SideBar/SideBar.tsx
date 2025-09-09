@@ -184,7 +184,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
             <BrainIconWithBadge size="47px" borderRadius="0.4rem" />
             <ItemTitleWrapper>
               <SideBarMainTitle>PULL IT</SideBarMainTitle>
-              <SideBarDescription>AI 학습 도구</SideBarDescription>
+              <SideBarDescription>AI Learning Platform</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
           {/* 성현: 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
