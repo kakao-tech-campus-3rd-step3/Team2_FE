@@ -3,23 +3,26 @@ import styled from '@emotion/styled';
 import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 
-const SolvePageWrapper = styled.div`
-  width: 100%;
-  height: 100%;
+import PageLayout from '@/shared/components/Layout/PageLayout';
+
+const SolveWrapper = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.spacing5};
+
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 960px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 
-const SolvePageInner = styled.div`
-  width: 900px;
-  margin-top: ${({ theme }) => theme.spacing.spacing5};
-`;
-
+// 문제풀이 헤더 부분
 const SolveHeader = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,6 +79,8 @@ const QuestionIndexViewTxt = styled.span`
   margin-left: ${({ theme }) => theme.spacing.spacing2};
 `;
 
+
+// 프로그래스바 부분
 const ProgressDescriptionWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -94,11 +99,13 @@ const ProgressDescriptionPercentTxt = styled.span`
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
 `;
 
+// 문제 네비게이터 부분
 const QuestionNavigator = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius2};
+  margin-top: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const QuestionNavigatorTitle = styled.span`
@@ -112,7 +119,7 @@ const QuestionNumberList = styled.div`
   display: flex;
 `;
 
-const QuestionNumberItem = styled.div<{ active?: boolean }>`
+const QuestionNumberItem = styled.div<{ active?: boolean; solved?: boolean }>`
   width: 28px;
   height: 28px;
   border-radius: ${({ theme }) => theme.radius.radiusFull};
@@ -125,11 +132,18 @@ const QuestionNumberItem = styled.div<{ active?: boolean }>`
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
 
-  background-color: ${({ active, theme }) =>
-    active ? theme.colors.green.green6 : theme.colors.gray.gray3};
-  color: ${({ active, theme }) => (active ? theme.colors.gray.gray0 : theme.colors.gray.gray7)};
+  background-color: ${({ active, solved, theme }) =>
+    active ? theme.colors.green.green6
+    : solved ? theme.colors.green.green7
+    : theme.colors.gray.gray3};
+  
+  color: ${({ active, solved, theme }) =>
+    active ? theme.colors.gray.gray0
+    : solved ? theme.colors.gray.gray0
+    : theme.colors.gray.gray7};
 `;
 
+// 문제 푸는 부분 본문 전체
 const SolveContentWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing3};
   display: flex;
@@ -165,7 +179,9 @@ const QuestionStem = styled.p`
 
 const OptionList = styled.p``;
 
-const OptionItem = styled.p``;
+const OptionItem = styled.p`
+  cursor: pointer;
+`;
 
 const QuestionNavigation = styled.div`
   display: flex;
@@ -203,8 +219,86 @@ const NextButton = styled.button`
 `;
 const RightSidebar = styled.div`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.gray.gray0};
+  display: flex;
+  flex-direction: column;
 `;
+
+const ModeCard = styled.div`
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
+
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  flex: 1;
+`;
+
+const CardTitle = styled.h6`
+  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing6};
+`;
+
+const ModeSelector = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.spacing12};
+  display: flex;
+  color: ${({ theme }) => theme.colors.gray.gray7};
+  background-color: ${({ theme }) => theme.colors.gray.gray3};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  padding: ${({ theme }) => theme.spacing.spacing1};
+`;
+
+const ModeButton = styled.button<{ active?: boolean }>`
+  background-color: ${({ active, theme }) => active && theme.colors.gray.gray0};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  flex: 1;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: ${({ theme }) => theme.colors.gray.gray10};
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  padding: ${({ theme }) => theme.spacing.spacing1};
+`;
+
+const ProgressCard = styled.div`
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
+
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+
+  flex: 1;
+`;
+
+const ProgressStats = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const ProgressStatItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+`
+
+const ProgressStatLabel = styled.span`
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+`
+
+const ProgressStatValue = styled.span`
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+`
 
 interface Question {
   id: number;
@@ -213,6 +307,7 @@ interface Question {
   answer: number; // 정답 인덱스 (1-based)
 }
 
+// 문제집 Mock 데이터
 const questions: Question[] = [
   {
     id: 1,
@@ -276,8 +371,20 @@ const questions: Question[] = [
   },
 ];
 
-function SolvePage() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
+// Solve
+function Solve() {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1); // 현재 풀고있는 문제 인덱스
+  const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택
+  const [solvedCheck, setSolvedCheck] = useState<Set<number>>(new Set()); // 선택된 문항 set으로 관리
+
+  // set에 풀린 문제 기록 함수
+  const markSolved = (qNo: number) => {
+  setSolvedCheck(prev => {
+    const next = new Set(prev);
+    next.add(qNo);              // qNo 문제를 '완료'로 기록
+    return next;
+  });
+};
 
   const goPrev = () => {
     if (currentQuestionIndex > 1) {
@@ -291,8 +398,10 @@ function SolvePage() {
     }
   };
   return (
-    <SolvePageWrapper>
-      <SolvePageInner>
+    <PageLayout>
+      <SolveWrapper>
+
+        {/* 문제풀이 페이지 헤더 */}
         <SolveHeader>
           <BackBtnTitleWrapper>
             <SolveHeaderBackBtn>
@@ -309,16 +418,20 @@ function SolvePage() {
             <QuestionIndexViewTxt>{currentQuestionIndex}/10</QuestionIndexViewTxt>
           </QuestionIndexViewWrapper>
         </SolveHeader>
+
+        {/* 프로그레스바 부분 */}
         <ProgressDescriptionWrapper>
           <ProgressDescriptionTitle>진행상황</ProgressDescriptionTitle>
           <ProgressDescriptionPercentTxt>
-            {(currentQuestionIndex / 10) * 100}%
+            {(solvedCheck.size / 10) * 100}%
           </ProgressDescriptionPercentTxt>
         </ProgressDescriptionWrapper>
         <CommonProgress
-          progress={(currentQuestionIndex / 10) * 100}
+          progress={(solvedCheck.size / 10) * 100}
           stepLabels={[]}
         ></CommonProgress>
+
+        {/* 문제 네비게이터 부분 */}
         <QuestionNavigator>
           <QuestionNavigatorTitle>문제 바로가기</QuestionNavigatorTitle>
           <QuestionNumberList>
@@ -328,6 +441,7 @@ function SolvePage() {
               <QuestionNumberItem
                 key={i + 1}
                 active={i + 1 === currentQuestionIndex}
+                solved={solvedCheck.has(i + 1)}
                 onClick={() => setCurrentQuestionIndex(i + 1)}
               >
                 {i + 1}
@@ -335,7 +449,10 @@ function SolvePage() {
             ))}
           </QuestionNumberList>
         </QuestionNavigator>
+
+        {/* 문제 푸는 본문 전체 */}
         <SolveContentWrapper>
+          {/* 왼쪽에 있는 문제지 */}
           <QuestionArea>
             <QuestionAreaHeader>
               <QuestionAreaTitle>문제 {currentQuestionIndex}</QuestionAreaTitle>
@@ -344,7 +461,7 @@ function SolvePage() {
               <QuestionStem>{questions[currentQuestionIndex - 1].stem}</QuestionStem>
               <OptionList>
                 {questions[currentQuestionIndex - 1].options.map((opt, i) => (
-                  <OptionItem key={i}>{`${i + 1}. ${opt}`}</OptionItem>
+                  <OptionItem key={i} onClick={() => markSolved(currentQuestionIndex)}>{`${i + 1}. ${opt}`}</OptionItem>
                 ))}
               </OptionList>
 
@@ -360,11 +477,59 @@ function SolvePage() {
               </QuestionNavigation>
             </QuestionWrapper>
           </QuestionArea>
-          <RightSidebar></RightSidebar>
+
+          {/* 오른쪽에 있는 놈들 묶어두는 거 */}
+          <RightSidebar>
+            {/* 학습모드 선택하는 부분 */}
+            <ModeCard>
+              <CardTitle>학습 모드</CardTitle>
+              <ModeSelector>
+                <ModeButton
+                  active={selectedMode === '시험'}
+                  onClick={() => setSelectedMode('시험')}
+                >
+                  <GraduationCap size={16} />
+                  시험
+                </ModeButton>
+                <ModeButton
+                  active={selectedMode === '학습'}
+                  onClick={() => setSelectedMode('학습')}
+                >
+                  <BookOpen size={16} />
+                  학습
+                </ModeButton>
+                <ModeButton
+                  active={selectedMode === '카드'}
+                  onClick={() => setSelectedMode('카드')}
+                >
+                  <CreditCard size={16} />
+                  카드
+                </ModeButton>
+              </ModeSelector>
+            </ModeCard>
+            {/* 문제풀고있는 현황 부분 */}
+            <ProgressCard>
+              <CardTitle>진행 현황</CardTitle>
+              <ProgressStats>
+                <ProgressStatItem>
+                  <ProgressStatLabel>전체 문제</ProgressStatLabel>
+                  <ProgressStatValue>{questions.length}</ProgressStatValue>
+                </ProgressStatItem>
+                  <ProgressStatItem>
+                  <ProgressStatLabel>답변 완료</ProgressStatLabel>
+                  <ProgressStatValue>{solvedCheck.size}</ProgressStatValue>
+                </ProgressStatItem>
+                  <ProgressStatItem>
+                  <ProgressStatLabel>남은 문제</ProgressStatLabel>
+                  <ProgressStatValue>{questions.length - solvedCheck.size}</ProgressStatValue>
+                </ProgressStatItem>
+              </ProgressStats>
+            </ProgressCard>
+          </RightSidebar>
         </SolveContentWrapper>
-      </SolvePageInner>
-    </SolvePageWrapper>
+      </SolveWrapper>
+    </PageLayout>
   );
 }
 
-export default SolvePage;
+export default Solve;

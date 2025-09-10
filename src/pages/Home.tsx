@@ -8,7 +8,7 @@ import Source from './HomeSection/Source';
 import Create from './HomeSection/Create';
 import Quiz from './HomeSection/Quiz';
 import Wrong from './HomeSection/Wrong';
-import SolvePage from './HomeSection/SolvePage';
+import SolvePage from './HomeSection/Solve';
 
 import { useState } from 'react';
 

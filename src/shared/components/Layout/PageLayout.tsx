@@ -13,18 +13,18 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const ContentBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 700px;
-  height: 500px;
-  background-color: ${({ theme }) => theme.colors.gray.gray2};
-`;
+// const ContentBox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 700px;
+//   height: 500px;
+//   background-color: ${({ theme }) => theme.colors.gray.gray2};
+// `;
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <Container>
-      <ContentBox>{children}</ContentBox>
+      {children}
     </Container>
   );
 };
