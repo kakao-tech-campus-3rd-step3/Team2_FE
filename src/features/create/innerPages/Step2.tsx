@@ -18,8 +18,24 @@ const SettingInfoBox = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
   padding: 10px 15px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
 `;
-
+const InfoTitle = styled.h3`
+  width: 100%;
+  font-size: ${({ theme }) => theme.typography.body3Bold.fontSize};
+`;
+const InfoContent = styled.h4`
+  width: 100%;
+  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
+  padding: 25px 0px;
+`;
+const InfoSpan = styled.span`
+  width: 100%;
+  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray6};
+`;
 const Spacer12 = styled.div`
   height: 12px;
 `;
@@ -38,9 +54,21 @@ const Step2: React.FC<Step2Props> = ({ onValidChange }) => {
       <SubTitle>AI가 생성할 맞춤형 문제집을 확인해보세요</SubTitle>
       <Spacer12 />
       <InfoContainer>
-        <SettingInfoBox>a</SettingInfoBox>
-        <SettingInfoBox>b</SettingInfoBox>
-        <SettingInfoBox>c</SettingInfoBox>
+        <SettingInfoBox>
+          <InfoTitle>선택된 PDF</InfoTitle>
+          <InfoContent>1개</InfoContent>
+          <InfoSpan>개발자 면접 가이드.pdf</InfoSpan>
+        </SettingInfoBox>
+        <SettingInfoBox>
+          <InfoTitle>문제 개수</InfoTitle>
+          <InfoContent>20문제</InfoContent>
+          <InfoSpan>PDF 내용으로만</InfoSpan>
+        </SettingInfoBox>
+        <SettingInfoBox>
+          <InfoTitle>문제 유형</InfoTitle>
+          <InfoContent>객관식</InfoContent>
+          <InfoSpan>4지 선다형</InfoSpan>
+        </SettingInfoBox>
       </InfoContainer>
     </>
   );
