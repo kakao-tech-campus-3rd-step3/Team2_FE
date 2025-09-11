@@ -10,6 +10,8 @@ import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 
 import PageLayout from '@/shared/components/Layout/PageLayout';
 
+import SolveHeader from '@/features/solve/SolveHeader';
+
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
 
@@ -21,63 +23,63 @@ const SolveWrapper = styled.div`
 `;
 
 // 문제풀이 헤더 부분
-const SolveHeader = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.spacing5};
-`;
+// const SolveHeader = styled.div`
+//   width: 100%;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: ${({ theme }) => theme.spacing.spacing5};
+// `;
 
-const BackBtnTitleWrapper = styled.div`
-  display: flex;
-`;
+// const BackBtnTitleWrapper = styled.div`
+//   display: flex;
+// `;
 
-const SolveHeaderBackBtn = styled.button`
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  padding: ${({ theme }) => theme.spacing.spacing1};
-  color: ${({ theme }) => theme.colors.gray.gray10};
+// const SolveHeaderBackBtn = styled.button`
+//   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+//   border-radius: ${({ theme }) => theme.radius.radius2};
+//   padding: ${({ theme }) => theme.spacing.spacing1};
+//   color: ${({ theme }) => theme.colors.gray.gray10};
 
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+//   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+//   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+//   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
 
-  color: ${({ theme }) => theme.colors.gray.gray10};
-  display: flex;
-  align-items: center;
-`;
+//   color: ${({ theme }) => theme.colors.gray.gray10};
+//   display: flex;
+//   align-items: center;
+// `;
 
-const SolveHeaderBackBtnTxt = styled.span`
-  margin-left: ${({ theme }) => theme.spacing.spacing2};
-`;
+// const SolveHeaderBackBtnTxt = styled.span`
+//   margin-left: ${({ theme }) => theme.spacing.spacing2};
+// `;
 
-const TitleDescriptionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: ${({ theme }) => theme.spacing.spacing4};
-`;
+// const TitleDescriptionWrapper = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   margin-left: ${({ theme }) => theme.spacing.spacing4};
+// `;
 
-const SolveTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
-`;
+// const SolveTitle = styled.h2`
+//   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
+//   font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
+//   line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
+// `;
 
-const SolveDescription = styled.p`
-  font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
-`;
+// const SolveDescription = styled.p`
+//   font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
+//   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
+//   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
+// `;
 
-const QuestionIndexViewWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.colors.gray.gray7};
-`;
-const QuestionIndexViewTxt = styled.span`
-  margin-left: ${({ theme }) => theme.spacing.spacing2};
-`;
+// const QuestionIndexViewWrapper = styled.div`
+//   display: flex;
+//   align-items: center;
+//   color: ${({ theme }) => theme.colors.gray.gray7};
+// `;
+// const QuestionIndexViewTxt = styled.span`
+//   margin-left: ${({ theme }) => theme.spacing.spacing2};
+// `;
 
 
 // 프로그래스바 부분
@@ -401,9 +403,9 @@ function Solve() {
     <PageLayout>
       <SolveWrapper>
 
-        {/* 문제풀이 페이지 헤더 */}
-        <SolveHeader>
-          <BackBtnTitleWrapper>
+        {/* 문제풀이 페이지 헤더 여기에는 currentQuestionIndex가 쓰이니까 props로 넘겨주자*/}
+        <SolveHeader currentQuestionIndex={currentQuestionIndex}>
+          {/* <BackBtnTitleWrapper>
             <SolveHeaderBackBtn>
               <ArrowLeft size={20} />
               <SolveHeaderBackBtnTxt>돌아가기</SolveHeaderBackBtnTxt>
@@ -416,7 +418,7 @@ function Solve() {
           <QuestionIndexViewWrapper>
             <GraduationCap size={16} />
             <QuestionIndexViewTxt>{currentQuestionIndex}/10</QuestionIndexViewTxt>
-          </QuestionIndexViewWrapper>
+          </QuestionIndexViewWrapper> */}
         </SolveHeader>
 
         {/* 프로그레스바 부분 */}
