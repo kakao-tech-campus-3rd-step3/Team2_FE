@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
 
+interface NavigationButtonsProps {
+  onNext: () => void;
+  onPrev: () => void;
+  isFirst: boolean;
+  isLast: boolean;
+}
+
 const Hr = styled.hr`
   width: 100%;
   height: 1px;
@@ -13,15 +20,16 @@ const ButtonBox = styled.div`
   justify-content: space-between;
 `;
 
-const PrevButton = styled.button`
+const PrevButton = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
   border: 1px solid ${({ theme }) => theme.colors.border.border0};
   border-radius: ${({ theme }) => theme.radius.radius1};
   font-size: ${({ theme }) => theme.typography.body2Bold.fontSize};
-  color: ${({ theme }) => theme.colors.gray.gray6};
+  color: ${({ theme, disabled }) => (disabled ? theme.colors.gray.gray5 : theme.colors.gray.gray6)};
   width: 55px;
   padding: 5px;
   font-weight: ${({ theme }) => theme.typography.body2Bold.fontWeight};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const NextButton = styled.button`
@@ -32,15 +40,18 @@ const NextButton = styled.button`
   width: 55px;
   padding: 5px;
   font-weight: ${({ theme }) => theme.typography.body2Bold.fontWeight};
+  cursor: pointer;
 `;
 
-const NavigationButtons = () => {
+const NavigationButtons = ({ onNext, onPrev, isFirst, isLast }: NavigationButtonsProps) => {
   return (
     <>
       <Hr />
       <ButtonBox>
-        <PrevButton>이전</PrevButton>
-        <NextButton>다음</NextButton>
+        <PrevButton onClick={onPrev} disabled={isFirst}>
+          이전
+        </PrevButton>
+        <NextButton onClick={onNext}>{isLast ? '완료' : '다음'}</NextButton>
       </ButtonBox>
     </>
   );
