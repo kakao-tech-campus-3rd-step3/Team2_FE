@@ -1,22 +1,9 @@
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-
 import PdfFileList from '@/features/create/components/PdfFileList';
 import type { FileData } from '@/features/create/types/types';
-
-const Title = styled.h2`
-  width: 100%;
-  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
-  text-align: center;
-  padding: 10px;
-`;
-
-const SubTitle = styled.span`
-  width: 100%;
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  text-align: center;
-  color: ${({ theme }) => theme.colors.gray.gray6};
-`;
+import Title from '@/features/create/components/Title';
+import SubTitle from '@/features/create/components/Subtitle';
 
 const Spacer12 = styled.div`
   height: 12px;
