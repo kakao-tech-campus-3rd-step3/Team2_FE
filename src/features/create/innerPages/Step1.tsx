@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 import PdfFileList from '@/features/create/components/PdfFileList';
@@ -22,16 +22,39 @@ const Spacer12 = styled.div`
   height: 12px;
 `;
 
-const Step1 = () => {
-  const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+interface Step1Props {
+  onValidChange: (valid: boolean) => void;
+}
 
-  const mockFileList: FileData[] = Array.from({ length: 8 }, (_, idx) => ({
-    id: `file-${idx}`, // 지금은 파일명이 같긴 하지만, 선택 시에 구분이 되어야 하므로 mock에서는 인덱스를 참조함
-    name: '컴퓨터 네트워크.pdf',
-    size: '2.4 MB',
-    pages: '156p',
-    date: '2024. 2. 13.',
-  }));
+const Step1 = ({ onValidChange }: Step1Props) => {
+  const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+  const [fileList, setFileList] = useState<FileData[]>(() =>
+    Array.from({ length: 8 }, (_, idx) => ({
+      id: `file-${idx}`,
+      name: '컴퓨터 네트워크.pdf',
+      size: '2.4 MB',
+      pages: '156p',
+      date: '2024. 2. 13.',
+    })),
+  );
+
+  useEffect(() => {
+    // selectedFileId가 있을 때만 유효하다고 부모에게 알림
+    onValidChange(!!selectedFileId);
+  }, [selectedFileId, onValidChange]);
+
+  const handleUpload = (file: File) => {
+    const newFile: FileData = {
+      id: `file-${Date.now()}`,
+      name: file.name,
+      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+      pages: '??p', // 필요시 업데이트(라이브러리든 API든 협의 필요)
+      date: new Date().toISOString().split('T')[0].replace(/-/g, '. '),
+    };
+
+    setFileList((prev) => [newFile, ...prev]);
+    setSelectedFileId(newFile.id);
+  };
 
   return (
     <>
@@ -41,9 +64,10 @@ const Step1 = () => {
       </SubTitle>
       <Spacer12 />
       <PdfFileList
-        fileList={mockFileList}
+        fileList={fileList}
         selectedFileId={selectedFileId}
         onSelect={setSelectedFileId}
+        onUpload={handleUpload}
       />
     </>
   );
