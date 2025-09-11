@@ -28,7 +28,7 @@ function Home() {
       case '오답노트':
         return <Wrong />;
       case '문제풀이':
-        return <SolvePage />;
+        return <SolvePage setSelectedMenu={setSelectedMenu}/>;
       default:
         return <Dashboard />;
     }

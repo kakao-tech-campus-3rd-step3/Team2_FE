@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { ArrowLeft } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 
 const QuestionAreaWrapper = styled.div`
   margin-right: ${({ theme }) => theme.spacing.spacing3};
@@ -32,8 +33,9 @@ const QuestionStem = styled.p`
 
 const OptionList = styled.p``;
 
-const OptionItem = styled.p`
+const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
+  color: ${({ active, theme }) => (active ? theme.colors.semantic.primary : theme.colors.gray.gray7)};
 `;
 
 const QuestionNavigation = styled.div`
@@ -72,21 +74,31 @@ const NextButton = styled.button`
 `;
 
 interface Question {
-  id: number;
-  stem: string;
-  options: string[];
-  answer: number;
+  id: number; // 문제 고유 ID
+  questionText: string; // 문제 텍스트
+  options: string[]; // 오답 목록
+  answer: string; // 정답
+  explanation: string; // 해설
 }
-
 type QuestionAreaProps = {
   currentQuestionIndex: number;
   questions: Question[];
+  solvedCheck: Set<number>;
   setSolvedCheck: React.Dispatch<React.SetStateAction<Set<number>>>;
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function QuestionArea({ currentQuestionIndex, questions, setSolvedCheck,setCurrentQuestionIndex,setIsAllSolved }: QuestionAreaProps) {
+function QuestionArea({
+  currentQuestionIndex,
+  questions,
+  solvedCheck,
+  setSolvedCheck,
+  setCurrentQuestionIndex,
+  setIsAllSolved,
+}: QuestionAreaProps) {
+  const [selectedOption, setSelectedOption] = useState<number | null>(null); // 어떤 선지가 선택되어있는지
+
   const markSolved = (qNo: number) => {
     setSolvedCheck((prev) => {
       const next = new Set(prev);
@@ -104,8 +116,8 @@ function QuestionArea({ currentQuestionIndex, questions, setSolvedCheck,setCurre
   const goNext = () => {
     if (currentQuestionIndex < 10) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if(currentQuestionIndex === 10) {
-        setIsAllSolved(true);
+    } else if (currentQuestionIndex === 10 && solvedCheck.size === 10) {
+      setIsAllSolved(true);
     }
   };
 
@@ -115,12 +127,16 @@ function QuestionArea({ currentQuestionIndex, questions, setSolvedCheck,setCurre
         <QuestionAreaTitle>문제 {currentQuestionIndex}</QuestionAreaTitle>
       </QuestionAreaHeader>
       <QuestionWrapper>
-        <QuestionStem>{questions[currentQuestionIndex - 1].stem}</QuestionStem>
+        <QuestionStem>{questions[currentQuestionIndex - 1].questionText}</QuestionStem>
         <OptionList>
           {questions[currentQuestionIndex - 1].options.map((opt, i) => (
             <OptionItem
               key={i}
-              onClick={() => markSolved(currentQuestionIndex)}
+              active={selectedOption === i}
+              onClick={() => {
+                markSolved(currentQuestionIndex);
+                setSelectedOption(i);
+              }}
             >{`${i + 1}. ${opt}`}</OptionItem>
           ))}
         </OptionList>

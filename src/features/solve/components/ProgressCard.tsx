@@ -41,12 +41,12 @@ const ProgressStatValue = styled.span`
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
 `;
 
-
 interface Question {
-  id: number;
-  stem: string;
-  options: string[];
-  answer: number;
+  id: number; // 문제 고유 ID
+  questionText: string; // 문제 텍스트
+  options: string[]; // 오답 목록
+  answer: string; // 정답
+  explanation: string; // 해설
 }
 
 type ProgressCardProps = {
