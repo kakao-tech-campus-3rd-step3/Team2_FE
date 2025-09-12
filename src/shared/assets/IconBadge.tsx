@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '@emotion/react';
 
 interface BrainIconWithBadgeProps {
   size?: string; // 예: '4rem', '64px', '100%'
@@ -9,6 +10,14 @@ const BrainIconWithBadge: React.FC<BrainIconWithBadgeProps> = ({
   size = '4rem',
   borderRadius = '1rem',
 }) => {
+  const theme = useTheme();
+
+  const gradientColor = `linear-gradient(
+    to bottom right,
+    ${theme.colors.semantic.primary},
+    ${theme.colors.green.green5}
+  )`;
+
   return (
     <div
       style={{
@@ -21,7 +30,7 @@ const BrainIconWithBadge: React.FC<BrainIconWithBadgeProps> = ({
         style={{
           width: '75%',
           height: '75%',
-          background: 'linear-gradient(to bottom right, #16a34a, #10b981)',
+          background: gradientColor,
           borderRadius,
           display: 'flex',
           alignItems: 'center',

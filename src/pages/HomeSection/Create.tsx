@@ -1,66 +1,83 @@
-import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 import { useState } from 'react';
+import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
+import PageLayout from '@/shared/components/Layout/PageLayout';
+import Step1 from '@/features/create/innerPages/Step1';
+import Step2 from '@/features/create/innerPages/Step2';
+import Step3 from '@/features/create/innerPages/Step3';
+import NavigationButtons from '@/features/create/components/NavigationButtons';
 import styled from '@emotion/styled';
 
-import PdfFileList from '@/features/create/components/PdfFileList';
-import NavigationButtons from '@/features/create/components/NavigationButtons';
-import PageLayout from '@/shared/components/Layout/PageLayout';
-
-const CreateWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 700px;
-  height: 500px;
-  background-color: ${({ theme }) => theme.colors.gray.gray2};
-`;
-
-const Title = styled.h2`
+const Container = styled.div`
   width: 100%;
-  font-size: 1.125rem;
-  text-align: center;
-  padding: 10px;
+  min-height: 400px;
 `;
-
-const SubTitle = styled.span`
-  width: 100%;
-  font-size: 0.8rem;
-  text-align: center;
-  color: grey;
-`;
-
-const Spacer12 = styled.div`
-  height: 12px;
-`;
-
-const stepLabels = ['PDF 선택', '설정', '생성하기'];
-const progress = 5;
 
 const Create = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const stepLabels = ['PDF 선택', '설정', '생성하기'];
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const mockFileList = Array(8).fill({
-    name: '컴퓨터 네트워크.pdf',
-    size: '2.4 MB',
-    pages: '156p',
-    date: '2024. 2. 13.',
+  // 각 스텝별 유효성 상태 (초기값은 false, 필요에 따라 조정)
+  const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
+    1: false,
+    2: false,
+    3: false,
   });
+
+  // 다음 버튼 활성/비활성 결정: 현재 스텝이 유효하지 않으면 비활성
+  const isNextDisabled = !stepValidity[currentStep];
+
+  // 각 Step 컴포넌트에 onValidChange 콜백 넘겨서 유효성 상태를 갱신
+  const renderStepComponent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <Step1
+            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
+          />
+        );
+      case 2:
+        return (
+          <Step2
+            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
+          />
+        );
+      case 3:
+        return (
+          <Step3
+            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 3: isValid }))}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const handleNext = () => {
+    if (!isNextDisabled && currentStep < stepLabels.length) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const progress = ((currentStep - 1) / (stepLabels.length - 1)) * 100;
 
   return (
     <PageLayout>
-      <CreateWrapper>
-        <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
-        <Title>PDF 파일을 선택하세요</Title>
-        <SubTitle>
-          하단의 PDF에서 선택하거나 새로운 PDF를 업로드 해 선택한 후 다음단계로 진행하세요
-        </SubTitle>
-        <Spacer12 />
-        <PdfFileList
-          fileList={mockFileList}
-          selectedIndex={selectedIndex}
-          onSelect={setSelectedIndex}
-        />
-        <NavigationButtons />
-      </CreateWrapper>
+      <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
+      <Container>{renderStepComponent()}</Container>
+
+      <NavigationButtons
+        onNext={handleNext}
+        onPrev={handlePrev}
+        isFirst={currentStep === 1}
+        isLast={currentStep === stepLabels.length}
+        nextDisabled={isNextDisabled}
+      />
     </PageLayout>
   );
 };

@@ -1,4 +1,5 @@
 import { Progress } from '@/shared/components/ProgressBar/ProgressBarSettings';
+import { useTheme } from '@emotion/react';
 
 interface CommonProgressProps {
   progress: number; // 현재 진행률
@@ -6,9 +7,10 @@ interface CommonProgressProps {
   width?: number | string; // 너비 (optional, 기본값 지정 가능)
 }
 
-// 10, 40, 65, 100 등으로 바꿔서 4단계의 경우 적용할 것
-
+// 진행률은 10, 40, 65, 100 등으로 설정한다고 가정 (4단계로)
 const CommonProgress = ({ progress, stepLabels, width = '100%' }: CommonProgressProps) => {
+  const theme = useTheme();
+
   return (
     <div style={{ width }}>
       <Progress value={progress} height="8px" borderRadius="12px" />
@@ -20,24 +22,29 @@ const CommonProgress = ({ progress, stepLabels, width = '100%' }: CommonProgress
           justifyContent: 'space-between',
           marginTop: 8,
           fontSize: 14,
-          fontWeight: '500',
-          color: '#16a34a',
         }}
       >
-        {stepLabels.map((label, index) => (
-          <div
-            key={label}
-            style={{
-              flex: 1,
-              textAlign:
-                index === 0 ? 'left' : index === stepLabels.length - 1 ? 'right' : 'center',
-              color: progress >= index * 25 ? '#16a34a' : '#aaa',
-              fontWeight: progress >= index * 25 ? '700' : '500',
-            }}
-          >
-            {label}
-          </div>
-        ))}
+        {stepLabels.map((label, index) => {
+          const labelProgressThreshold = (100 / (stepLabels.length - 1)) * index;
+          const isPassed = progress >= labelProgressThreshold;
+
+          return (
+            <div
+              key={label}
+              style={{
+                flex: 1,
+                textAlign:
+                  index === 0 ? 'left' : index === stepLabels.length - 1 ? 'right' : 'center',
+                color: isPassed ? theme.colors.semantic.primary : theme.colors.gray.gray6,
+                fontWeight: isPassed
+                  ? theme.typography.title1Bold.fontWeight
+                  : theme.typography.title1Regular.fontWeight,
+              }}
+            >
+              {label}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

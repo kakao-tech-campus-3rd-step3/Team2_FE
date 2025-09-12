@@ -1,10 +1,19 @@
+import { useTheme } from '@emotion/react';
+
 const TitleSection = () => {
+  const theme = useTheme();
+
   return (
     <h1
       style={{
-        fontSize: '1.5rem',
-        fontWeight: '700',
-        background: 'linear-gradient(to right, #111827, #16a34a, #10b981)',
+        fontSize: theme.typography.title1Bold.fontSize,
+        fontWeight: theme.typography.title1Bold.fontWeight,
+        background: `linear-gradient(
+          to right,
+          ${theme.colors.gray.gray9},
+          ${theme.colors.semantic.primary},
+          ${theme.colors.green.green5}
+        )`,
         WebkitBackgroundClip: 'text',
         backgroundClip: 'text',
         color: 'transparent',

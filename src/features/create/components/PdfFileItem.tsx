@@ -1,16 +1,18 @@
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { LucideFileText } from 'lucide-react';
 
 const FileContentBox = styled.div<{ isSelected: boolean }>`
   width: 100%;
-  border-radius: 5px;
-  border: 1px solid lightgrey;
+  border-radius: ${({ theme }) => theme.radius.radius1};
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
   height: 50px;
   margin: 5px 0;
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: ${({ isSelected }) => (isSelected ? '#d1fae5' : '#ffffff')};
+  background-color: ${({ isSelected, theme }) =>
+    isSelected ? theme.colors.green.green2 : theme.colors.gray.gray0};
   cursor: pointer;
   transition: background-color 0.2s ease;
 `;
@@ -36,12 +38,13 @@ const FileInfoUnderBox = styled.div`
 `;
 
 const FileName = styled.h4`
-  font-size: 0.85rem;
+  font-size: ${({ theme }) => theme.typography.body3Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body3Bold.fontWeight};
 `;
 
 const FileInfo = styled.span`
-  font-size: 0.7rem;
-  color: grey;
+  font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
 interface FileItemProps {
@@ -56,18 +59,18 @@ interface FileItemProps {
 }
 
 const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
+  const FILE_INFO_SEPARATOR = ' · ';
+  const fileInfoItems = [file.size, file.pages, file.date];
+  const theme = useTheme();
+
   return (
     <FileContentBox isSelected={isSelected} onClick={onClick}>
       <RadioInput type="radio" name="pdf-selection" checked={isSelected} readOnly />
-      <FileIcon size={16} color="#16a34a" />
+      <FileIcon size={16} color={theme.colors.semantic.primary} />
       <FileInfoBox>
         <FileName>{file.name}</FileName>
         <FileInfoUnderBox>
-          <FileInfo>{file.size}</FileInfo>
-          <FileInfo>&nbsp;·&nbsp;</FileInfo>
-          <FileInfo>{file.pages}</FileInfo>
-          <FileInfo>&nbsp;·&nbsp;</FileInfo>
-          <FileInfo>{file.date}</FileInfo>
+          <FileInfo>{fileInfoItems.join(FILE_INFO_SEPARATOR)}</FileInfo>
         </FileInfoUnderBox>
       </FileInfoBox>
     </FileContentBox>

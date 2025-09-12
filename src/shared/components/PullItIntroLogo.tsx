@@ -19,8 +19,8 @@ const TextGroup = styled.div`
 `;
 
 const Subtitle = styled.span`
-  font-size: 0.875rem;
-  color: #4b5563;
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
 const PullItLogo = () => {
