@@ -42,13 +42,12 @@ type SolveProps = {
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 };
 
+
 function Solve({ setSelectedMenu }: SolveProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1); // 현재 풀고있는 문제 인덱스
   const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택
-  const [solvedCheck, setSolvedCheck] = useState<Set<number>>(new Set()); // 선택된 문항 set으로 관리
-
-  const [isAllSolved, setIsAllSolved] = useState<boolean>(false);
-  // set에 풀린 문제 기록 함수
+  const [solvedCheck, setSolvedCheck] = useState<Set<number>>(new Set()); // 선택된 문항 set으로 관리, 얘를 더 발전 시켜서 현재 문제 푼 답 + 마지막 제출할때 정답들 목록이랑 비교시켜서 점수를 생성해내야함
+  const [isAllSolved, setIsAllSolved] = useState<boolean>(false); // 전체 문제가 다 풀렸는지 감지
 
   return (
     <PageLayout>
