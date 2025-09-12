@@ -62,46 +62,46 @@ const ResultScoreWrapper = styled.div`
 `;
 
 const ResultScore = styled.span`
-    font-size: 32px;
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.semantic.primary};
+  font-size: 32px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.semantic.primary};
 `;
 
 const ResultScoreDescription = styled.p`
-    margin-top: ${({ theme }) => theme.spacing.spacing2};
-    font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
-    font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
-    line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
+  margin-top: ${({ theme }) => theme.spacing.spacing2};
+  font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
 `;
 
 const ResultActions = styled.div`
-    margin-top: ${({ theme }) => theme.spacing.spacing4};
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-`
+  margin-top: ${({ theme }) => theme.spacing.spacing4};
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+`;
 
 const ReviewWrongAnswersButton = styled.button`
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-    border-radius: ${({ theme }) => theme.radius.radius2};
-    padding: ${({ theme }) => theme.spacing.spacing2};
-    color: ${({ theme }) => theme.colors.gray.gray10};
-`
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  color: ${({ theme }) => theme.colors.gray.gray10};
+`;
 
 const RetryButton = styled.button`
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-    border-radius: ${({ theme }) => theme.radius.radius2};
-    padding: ${({ theme }) => theme.spacing.spacing2};
-    color: ${({ theme }) => theme.colors.gray.gray10};
-`
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  color: ${({ theme }) => theme.colors.gray.gray10};
+`;
 
 const GoToDashboardButton = styled.button`
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-    border-radius: ${({ theme }) => theme.radius.radius2};
-    padding: ${({ theme }) => theme.spacing.spacing2};
-    color: ${({ theme }) => theme.colors.gray.gray0};
-    background-color: ${({ theme }) => theme.colors.semantic.primary};
-`
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  color: ${({ theme }) => theme.colors.gray.gray0};
+  background-color: ${({ theme }) => theme.colors.semantic.primary};
+`;
 
 interface Question {
   id: number; // 문제 고유 ID
@@ -112,12 +112,12 @@ interface Question {
 }
 
 type SolveResultProps = {
-    questions: Question[];
-    solvedCheck: Set<number>;
-    setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
-}
+  questions: Question[];
+  solvedCheck: Set<number>;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+};
 
-function SolveResult({questions, solvedCheck, setSelectedMenu}:SolveResultProps) {
+function SolveResult({ questions, solvedCheck, setSelectedMenu }: SolveResultProps) {
   return (
     <>
       <SolveResultTitle>문제 풀이 완료!</SolveResultTitle>
@@ -149,9 +149,13 @@ function SolveResult({questions, solvedCheck, setSelectedMenu}:SolveResultProps)
         </ResultCard>
       </ResultCardsWrapper>
       <ResultActions>
-            <ReviewWrongAnswersButton onClick={() => setSelectedMenu('오답노트')}>오답노트 확인</ReviewWrongAnswersButton>
-            <RetryButton onClick={() => setSelectedMenu('문제집 생성')}>다시 생성하기</RetryButton>
-            <GoToDashboardButton onClick={() => setSelectedMenu('대시보드')}>대시보드로 이동</GoToDashboardButton>
+        <ReviewWrongAnswersButton onClick={() => setSelectedMenu('오답노트')}>
+          오답노트 확인
+        </ReviewWrongAnswersButton>
+        <RetryButton onClick={() => setSelectedMenu('문제집 생성')}>다시 생성하기</RetryButton>
+        <GoToDashboardButton onClick={() => setSelectedMenu('대시보드')}>
+          대시보드로 이동
+        </GoToDashboardButton>
       </ResultActions>
     </>
   );

@@ -28,9 +28,7 @@ function ProgressDescription({ solvedCheckPercent }: ProgressDescriptionProps) {
     <>
       <ProgressDescriptionWrapper>
         <ProgressDescriptionTitle>진행상황</ProgressDescriptionTitle>
-        <ProgressDescriptionPercentTxt>
-          {solvedCheckPercent}%
-        </ProgressDescriptionPercentTxt>
+        <ProgressDescriptionPercentTxt>{solvedCheckPercent}%</ProgressDescriptionPercentTxt>
       </ProgressDescriptionWrapper>
       <CommonProgress progress={solvedCheckPercent} stepLabels={[]}></CommonProgress>
     </>

@@ -42,7 +42,6 @@ type SolveProps = {
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 };
 
-
 function Solve({ setSelectedMenu }: SolveProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1); // 현재 풀고있는 문제 인덱스
   const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택

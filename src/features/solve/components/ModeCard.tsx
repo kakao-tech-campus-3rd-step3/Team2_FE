@@ -49,40 +49,30 @@ const ModeButton = styled.button<{ active?: boolean }>`
 `;
 
 type ModeCard = {
-    selectedMode: string;
-    setSelectedMode: React.Dispatch<React.SetStateAction<string>>;
-}
+  selectedMode: string;
+  setSelectedMode: React.Dispatch<React.SetStateAction<string>>;
+};
 
-function ModeCard({selectedMode,setSelectedMode}:ModeCard) {
-
-    return (
-        <ModeCardWrapper>
-              <CardTitle>학습 모드</CardTitle>
-              <ModeSelector>
-                <ModeButton
-                  active={selectedMode === '시험'}
-                  onClick={() => setSelectedMode('시험')}
-                >
-                  <GraduationCap size={16} />
-                  시험
-                </ModeButton>
-                <ModeButton
-                  active={selectedMode === '학습'}
-                  onClick={() => setSelectedMode('학습')}
-                >
-                  <BookOpen size={16} />
-                  학습
-                </ModeButton>
-                <ModeButton
-                  active={selectedMode === '카드'}
-                  onClick={() => setSelectedMode('카드')}
-                >
-                  <CreditCard size={16} />
-                  카드
-                </ModeButton>
-              </ModeSelector>
-            </ModeCardWrapper>
-    )
+function ModeCard({ selectedMode, setSelectedMode }: ModeCard) {
+  return (
+    <ModeCardWrapper>
+      <CardTitle>학습 모드</CardTitle>
+      <ModeSelector>
+        <ModeButton active={selectedMode === '시험'} onClick={() => setSelectedMode('시험')}>
+          <GraduationCap size={16} />
+          시험
+        </ModeButton>
+        <ModeButton active={selectedMode === '학습'} onClick={() => setSelectedMode('학습')}>
+          <BookOpen size={16} />
+          학습
+        </ModeButton>
+        <ModeButton active={selectedMode === '카드'} onClick={() => setSelectedMode('카드')}>
+          <CreditCard size={16} />
+          카드
+        </ModeButton>
+      </ModeSelector>
+    </ModeCardWrapper>
+  );
 }
 
 export default ModeCard;

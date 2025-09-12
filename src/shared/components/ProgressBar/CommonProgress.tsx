@@ -10,7 +10,7 @@ interface CommonProgressProps {
 
 const CommonProgress = ({ progress, stepLabels, width = '100%' }: CommonProgressProps) => {
   return (
-    <div style={{ width}}>
+    <div style={{ width }}>
       <Progress value={progress} height="8px" borderRadius="12px" />
 
       {/* 라벨 영역 */}

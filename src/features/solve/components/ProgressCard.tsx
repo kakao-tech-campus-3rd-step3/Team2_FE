@@ -50,30 +50,29 @@ interface Question {
 }
 
 type ProgressCardProps = {
-    questions: Question[];
-    solvedCheck: Set<number>;
-}
-function ProgressCard({questions,solvedCheck} : ProgressCardProps) {
-
-    return (
-        <ProgressCardWrapper>
-              <CardTitle>진행 현황</CardTitle>
-              <ProgressStats>
-                <ProgressStatItem>
-                  <ProgressStatLabel>전체 문제</ProgressStatLabel>
-                  <ProgressStatValue>{questions.length}</ProgressStatValue>
-                </ProgressStatItem>
-                <ProgressStatItem>
-                  <ProgressStatLabel>답변 완료</ProgressStatLabel>
-                  <ProgressStatValue>{solvedCheck.size}</ProgressStatValue>
-                </ProgressStatItem>
-                <ProgressStatItem>
-                  <ProgressStatLabel>남은 문제</ProgressStatLabel>
-                  <ProgressStatValue>{questions.length - solvedCheck.size}</ProgressStatValue>
-                </ProgressStatItem>
-              </ProgressStats>
-            </ProgressCardWrapper>
-    )
+  questions: Question[];
+  solvedCheck: Set<number>;
+};
+function ProgressCard({ questions, solvedCheck }: ProgressCardProps) {
+  return (
+    <ProgressCardWrapper>
+      <CardTitle>진행 현황</CardTitle>
+      <ProgressStats>
+        <ProgressStatItem>
+          <ProgressStatLabel>전체 문제</ProgressStatLabel>
+          <ProgressStatValue>{questions.length}</ProgressStatValue>
+        </ProgressStatItem>
+        <ProgressStatItem>
+          <ProgressStatLabel>답변 완료</ProgressStatLabel>
+          <ProgressStatValue>{solvedCheck.size}</ProgressStatValue>
+        </ProgressStatItem>
+        <ProgressStatItem>
+          <ProgressStatLabel>남은 문제</ProgressStatLabel>
+          <ProgressStatValue>{questions.length - solvedCheck.size}</ProgressStatValue>
+        </ProgressStatItem>
+      </ProgressStats>
+    </ProgressCardWrapper>
+  );
 }
 
 export default ProgressCard;

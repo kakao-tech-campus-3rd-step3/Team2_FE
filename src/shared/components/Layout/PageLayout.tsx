@@ -22,11 +22,7 @@ const Container = styled.div`
 // `;
 
 const PageLayout = ({ children }: PageLayoutProps) => {
-  return (
-    <Container>
-      {children}
-    </Container>
-  );
+  return <Container>{children}</Container>;
 };
 
 export default PageLayout;

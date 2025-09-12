@@ -35,7 +35,8 @@ const OptionList = styled.p``;
 
 const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
-  color: ${({ active, theme }) => (active ? theme.colors.semantic.primary : theme.colors.gray.gray7)};
+  color: ${({ active, theme }) =>
+    active ? theme.colors.semantic.primary : theme.colors.gray.gray7};
 `;
 
 const QuestionNavigation = styled.div`
