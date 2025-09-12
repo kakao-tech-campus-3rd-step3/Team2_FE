@@ -12,11 +12,11 @@ const Step3: React.FC<Step3Props> = ({ onValidChange }) => {
     onValidChange(!!selectedFileId);
   }, [selectedFileId, onValidChange]);
 
-   // 현재는 다음 페이지가 비활성화되기에 set을 할 필요는 없으나, vercel 배포에서 에러를 내므로 임시로 사용 => 추후 수정 필요
-    useEffect(()=>{
-      setSelectedFileId(null);
-    },[]);
-    
+  // 현재는 다음 페이지가 비활성화되기에 set을 할 필요는 없으나, vercel 배포에서 에러를 내므로 임시로 사용 => 추후 수정 필요
+  useEffect(() => {
+    setSelectedFileId(null);
+  }, []);
+
   return (
     <div>
       Step3

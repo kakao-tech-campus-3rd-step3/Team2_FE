@@ -20,12 +20,11 @@ const Container = styled.div`
   min-height: 400px;
 `;
 
-
 type CreateProps = {
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Create = ({setSelectedMenu}:CreateProps) => {
+const Create = ({ setSelectedMenu }: CreateProps) => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
 
