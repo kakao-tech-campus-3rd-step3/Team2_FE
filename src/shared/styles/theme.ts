@@ -69,6 +69,7 @@ export const colors = {
     green2: '#dcfce7', // 학습 활동 차트의 연한 초록색
     green3: '#bbf7d0', // 학습 활동 차트의 중간 초록색
     green4: '#86efac', // 학습 활동 차트의 진한 초록색
+    green7: '#4FC65F',
     green5: '#4ade80', // "정상" 뱃지
     green6: '#16a34a', // 기본 초록색 (primary)
   },
