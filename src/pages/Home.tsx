@@ -13,7 +13,7 @@ import SolvePage from './HomeSection/Solve';
 import { useState } from 'react';
 
 function Home() {
-  const [selectedMenu, setSelectedMenu] = useState('문제풀이');
+  const [selectedMenu, setSelectedMenu] = useState('문제집 생성');
   const [isOpen, setIsOpen] = useState(true);
   const renderContent = () => {
     switch (selectedMenu) {
