@@ -20,7 +20,12 @@ const Container = styled.div`
   min-height: 400px;
 `;
 
-const Create = () => {
+
+type CreateProps = {
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const Create = ({setSelectedMenu}:CreateProps) => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -47,6 +52,7 @@ const Create = () => {
         return (
           <Step2
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
+            setSelectedMenu={setSelectedMenu}
           />
         );
       case 3:
