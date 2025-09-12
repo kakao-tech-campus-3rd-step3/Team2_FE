@@ -13,7 +13,7 @@ const InfoContainer = styled.div`
   gap: 4px;
 `;
 const SettingInfoBox = styled.div`
-  background-color: #${({ theme }) => theme.colors.background.foreground};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
   border-radius: ${({ theme }) => theme.radius.radius2};
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
   padding: 10px 15px;
@@ -36,8 +36,26 @@ const InfoSpan = styled.span`
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray6};
 `;
+const CreateButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+const CreateButton = styled.button`
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.gray.gray5 : theme.colors.semantic.primary};
+  border-radius: ${({ theme }) => theme.radius.radius1};
+  font-size: ${({ theme }) => theme.typography.body2Bold.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray0};
+  padding: 5px 10px;
+  font-weight: ${({ theme }) => theme.typography.body2Bold.fontWeight};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`;
 const Spacer12 = styled.div`
   height: 12px;
+`;
+const Spacer20 = styled.div`
+  height: 20px;
 `;
 
 const Step2: React.FC<Step2Props> = ({ onValidChange }) => {
@@ -70,6 +88,10 @@ const Step2: React.FC<Step2Props> = ({ onValidChange }) => {
           <InfoSpan>4지 선다형</InfoSpan>
         </SettingInfoBox>
       </InfoContainer>
+      <Spacer20 />
+      <CreateButtonContainer>
+        <CreateButton>문제 생성</CreateButton>
+      </CreateButtonContainer>
     </>
   );
 };
