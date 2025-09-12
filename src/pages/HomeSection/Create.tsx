@@ -7,12 +7,24 @@ import Step3 from '@/features/create/innerPages/Step3';
 import NavigationButtons from '@/features/create/components/NavigationButtons';
 import styled from '@emotion/styled';
 
+const CreateWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  height: 500px;
+  background-color: ${({ theme }) => theme.colors.gray.gray2};
+`;
+
 const Container = styled.div`
   width: 100%;
   min-height: 400px;
 `;
 
-const Create = () => {
+type CreateProps = {
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const Create = ({ setSelectedMenu }: CreateProps) => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -39,6 +51,7 @@ const Create = () => {
         return (
           <Step2
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
+            setSelectedMenu={setSelectedMenu}
           />
         );
       case 3:
@@ -68,16 +81,17 @@ const Create = () => {
 
   return (
     <PageLayout>
-      <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
-      <Container>{renderStepComponent()}</Container>
-
-      <NavigationButtons
-        onNext={handleNext}
-        onPrev={handlePrev}
-        isFirst={currentStep === 1}
-        isLast={currentStep === stepLabels.length}
-        nextDisabled={isNextDisabled}
-      />
+      <CreateWrapper>
+        <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
+        <Container>{renderStepComponent()}</Container>
+        <NavigationButtons
+          onNext={handleNext}
+          onPrev={handlePrev}
+          isFirst={currentStep === 1}
+          isLast={currentStep === stepLabels.length}
+          nextDisabled={isNextDisabled}
+        />
+      </CreateWrapper>
     </PageLayout>
   );
 };

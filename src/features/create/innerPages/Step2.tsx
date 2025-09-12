@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 
 interface Step2Props {
   onValidChange: (isValid: boolean) => void;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const InfoContainer = styled.div`
@@ -85,14 +86,17 @@ const infoData = [
   },
 ];
 
-const Step2: React.FC<Step2Props> = ({ onValidChange }) => {
+const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
-  // 현재는 다음 페이지가 비활성화되기에 set을 할 필요는 없으나, vercel 배포에서 에러를 내므로 임시로 사용 => 추후 수정 필요
-  setSelectedFileId(null);
 
   useEffect(() => {
     onValidChange(!!selectedFileId);
   }, [selectedFileId, onValidChange]);
+
+  // 현재는 다음 페이지가 비활성화되기에 set을 할 필요는 없으나, vercel 배포에서 에러를 내므로 임시로 사용 => 추후 수정 필요
+  useEffect(() => {
+    setSelectedFileId(null);
+  }, []);
 
   return (
     <>
@@ -110,7 +114,7 @@ const Step2: React.FC<Step2Props> = ({ onValidChange }) => {
       </InfoContainer>
       <Spacer20 />
       <CreateButtonContainer>
-        <CreateButton>문제 생성</CreateButton>
+        <CreateButton onClick={() => setSelectedMenu('문제풀이')}>문제 생성</CreateButton>
       </CreateButtonContainer>
     </>
   );

@@ -3,11 +3,12 @@ import AppLayout from './layout/AppLayout';
 import { PageLayout, PageContent } from './layout/AppLayoutVertical';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 
-import Dashboard from '@/pages/HomeSection/Dashboard';
-import Source from '@/pages/HomeSection/Source';
-import Create from '@/pages/HomeSection/Create';
-import Quiz from '@/pages/HomeSection/Quiz';
-import Wrong from '@/pages/HomeSection/Wrong';
+import Dashboard from './HomeSection/Dashboard';
+import Source from './HomeSection/Source';
+import Create from './HomeSection/Create';
+import Quiz from './HomeSection/Quiz';
+import Wrong from './HomeSection/Wrong';
+import SolvePage from './HomeSection/Solve';
 
 import { useState } from 'react';
 
@@ -21,11 +22,13 @@ function Home() {
       case '학습소스 관리':
         return <Source />;
       case '문제집 생성':
-        return <Create />;
+        return <Create setSelectedMenu={setSelectedMenu} />;
       case '나의 문제집':
         return <Quiz />;
       case '오답노트':
         return <Wrong />;
+      case '문제풀이':
+        return <SolvePage setSelectedMenu={setSelectedMenu} />;
       default:
         return <Dashboard />;
     }
