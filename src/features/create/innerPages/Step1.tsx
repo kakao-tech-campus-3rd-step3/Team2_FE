@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PdfFileList from '@/features/create/components/PdfFileList';
 import type { FileData } from '@/features/create/types/types';
 import Title from '@/features/create/components/Title';
@@ -11,6 +11,8 @@ interface Step1Props {
 
 const Step1 = ({ onValidChange }: Step1Props) => {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+
+  // 더미 파일 데이터로 초기화
   const [fileList, setFileList] = useState<FileData[]>(() =>
     Array.from({ length: 8 }, (_, idx) => ({
       id: `file-${idx}`,
@@ -21,22 +23,22 @@ const Step1 = ({ onValidChange }: Step1Props) => {
     })),
   );
 
-  useEffect(() => {
-    // selectedFileId가 있을 때만 유효하다고 부모에게 알림
-    onValidChange(!!selectedFileId);
-  }, [selectedFileId, onValidChange]);
+  const handleSelectFile = (fileId: string | null) => {
+    setSelectedFileId(fileId);
+    onValidChange(!!fileId); // 파일 선택 여부에 따라 유효성 체크
+  };
 
   const handleUpload = (file: File) => {
     const newFile: FileData = {
       id: `file-${Date.now()}`,
       name: file.name,
       size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-      pages: '??p', // 필요시 업데이트(라이브러리든 API든 협의 필요)
+      pages: '??p', // 페이지 수 추출 로직 추가 필요
       date: new Date().toISOString().split('T')[0].replace(/-/g, '. '),
     };
 
     setFileList((prev) => [newFile, ...prev]);
-    setSelectedFileId(newFile.id);
+    handleSelectFile(newFile.id); // 파일 업로드 후 선택된 파일 갱신
   };
 
   return (
@@ -49,8 +51,8 @@ const Step1 = ({ onValidChange }: Step1Props) => {
       <PdfFileList
         fileList={fileList}
         selectedFileId={selectedFileId}
-        onSelect={setSelectedFileId}
-        onUpload={handleUpload}
+        onSelect={handleSelectFile} // 선택된 파일을 처리하는 함수 전달
+        onUpload={handleUpload} // 파일 업로드 함수 전달
       />
     </>
   );
