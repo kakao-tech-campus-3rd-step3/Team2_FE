@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
+import Spacer from '@/shared/components/Spacer';
 
 const FileListBox = styled.div`
   background-color: #${({ theme }) => theme.colors.background.foreground};
@@ -56,10 +57,6 @@ const FileListDivWithScroll = styled.div`
   border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
-const Spacer12 = styled.div`
-  height: 12px;
-`;
-
 const PdfFileList = ({
   fileList,
   selectedFileId,
@@ -92,10 +89,10 @@ const PdfFileList = ({
           onChange={handleFileChange}
         />
       </FileListFirstBox>
-      <Spacer12 />
+      <Spacer height="12px" />
       <FileListSecondBox>
         <FileListSearchInput placeholder="PDF 파일 검색" />
-        <Spacer12 />
+        <Spacer height="12px" />
         <FileListDivWithScroll>
           {fileList.map((file) => (
             <PdfFileItem

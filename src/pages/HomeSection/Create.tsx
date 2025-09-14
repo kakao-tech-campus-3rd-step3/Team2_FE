@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 import PageLayout from '@/shared/components/Layout/PageLayout';
-import Step1 from '@/features/create/innerPages/Step1';
-import Step2 from '@/features/create/innerPages/Step2';
-import Step3 from '@/features/create/innerPages/Step3';
+import SelectPdf from '@/features/create/innerPages/SelectPdf';
+import CreateSummary from '@/features/create/innerPages/CreateSummary';
 import NavigationButtons from '@/features/create/components/NavigationButtons';
 import styled from '@emotion/styled';
 
@@ -32,7 +31,6 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
   const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
     1: false,
     2: false,
-    3: false,
   });
 
   // 다음 버튼 활성/비활성 결정: 현재 스텝이 유효하지 않으면 비활성
@@ -43,21 +41,15 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
     switch (currentStep) {
       case 1:
         return (
-          <Step1
+          <SelectPdf
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
           />
         );
       case 2:
         return (
-          <Step2
+          <CreateSummary
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
             setSelectedMenu={setSelectedMenu}
-          />
-        );
-      case 3:
-        return (
-          <Step3
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 3: isValid }))}
           />
         );
       default:

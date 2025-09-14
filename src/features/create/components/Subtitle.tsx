@@ -8,12 +8,4 @@ const StyledSubTitle = styled.span`
   color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
-interface SubTitleProps {
-  children: React.ReactNode;
-}
-
-const SubTitle = ({ children }: SubTitleProps) => {
-  return <StyledSubTitle>{children}</StyledSubTitle>;
-};
-
-export default SubTitle;
+export default StyledSubTitle;

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Title from '@/features/create/components/Title';
-import SubTitle from '../components/Subtitle';
+import StyledSubTitle from '@/features/create/components/Subtitle';
 import styled from '@emotion/styled';
+import Spacer from '@/shared/components/Spacer';
 
 interface Step2Props {
   onValidChange: (isValid: boolean) => void;
@@ -60,14 +61,6 @@ const CreateButton = styled.button<{ disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 
-const Spacer12 = styled.div`
-  height: 12px;
-`;
-
-const Spacer20 = styled.div`
-  height: 20px;
-`;
-
 const infoData = [
   {
     title: '선택된 PDF',
@@ -86,23 +79,17 @@ const infoData = [
   },
 ];
 
-const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
-  const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
-
+const CreateSummary: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
+  // 페이지 추가 시 추후 수정 필요
   useEffect(() => {
-    onValidChange(!!selectedFileId);
-  }, [selectedFileId, onValidChange]);
-
-  // 현재는 다음 페이지가 비활성화되기에 set을 할 필요는 없으나, vercel 배포에서 에러를 내므로 임시로 사용 => 추후 수정 필요
-  useEffect(() => {
-    setSelectedFileId(null);
+    onValidChange(false);
   }, []);
 
   return (
     <>
       <Title>문제집을 생성합니다</Title>
-      <SubTitle>AI가 생성할 맞춤형 문제집을 확인해보세요</SubTitle>
-      <Spacer12 />
+      <StyledSubTitle>AI가 생성할 맞춤형 문제집을 확인해보세요</StyledSubTitle>
+      <Spacer height="12px" />
       <InfoContainer>
         {infoData.map(({ title, content, description }, index) => (
           <SettingInfoBox key={index}>
@@ -112,7 +99,7 @@ const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
           </SettingInfoBox>
         ))}
       </InfoContainer>
-      <Spacer20 />
+      <Spacer height="20px" />
       <CreateButtonContainer>
         <CreateButton onClick={() => setSelectedMenu('문제풀이')}>문제 생성</CreateButton>
       </CreateButtonContainer>
@@ -120,4 +107,4 @@ const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
   );
 };
 
-export default Step2;
+export default CreateSummary;
