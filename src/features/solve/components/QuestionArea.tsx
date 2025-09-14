@@ -31,7 +31,7 @@ const QuestionStem = styled.p`
   margin: ${({ theme }) => theme.spacing.spacing8} 0;
 `;
 
-const OptionList = styled.p``;
+const OptionList = styled.div``;
 
 const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
