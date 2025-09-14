@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Title from '@/features/create/components/Title';
-import SubTitle from '../components/Subtitle';
+import StyledSubTitle from '@/features/create/components/Subtitle';
 import styled from '@emotion/styled';
 
 interface Step2Props {
@@ -101,7 +101,7 @@ const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
   return (
     <>
       <Title>문제집을 생성합니다</Title>
-      <SubTitle>AI가 생성할 맞춤형 문제집을 확인해보세요</SubTitle>
+      <StyledSubTitle>AI가 생성할 맞춤형 문제집을 확인해보세요</StyledSubTitle>
       <Spacer12 />
       <InfoContainer>
         {infoData.map(({ title, content, description }, index) => (
