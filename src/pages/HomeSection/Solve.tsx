@@ -44,7 +44,8 @@ function Solve({ setSelectedMenu }: SolveProps) {
   const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택
   const [solvedCheck, setSolvedCheck] = useState<Set<number>>(new Set()); // 선택된 문항 set으로 관리, 얘를 더 발전 시켜서 현재 문제 푼 답 + 마지막 제출할때 정답들 목록이랑 비교시켜서 점수를 생성해내야함
   const [isAllSolved, setIsAllSolved] = useState<boolean>(false); // 전체 문제가 다 풀렸는지 감지
-  
+  const percentageOfProblemSolved = (solvedCheck.size / 10) * 100;
+
   return (
     <PageLayout>
       <SolveWrapper>
@@ -57,7 +58,7 @@ function Solve({ setSelectedMenu }: SolveProps) {
         ) : (
           <>
             <SolveHeader currentQuestionIndex={currentQuestionIndex} />
-            <ProgressDescription solvedCheckPercent={(solvedCheck.size / 10) * 100} />
+            <ProgressDescription solvedCheckPercent={percentageOfProblemSolved} />
             <QuestionNavigator
               currentQuestionIndex={currentQuestionIndex}
               solvedCheck={solvedCheck}
