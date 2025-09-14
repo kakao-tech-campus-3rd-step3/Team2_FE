@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
-import styled from '@emotion/styled';
 import PdfFileList from '@/features/create/components/PdfFileList';
 import type { FileData } from '@/features/create/types/types';
 import Title from '@/features/create/components/Title';
 import StyledSubTitle from '@/features/create/components/Subtitle';
-
-const Spacer12 = styled.div`
-  height: 12px;
-`;
+import Spacer from '@/shared/components/Spacer';
 
 interface Step1Props {
   onValidChange: (valid: boolean) => void;
@@ -49,7 +45,7 @@ const Step1 = ({ onValidChange }: Step1Props) => {
       <StyledSubTitle>
         하단의 PDF에서 선택하거나 새로운 PDF를 업로드 해 선택한 후 다음단계로 진행하세요
       </StyledSubTitle>
-      <Spacer12 />
+      <Spacer height="12px" />
       <PdfFileList
         fileList={fileList}
         selectedFileId={selectedFileId}
