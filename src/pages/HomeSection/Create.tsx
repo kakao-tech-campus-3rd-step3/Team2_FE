@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 import PageLayout from '@/shared/components/Layout/PageLayout';
-import Step1 from '@/features/create/innerPages/Step1';
-import Step2 from '@/features/create/innerPages/Step2';
+import SelectPdf from '@/features/create/innerPages/SelectPdf';
+import CreateSummary from '@/features/create/innerPages/CreateSummary';
 import NavigationButtons from '@/features/create/components/NavigationButtons';
 import styled from '@emotion/styled';
 
@@ -41,13 +41,13 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
     switch (currentStep) {
       case 1:
         return (
-          <Step1
+          <SelectPdf
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
           />
         );
       case 2:
         return (
-          <Step2
+          <CreateSummary
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
             setSelectedMenu={setSelectedMenu}
           />

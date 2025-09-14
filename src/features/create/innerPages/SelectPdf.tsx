@@ -9,7 +9,7 @@ interface Step1Props {
   onValidChange: (valid: boolean) => void;
 }
 
-const Step1 = ({ onValidChange }: Step1Props) => {
+const SelectPdf = ({ onValidChange }: Step1Props) => {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
 
   // 더미 파일 데이터로 초기화
@@ -58,4 +58,4 @@ const Step1 = ({ onValidChange }: Step1Props) => {
   );
 };
 
-export default Step1;
+export default SelectPdf;

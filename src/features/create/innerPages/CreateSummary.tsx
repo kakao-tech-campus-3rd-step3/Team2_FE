@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Title from '@/features/create/components/Title';
 import StyledSubTitle from '@/features/create/components/Subtitle';
 import styled from '@emotion/styled';
@@ -79,7 +79,7 @@ const infoData = [
   },
 ];
 
-const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
+const CreateSummary: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
   // 페이지 추가 시 추후 수정 필요
   useEffect(() => {
     onValidChange(false);
@@ -107,4 +107,4 @@ const Step2: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
   );
 };
 
-export default Step2;
+export default CreateSummary;
