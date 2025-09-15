@@ -6,7 +6,6 @@ import Spacer from '@/shared/components/Spacer';
 
 interface Step2Props {
   onValidChange: (isValid: boolean) => void;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const InfoContainer = styled.div`
@@ -44,23 +43,6 @@ const InfoSpan = styled.span`
   color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
-const CreateButtonContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const CreateButton = styled.button<{ disabled?: boolean }>`
-  background-color: ${({ theme, disabled }) =>
-    disabled ? theme.colors.gray.gray5 : theme.colors.semantic.primary};
-  border-radius: ${({ theme }) => theme.radius.radius1};
-  font-size: ${({ theme }) => theme.typography.body2Bold.fontSize};
-  color: ${({ theme }) => theme.colors.gray.gray0};
-  padding: 5px 10px;
-  font-weight: ${({ theme }) => theme.typography.body2Bold.fontWeight};
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-`;
-
 const infoData = [
   {
     title: '선택된 PDF',
@@ -79,10 +61,9 @@ const infoData = [
   },
 ];
 
-const CreateSummary: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu }) => {
-  // 페이지 추가 시 추후 수정 필요
+const CreateSummary: React.FC<Step2Props> = ({ onValidChange }) => {
   useEffect(() => {
-    onValidChange(false);
+    onValidChange(true);
   }, []);
 
   return (
@@ -100,9 +81,6 @@ const CreateSummary: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu })
         ))}
       </InfoContainer>
       <Spacer height="20px" />
-      <CreateButtonContainer>
-        <CreateButton onClick={() => setSelectedMenu('문제풀이')}>문제 생성</CreateButton>
-      </CreateButtonContainer>
     </>
   );
 };
