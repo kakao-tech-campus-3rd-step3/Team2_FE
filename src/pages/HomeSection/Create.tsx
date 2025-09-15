@@ -12,7 +12,7 @@ const CreateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 700px;
-  height: 500px;
+  height: 600px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 
