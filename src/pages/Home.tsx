@@ -22,7 +22,7 @@ function Home() {
       case '학습소스 관리':
         return <Source />;
       case '문제집 생성':
-        return <Create setSelectedMenu={setSelectedMenu} />;
+        return <Create />;
       case '나의 문제집':
         return <Quiz />;
       case '오답노트':

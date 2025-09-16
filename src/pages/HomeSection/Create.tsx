@@ -5,12 +5,14 @@ import SelectPdf from '@/features/create/innerPages/SelectPdf';
 import CreateSummary from '@/features/create/innerPages/CreateSummary';
 import NavigationButtons from '@/features/create/components/NavigationButtons';
 import styled from '@emotion/styled';
+import CreateRequest from '@/features/create/innerPages/CreateRequest';
+import Spacer from '@/shared/components/Spacer';
 
 const CreateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 700px;
-  height: 500px;
+  height: 600px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 
@@ -19,11 +21,7 @@ const Container = styled.div`
   min-height: 400px;
 `;
 
-type CreateProps = {
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const Create = ({ setSelectedMenu }: CreateProps) => {
+const Create = () => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -31,6 +29,7 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
   const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
     1: false,
     2: false,
+    3: false,
   });
 
   // 다음 버튼 활성/비활성 결정: 현재 스텝이 유효하지 않으면 비활성
@@ -49,9 +48,10 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
         return (
           <CreateSummary
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
-            setSelectedMenu={setSelectedMenu}
           />
         );
+      case 3:
+        return <CreateRequest />;
       default:
         return null;
     }
@@ -74,15 +74,18 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
   return (
     <PageLayout>
       <CreateWrapper>
+        <Spacer height="20px" />
         <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
         <Container>{renderStepComponent()}</Container>
-        <NavigationButtons
-          onNext={handleNext}
-          onPrev={handlePrev}
-          isFirst={currentStep === 1}
-          isLast={currentStep === stepLabels.length}
-          nextDisabled={isNextDisabled}
-        />
+        {currentStep !== 3 && (
+          <NavigationButtons
+            onNext={handleNext}
+            onPrev={handlePrev}
+            isFirst={currentStep === 1}
+            isLast={currentStep === stepLabels.length}
+            nextDisabled={isNextDisabled}
+          />
+        )}
       </CreateWrapper>
     </PageLayout>
   );
