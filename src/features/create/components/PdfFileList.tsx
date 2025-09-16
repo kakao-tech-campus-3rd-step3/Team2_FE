@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
 import Spacer from '@/shared/components/Spacer';
+import { uploadPdfFile } from '../utils/upload/uploadPdfFile';
 
 const FileListBox = styled.div`
   background-color: #${({ theme }) => theme.colors.background.foreground};
@@ -61,20 +62,25 @@ const PdfFileList = ({
   fileList,
   selectedFileId,
   onSelect,
-  onUpload,
-}: PdfFileListProps & { onUpload: (file: File) => void }) => {
+  onAddFile,
+}: PdfFileListProps & { onAddFile: (file: any) => void }) => {
   const handleButtonClick = () => {
     document.getElementById('pdf-upload-input')?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      onUpload(file);
-    } else {
-      alert('PDF 파일만 업로드 가능합니다.');
+    e.target.value = ''; // 같은 파일 재업로드 가능하도록 초기화
+
+    if (!file) return;
+
+    try {
+      const uploadedFile = await uploadPdfFile(file); // ✅ axios 기반 함수 호출
+      onAddFile(uploadedFile); // 업로드된 파일 정보를 상위에 전달
+    } catch (error: any) {
+      console.error('업로드 실패:', error);
+      alert(error.message || '파일 업로드 중 오류가 발생했습니다.');
     }
-    e.target.value = ''; // 같은 파일 재업로드 가능하게 초기화
   };
 
   return (
@@ -89,7 +95,9 @@ const PdfFileList = ({
           onChange={handleFileChange}
         />
       </FileListFirstBox>
+
       <Spacer height="12px" />
+
       <FileListSecondBox>
         <FileListSearchInput placeholder="PDF 파일 검색" />
         <Spacer height="12px" />

@@ -4,6 +4,7 @@ import type { FileData } from '@/features/create/types/types';
 import Title from '@/features/create/components/Title';
 import StyledSubTitle from '@/features/create/components/Subtitle';
 import Spacer from '@/shared/components/Spacer';
+import { uploadPdfFile } from '@/features/create/utils/upload/uploadPdfFile';
 
 interface Step1Props {
   onValidChange: (valid: boolean) => void;
@@ -28,17 +29,16 @@ const SelectPdf = ({ onValidChange }: Step1Props) => {
     onValidChange(!!fileId); // 파일 선택 여부에 따라 유효성 체크
   };
 
-  const handleUpload = (file: File) => {
-    const newFile: FileData = {
-      id: `file-${Date.now()}`,
-      name: file.name,
-      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-      pages: '??p', // 페이지 수 추출 로직 추가 필요
-      date: new Date().toISOString().split('T')[0].replace(/-/g, '. '),
-    };
+  const handleUpload = async (file: File) => {
+    try {
+      const uploadedFile = await uploadPdfFile(file);
 
-    setFileList((prev) => [newFile, ...prev]);
-    handleSelectFile(newFile.id); // 파일 업로드 후 선택된 파일 갱신
+      setFileList((prev) => [uploadedFile, ...prev]);
+      handleSelectFile(uploadedFile.id);
+    } catch (error: any) {
+      alert(error.message || '파일 업로드 실패');
+      console.error('파일 업로드 오류:', error);
+    }
   };
 
   return (
