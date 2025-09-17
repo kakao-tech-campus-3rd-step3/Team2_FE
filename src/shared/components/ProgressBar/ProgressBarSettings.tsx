@@ -19,6 +19,7 @@ function Progress({ value = 0, className, ...props }: ProgressProps) {
         sx={{
           '& > div:first-of-type': {
             backgroundColor: theme.colors.semantic.primary,
+            transition: 'width 0.3s ease-in-out',
           },
         }}
         {...props}

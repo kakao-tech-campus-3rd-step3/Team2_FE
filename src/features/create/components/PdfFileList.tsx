@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
+import Spacer from '@/shared/components/Spacer';
 
 const FileListBox = styled.div`
   background-color: #${({ theme }) => theme.colors.background.foreground};
@@ -30,6 +31,11 @@ const FileUploadButton = styled.button`
   width: 55px;
   padding: 5px;
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
+  cursor: pointer;
+`;
+
+const HiddenInput = styled.input`
+  display: none;
 `;
 
 const FileListSecondBox = styled.div`
@@ -51,21 +57,42 @@ const FileListDivWithScroll = styled.div`
   border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
-const Spacer12 = styled.div`
-  height: 12px;
-`;
+const PdfFileList = ({
+  fileList,
+  selectedFileId,
+  onSelect,
+  onUpload,
+}: PdfFileListProps & { onUpload: (file: File) => void }) => {
+  const handleButtonClick = () => {
+    document.getElementById('pdf-upload-input')?.click();
+  };
 
-const PdfFileList = ({ fileList, selectedFileId, onSelect }: PdfFileListProps) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      onUpload(file);
+    } else {
+      alert('PDF 파일만 업로드 가능합니다.');
+    }
+    e.target.value = ''; // 같은 파일 재업로드 가능하게 초기화
+  };
+
   return (
     <FileListBox>
       <FileListFirstBox>
         <FileListBoxTitle>PDF 파일을 선택해주세요.</FileListBoxTitle>
-        <FileUploadButton>업로드</FileUploadButton>
+        <FileUploadButton onClick={handleButtonClick}>업로드</FileUploadButton>
+        <HiddenInput
+          id="pdf-upload-input"
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+        />
       </FileListFirstBox>
-      <Spacer12 />
+      <Spacer height="12px" />
       <FileListSecondBox>
         <FileListSearchInput placeholder="PDF 파일 검색" />
-        <Spacer12 />
+        <Spacer height="12px" />
         <FileListDivWithScroll>
           {fileList.map((file) => (
             <PdfFileItem
