@@ -52,7 +52,7 @@ const SelectPdf = ({ onValidChange }: Step1Props) => {
         fileList={fileList}
         selectedFileId={selectedFileId}
         onSelect={handleSelectFile} // 선택된 파일을 처리하는 함수 전달
-        onUpload={handleUpload} // 파일 업로드 함수 전달
+        onAddFile={handleUpload} // 파일 업로드 함수 전달
       />
     </>
   );

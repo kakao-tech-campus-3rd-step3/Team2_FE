@@ -1,4 +1,14 @@
 import { api } from '@/shared/api/axiosClient';
+import axios from 'axios';
+
+interface UploadPresignResponse {
+  uploadUrl: string;
+  uploadId: string;
+  filePath: string;
+  originalName: string;
+  contentType: string;
+  fileSizeBytes: number;
+}
 
 interface UploadResponse {
   id: string;
@@ -23,30 +33,40 @@ export const uploadPdfFile = async (file: File): Promise<UploadResponse> => {
   };
 
   try {
-    // 프리사인드 URL 요청 (baseURL + /learning/source/upload)
-    const { data: presignData } = await api.post('/learning/source/upload', metadata);
+    // 1단계: presigned URL 요청
+    const { data: presignData }: { data: UploadPresignResponse } = await api.post(
+      '/learning/source/upload',
+      metadata,
+    );
 
-    const { uploadUrl, fileId } = presignData;
+    const { uploadUrl, uploadId, filePath, originalName, contentType, fileSizeBytes } = presignData;
 
-    if (!uploadUrl || !fileId) {
-      throw new Error('프리사인드 URL 발급 실패: 서버 응답 없음');
+    if (!uploadUrl || !uploadId || !filePath) {
+      throw new Error('프리사인드 URL 발급 실패: 필수 응답 누락');
     }
 
-    // S3 업로드는 외부 URL로 요청하므로 기본 axios를 사용 (또는 fetch)
-    await api.put(uploadUrl, file, {
+    // 2단계: S3로 파일 업로드
+    await axios.put(uploadUrl, file, {
       headers: {
         'Content-Type': file.type,
       },
     });
-    // 업로드 완료 알림
-    await api.post('/learning/source/upload-complete', { fileId });
+
+    // 3단계: 업로드 완료 알림
+    await api.post('/learning/source/upload-complete', {
+      uploadId,
+      filePath,
+      originalName,
+      contentType,
+      fileSizeBytes,
+    });
 
     return {
-      id: fileId,
+      id: uploadId,
       name: file.name,
       size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
       pages: '??p',
-      date: new Date().toISOString().split('T')[0].replace(/-/g, '. '),
+      date: new Date().toISOString().split('T')[0].replace(/-/g, '. ') + '.',
     };
   } catch (error: any) {
     console.error('업로드 실패:', error);
