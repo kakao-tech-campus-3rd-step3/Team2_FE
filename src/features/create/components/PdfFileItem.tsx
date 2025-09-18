@@ -51,7 +51,6 @@ interface FileItemProps {
   file: {
     name: string;
     size: string;
-    pages: string;
     date: string;
   };
   isSelected: boolean;
@@ -60,7 +59,7 @@ interface FileItemProps {
 
 const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
   const FILE_INFO_SEPARATOR = ' · ';
-  const fileInfoItems = [file.size, file.pages, file.date];
+  const fileInfoItems = [file.size, file.date];
   const theme = useTheme();
 
   return (

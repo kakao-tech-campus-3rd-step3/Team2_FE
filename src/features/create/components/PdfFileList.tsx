@@ -69,11 +69,8 @@ const PdfFileList = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    e.target.value = ''; // 같은 파일 재업로드 가능하도록 초기화
-
+    e.target.value = '';
     if (!file) return;
-
-    // ✅ 파일 업로드는 부모 컴포넌트에게 위임
     onAddFile(file);
   };
 

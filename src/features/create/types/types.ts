@@ -2,7 +2,6 @@ export interface FileData {
   id: string;
   name: string;
   size: string;
-  pages: string;
   date: string;
 }
 
