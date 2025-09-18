@@ -1,5 +1,5 @@
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
-import { MIN_HEIGHT } from '@/shared/constants';
+import { MIN_HEIGHT } from '@/shared/config/constants';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ import {
   CircleX,
 } from 'lucide-react';
 
+import { MENUS } from '@/shared/config/constants';
+
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   width: ${({ isOpen }) => (isOpen ? '240px' : '0px')};
@@ -22,7 +24,6 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
-  /* display: ${({ isOpen }) => (isOpen ? 'flex' : 'hidden')}; */
   opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
   flex-direction: column;
 
@@ -61,7 +62,7 @@ const ItemTitleWrapper = styled.div`
 `;
 
 const SideBarMainTitle = styled.h1`
-  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize}; // 15px
+  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize}; 
   font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
 `;
@@ -163,8 +164,7 @@ const SideBarUserInfoEmail = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
-const menus = ['대시보드', '학습소스 관리', '문제집 생성', '나의 문제집', '오답노트'];
-
+// TODO: 이거 props 타입도 일관되지않네...
 interface SideBarProps {
   selectedMenu: string;
   setSelectedMenu: (menu: string) => void;
@@ -187,7 +187,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
               <SideBarDescription>AI 학습 도구</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
-          {/* 성현: 이 부분 아이콘 가져다쓰는거랑 컴포넌트 이름이 같네? 먼 문제생길수도?? */}
+          {/* TODO: 이 부분 페이지 컴포넌트랑 이름이 같네? 문제가 생길수도? */}
           <Sidebar size={16} onClick={() => setIsOpen(false)} />
         </SideBarHeaderItemWrapper>
       </SideBarHeader>
@@ -196,39 +196,39 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
       <SideBarMain>
         <SideBarNav>
           <SideBarNavItem
-            onClick={() => setSelectedMenu(menus[0])}
-            active={menus[0] === selectedMenu}
+            onClick={() => setSelectedMenu(MENUS.DASHBOARD)}
+            active={MENUS.DASHBOARD === selectedMenu}
           >
             <LayoutDashboard size={14} />
-            <SideBarNavTxt>대시보드</SideBarNavTxt>
+            <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
           </SideBarNavItem>
           <SideBarNavItem
-            onClick={() => setSelectedMenu(menus[1])}
-            active={menus[1] === selectedMenu}
+            onClick={() => setSelectedMenu(MENUS.SOURCE)}
+            active={MENUS.SOURCE === selectedMenu}
           >
             <FileText size={14} />
-            <SideBarNavTxt>학습소스 관리</SideBarNavTxt>
+            <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
           </SideBarNavItem>
           <SideBarNavItem
-            onClick={() => setSelectedMenu(menus[2])}
-            active={menus[2] === selectedMenu}
+            onClick={() => setSelectedMenu(MENUS.CREATE)}
+            active={MENUS.CREATE === selectedMenu}
           >
             <Plus size={14} />
-            <SideBarNavTxt>문제집 생성</SideBarNavTxt>
+            <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
           </SideBarNavItem>
           <SideBarNavItem
-            onClick={() => setSelectedMenu(menus[3])}
-            active={menus[3] === selectedMenu}
+            onClick={() => setSelectedMenu(MENUS.QUIZ)}
+            active={MENUS.QUIZ === selectedMenu}
           >
             <BookOpen size={14} />
-            <SideBarNavTxt>나의 문제집</SideBarNavTxt>
+            <SideBarNavTxt>{MENUS.QUIZ}</SideBarNavTxt>
           </SideBarNavItem>
           <SideBarNavItem
-            onClick={() => setSelectedMenu(menus[4])}
-            active={menus[4] === selectedMenu}
+            onClick={() => setSelectedMenu(MENUS.WRONG)}
+            active={MENUS.WRONG === selectedMenu}
           >
             <CircleX size={14} />
-            <SideBarNavTxt>오답노트</SideBarNavTxt>
+            <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
           </SideBarNavItem>
         </SideBarNav>
       </SideBarMain>
@@ -243,6 +243,7 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
               <SideBarUserInfoEmail>user@kakao.com</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
+          {/* TODO: 임시로 설정 아이콘 누르면 로그인 페이지로 가게함 */}
           <Settings size={16} onClick={() => navigate('/')} />
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
