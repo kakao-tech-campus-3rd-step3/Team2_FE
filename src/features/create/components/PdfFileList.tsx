@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
 import Spacer from '@/shared/components/Spacer';
+import Loading from './Loading';
 
 const FileListBox = styled.div`
   background-color: #${({ theme }) => theme.colors.background.foreground};
@@ -57,12 +58,23 @@ const FileListDivWithScroll = styled.div`
   border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
-const PdfFileList = ({
-  fileList,
-  selectedFileId,
-  onSelect,
-  onAddFile,
-}: PdfFileListProps & { onAddFile: (file: File) => void }) => {
+const LoadingDiv = styled.div`
+  border:
+  width:100%;
+  height:200px;
+  border:1px solid lightgray;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius: ${({ theme }) => theme.radius.radius2};
+`;
+
+interface Props extends PdfFileListProps {
+  onAddFile: (file: File) => void;
+  isLoading: boolean;
+}
+
+const PdfFileList = ({ fileList, selectedFileId, onSelect, onAddFile, isLoading }: Props) => {
   const handleButtonClick = () => {
     document.getElementById('pdf-upload-input')?.click();
   };
@@ -93,14 +105,22 @@ const PdfFileList = ({
         <FileListSearchInput placeholder="PDF 파일 검색" />
         <Spacer height="12px" />
         <FileListDivWithScroll>
-          {fileList.map((file) => (
-            <PdfFileItem
-              key={file.id}
-              file={file}
-              isSelected={selectedFileId === file.id}
-              onClick={() => onSelect(file.id)}
-            />
-          ))}
+          {isLoading ? (
+            <LoadingDiv>
+              <Loading size="25px" />
+            </LoadingDiv>
+          ) : fileList.length === 0 ? (
+            <LoadingDiv>저장된 PDF 파일이 없습니다.</LoadingDiv>
+          ) : (
+            fileList.map((file) => (
+              <PdfFileItem
+                key={file.id}
+                file={file}
+                isSelected={selectedFileId === file.id}
+                onClick={() => onSelect(file.id)}
+              />
+            ))
+          )}
         </FileListDivWithScroll>
       </FileListSecondBox>
     </FileListBox>

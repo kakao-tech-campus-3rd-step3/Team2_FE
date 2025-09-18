@@ -14,18 +14,18 @@ interface Step1Props {
 const SelectPdf = ({ onValidChange }: Step1Props) => {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
   const [fileList, setFileList] = useState<FileData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [isLoadingList, setIsLoadingList] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
   useEffect(() => {
+    onValidChange(false);
     const fetchFileList = async () => {
       try {
         const files = await getPdfFileList();
         setFileList(files);
       } catch (error) {
-        console.error('PDF 파일 목록 가져오기 실패:', error);
         alert('PDF 목록을 불러오는 데 실패했습니다.');
       } finally {
-        setIsLoading(false);
+        setIsLoadingList(false);
       }
     };
 
@@ -38,6 +38,7 @@ const SelectPdf = ({ onValidChange }: Step1Props) => {
   };
 
   const handleUpload = async (file: File) => {
+    setIsUploading(true);
     try {
       const uploadedFile = await uploadPdfFile(file);
 
@@ -45,8 +46,8 @@ const SelectPdf = ({ onValidChange }: Step1Props) => {
       handleSelectFile(uploadedFile.id);
     } catch (error: any) {
       alert(error.message || '파일 업로드 실패');
-      console.error('파일 업로드 오류:', error);
     }
+    setIsUploading(false);
   };
 
   return (
@@ -56,16 +57,13 @@ const SelectPdf = ({ onValidChange }: Step1Props) => {
         하단의 PDF에서 선택하거나 새로운 PDF를 업로드 해 선택한 후 다음단계로 진행하세요
       </StyledSubTitle>
       <Spacer height="12px" />
-      {isLoading ? (
-        <p>불러오는 중...</p>
-      ) : (
-        <PdfFileList
-          fileList={fileList}
-          selectedFileId={selectedFileId}
-          onSelect={handleSelectFile}
-          onAddFile={handleUpload}
-        />
-      )}
+      <PdfFileList
+        fileList={fileList}
+        selectedFileId={selectedFileId}
+        onSelect={handleSelectFile}
+        onAddFile={handleUpload}
+        isLoading={isLoadingList || isUploading}
+      />
     </>
   );
 };

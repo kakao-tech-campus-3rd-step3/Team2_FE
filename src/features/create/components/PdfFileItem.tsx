@@ -46,12 +46,17 @@ const FileInfo = styled.span`
   font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray6};
 `;
+const NewItemSpan = styled.span`
+  font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
+  color: ${({ theme }) => theme.colors.semantic.primary};
+`;
 
 interface FileItemProps {
   file: {
     name: string;
     size: string;
     date: string;
+    new?: boolean;
   };
   isSelected: boolean;
   onClick: () => void;
@@ -69,7 +74,10 @@ const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
       <FileInfoBox>
         <FileName>{file.name}</FileName>
         <FileInfoUnderBox>
-          <FileInfo>{fileInfoItems.join(FILE_INFO_SEPARATOR)}</FileInfo>
+          <FileInfo>
+            {fileInfoItems.join(FILE_INFO_SEPARATOR)}
+            {file.new && <NewItemSpan> new</NewItemSpan>}
+          </FileInfo>
         </FileInfoUnderBox>
       </FileInfoBox>
     </FileContentBox>

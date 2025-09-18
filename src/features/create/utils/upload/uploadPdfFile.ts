@@ -14,8 +14,8 @@ interface UploadResponse {
   id: string;
   name: string;
   size: string;
-  pages: string;
   date: string;
+  new: boolean;
 }
 
 /**
@@ -65,8 +65,8 @@ export const uploadPdfFile = async (file: File): Promise<UploadResponse> => {
       id: uploadId,
       name: file.name,
       size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-      pages: '??p',
       date: new Date().toISOString().split('T')[0].replace(/-/g, '. ') + '.',
+      new: true,
     };
   } catch (error: any) {
     console.error('업로드 실패:', error);
