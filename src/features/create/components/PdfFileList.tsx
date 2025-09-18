@@ -3,9 +3,10 @@ import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
 import Spacer from '@/shared/components/Spacer';
 import Loading from './Loading';
+import { useEffect, useState } from 'react';
 
 const FileListBox = styled.div`
-  background-color: #${({ theme }) => theme.colors.background.foreground};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
   border-radius: ${({ theme }) => theme.radius.radius2};
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
   width: 100%;
@@ -59,13 +60,12 @@ const FileListDivWithScroll = styled.div`
 `;
 
 const LoadingDiv = styled.div`
-  border:
-  width:100%;
-  height:200px;
-  border:1px solid lightgray;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  width: 100%;
+  height: 200px;
+  border: 1px solid lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
@@ -75,6 +75,23 @@ interface Props extends PdfFileListProps {
 }
 
 const PdfFileList = ({ fileList, selectedFileId, onSelect, onAddFile, isLoading }: Props) => {
+  const [searchText, setSearchText] = useState('');
+  const [debouncedSearchText, setDebouncedSearchText] = useState('');
+
+  // debounce: 입력이 멈춘 후 300ms 뒤에 검색어를 업데이트
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchText(searchText.trim());
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [searchText]);
+
+  // 검색어에 맞게 필터링된 파일 리스트
+  const filteredFiles = debouncedSearchText
+    ? fileList.filter((file) => file.name.toLowerCase().includes(debouncedSearchText.toLowerCase()))
+    : fileList;
+
   const handleButtonClick = () => {
     document.getElementById('pdf-upload-input')?.click();
   };
@@ -102,17 +119,21 @@ const PdfFileList = ({ fileList, selectedFileId, onSelect, onAddFile, isLoading 
       <Spacer height="12px" />
 
       <FileListSecondBox>
-        <FileListSearchInput placeholder="PDF 파일 검색" />
+        <FileListSearchInput
+          placeholder="PDF 파일 검색"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
         <Spacer height="12px" />
         <FileListDivWithScroll>
           {isLoading ? (
             <LoadingDiv>
               <Loading size="25px" />
             </LoadingDiv>
-          ) : fileList.length === 0 ? (
-            <LoadingDiv>저장된 PDF 파일이 없습니다.</LoadingDiv>
+          ) : filteredFiles.length === 0 ? (
+            <LoadingDiv>검색 결과가 없습니다.</LoadingDiv>
           ) : (
-            fileList.map((file) => (
+            filteredFiles.map((file) => (
               <PdfFileItem
                 key={file.id}
                 file={file}

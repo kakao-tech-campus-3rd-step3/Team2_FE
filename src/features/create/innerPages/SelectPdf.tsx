@@ -9,9 +9,10 @@ import { getPdfFileList } from '@/features/create/utils/getPdfFileList';
 
 interface Step1Props {
   onValidChange: (valid: boolean) => void;
+  onSelectFile: (fileInfo: { id: string; name: string }) => void;
 }
 
-const SelectPdf = ({ onValidChange }: Step1Props) => {
+const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
   const [fileList, setFileList] = useState<FileData[]>([]);
   const [isLoadingList, setIsLoadingList] = useState(true);
@@ -35,6 +36,13 @@ const SelectPdf = ({ onValidChange }: Step1Props) => {
   const handleSelectFile = (fileId: string | null) => {
     setSelectedFileId(fileId);
     onValidChange(!!fileId);
+
+    if (fileId) {
+      const selected = fileList.find((file) => file.id === fileId);
+      if (selected) {
+        onSelectFile({ id: fileId, name: selected.name });
+      }
+    }
   };
 
   const handleUpload = async (file: File) => {

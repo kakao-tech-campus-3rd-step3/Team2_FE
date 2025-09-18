@@ -24,6 +24,7 @@ const Container = styled.div`
 const Create = () => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
+  const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
 
   // 각 스텝별 유효성 상태 (초기값은 false, 필요에 따라 조정)
   const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
@@ -42,16 +43,18 @@ const Create = () => {
         return (
           <SelectPdf
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
+            onSelectFile={(fileInfo) => setSelectedFile(fileInfo)}
           />
         );
       case 2:
         return (
           <CreateSummary
+            selectedFile={selectedFile}
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
           />
         );
       case 3:
-        return <CreateRequest />;
+        return <CreateRequest selectedFile={selectedFile} onReset={handleReset} />;
       default:
         return null;
     }
@@ -67,6 +70,11 @@ const Create = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
+  };
+  const handleReset = () => {
+    setCurrentStep(1);
+    setSelectedFile(null);
+    setStepValidity({ 1: false, 2: false, 3: false });
   };
 
   const progress = ((currentStep - 1) / (stepLabels.length - 1)) * 100;

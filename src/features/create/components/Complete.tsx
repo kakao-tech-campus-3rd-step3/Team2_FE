@@ -3,6 +3,11 @@ import Celebration from '@/features/create/components/Celebration';
 import { Play, RefreshCw } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
 
+interface CompleteProps {
+  fileName: string | null;
+  onReset: () => void;
+}
+
 const NoticeTitle = styled.h3`
   width: 100%;
   text-align: center;
@@ -82,7 +87,7 @@ const RefreshIcon = styled(RefreshCw)`
   height: 1.25rem;
   transition: transform 0.5s ease;
 `;
-const Complete = () => {
+const Complete: React.FC<CompleteProps> = ({ fileName, onReset }) => {
   return (
     <>
       <Spacer height="70px" />
@@ -94,10 +99,10 @@ const Complete = () => {
         <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 완성했어요!
       </NoticeContent>
       <Spacer height="20px" />
-      <CompletedInfo> 기계학습 입문 문제집.pdf</CompletedInfo>
+      <CompletedInfo>{fileName ?? '선택된 파일 없음'}</CompletedInfo>
       <Spacer height="12px" />
       <ButtonBox>
-        <ReCreateButton>
+        <ReCreateButton onClick={onReset}>
           <RefreshIcon />
           <ButtonTitle>다른 문제 만들기</ButtonTitle>
           <ButtonSubtitle>새로운 문제 생성</ButtonSubtitle>
