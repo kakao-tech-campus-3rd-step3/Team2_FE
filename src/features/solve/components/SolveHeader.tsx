@@ -67,13 +67,20 @@ type SolveHeaderProps = {
   questionLength: number;
 };
 
-function SolveHeader({ currentQuestionIndex, title, setSelectedMenu, questionLength }: SolveHeaderProps) {
+function SolveHeader({
+  currentQuestionIndex,
+  title,
+  setSelectedMenu,
+  questionLength,
+}: SolveHeaderProps) {
   return (
     <SolveHeaderWrapper>
       <BackBtnTitleWrapper>
         <SolveHeaderBackBtn>
           <ArrowLeft size={20} />
-          <SolveHeaderBackBtnTxt onClick={() => setSelectedMenu('문제집 생성')}>돌아가기</SolveHeaderBackBtnTxt>
+          <SolveHeaderBackBtnTxt onClick={() => setSelectedMenu('문제집 생성')}>
+            돌아가기
+          </SolveHeaderBackBtnTxt>
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
@@ -82,7 +89,9 @@ function SolveHeader({ currentQuestionIndex, title, setSelectedMenu, questionLen
       </BackBtnTitleWrapper>
       <QuestionIndexViewWrapper>
         <GraduationCap size={16} />
-        <QuestionIndexViewTxt>{currentQuestionIndex}/{questionLength}</QuestionIndexViewTxt>
+        <QuestionIndexViewTxt>
+          {currentQuestionIndex}/{questionLength}
+        </QuestionIndexViewTxt>
       </QuestionIndexViewWrapper>
     </SolveHeaderWrapper>
   );

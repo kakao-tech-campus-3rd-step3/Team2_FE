@@ -148,12 +148,7 @@ export const mockQuestionSet: QuestionSet = {
     {
       id: 20,
       questionText: '데이터베이스에서 JOIN 연산을 사용하는 이유는?',
-      options: [
-        '데이터 압축',
-        '여러 테이블의 데이터를 결합',
-        '테이블 삭제',
-        '트랜잭션 롤백',
-      ],
+      options: ['데이터 압축', '여러 테이블의 데이터를 결합', '테이블 삭제', '트랜잭션 롤백'],
       answer: '여러 테이블의 데이터를 결합',
       explanation: 'JOIN은 서로 다른 테이블의 데이터를 조건에 따라 결합할 때 사용됩니다.',
     },

@@ -134,7 +134,7 @@ function SolveResult({
     });
 
     setCorrectCount(correct);
-    setScore(Math.round((correct / questionLength) * 100)); 
+    setScore(Math.round((correct / questionLength) * 100));
   }, [questions, solvedCheck, questionLength]);
 
   return (
@@ -163,11 +163,9 @@ function SolveResult({
           <ResultCardTitle>점수</ResultCardTitle>
           <ResultScoreWrapper>
             <ResultScore>{score}점</ResultScore>
-            <ResultScoreDescription>{score === 100
-                ? '완벽합니다!'
-                : score >= 70
-                ? '잘하셨어요!'
-                : '다시 공부해보세요!'}</ResultScoreDescription>
+            <ResultScoreDescription>
+              {score === 100 ? '완벽합니다!' : score >= 70 ? '잘하셨어요!' : '다시 공부해보세요!'}
+            </ResultScoreDescription>
           </ResultScoreWrapper>
         </ResultCard>
       </ResultCardsWrapper>

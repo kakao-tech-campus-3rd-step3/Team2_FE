@@ -1,4 +1,3 @@
-
 // 메뉴 상수
 export const MENUS = {
   DASHBOARD: '대시보드',
@@ -9,7 +8,7 @@ export const MENUS = {
 } as const;
 
 // 메뉴 상수 타입
-export type Menu = typeof MENUS[keyof typeof MENUS];
+export type Menu = (typeof MENUS)[keyof typeof MENUS];
 
 // 레이아웃 상수
 export const MIN_WIDTH = '1024px';

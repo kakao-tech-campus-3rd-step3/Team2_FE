@@ -62,7 +62,7 @@ const ItemTitleWrapper = styled.div`
 `;
 
 const SideBarMainTitle = styled.h1`
-  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize}; 
+  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
 `;

@@ -113,11 +113,17 @@ function QuestionArea({
   const goNext = () => {
     if (currentQuestionIndex < questions.questionLength) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (currentQuestionIndex === questions.questionLength && solvedCheck.size === questions.questionLength) {
+    } else if (
+      currentQuestionIndex === questions.questionLength &&
+      solvedCheck.size === questions.questionLength
+    ) {
       setIsAllSolved(true);
-    } else if(currentQuestionIndex === questions.questionLength && solvedCheck.size !== questions.questionLength) {
-      toast("모든 문제를 체크해야 넘어갈 수 있습니다");
-    } 
+    } else if (
+      currentQuestionIndex === questions.questionLength &&
+      solvedCheck.size !== questions.questionLength
+    ) {
+      toast('모든 문제를 체크해야 넘어갈 수 있습니다');
+    }
   };
 
   useEffect(() => {

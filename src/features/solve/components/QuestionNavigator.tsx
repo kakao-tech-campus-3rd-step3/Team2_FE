@@ -53,7 +53,7 @@ function QuestionNavigator({
   currentQuestionIndex,
   solvedCheck,
   setCurrentQuestionIndex,
-  questionLength
+  questionLength,
 }: QuestionNavigatorProps) {
   return (
     <QuestionNavigatorWrapper>

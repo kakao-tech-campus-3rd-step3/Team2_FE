@@ -34,7 +34,7 @@ export function createEventSource(callback: NotificationCallbacks) {
   const eventSource = new EventSourcePolyfill(`${BASE_URL}${SSE_SUB_URL}`, {
     withCredentials: true,
     headers: {
-      'Authorization': `Basic ${encodedCredentials}`,
+      Authorization: `Basic ${encodedCredentials}`,
     },
   });
 
