@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { ArrowLeft } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+
+import type { QuestionSet } from '@/features/solve/types/question';
 
 const QuestionAreaWrapper = styled.div`
   margin-right: ${({ theme }) => theme.spacing.spacing3};
@@ -74,18 +77,11 @@ const NextButton = styled.button`
   align-items: center;
 `;
 
-interface Question {
-  id: number; // 문제 고유 ID
-  questionText: string; // 문제 텍스트
-  options: string[]; // 오답 목록
-  answer: string; // 정답
-  explanation: string; // 해설
-}
 type QuestionAreaProps = {
   currentQuestionIndex: number;
-  questions: Question[];
-  solvedCheck: Set<number>;
-  setSolvedCheck: React.Dispatch<React.SetStateAction<Set<number>>>;
+  questions: QuestionSet;
+  solvedCheck: Map<number, string>;
+  setSolvedCheck: React.Dispatch<React.SetStateAction<Map<number, string>>>;
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -100,10 +96,10 @@ function QuestionArea({
 }: QuestionAreaProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null); // 어떤 선지가 선택되어있는지
 
-  const markSolved = (qNo: number) => {
+  const markSolved = (qNo: number, optionText: string) => {
     setSolvedCheck((prev) => {
-      const next = new Set(prev);
-      next.add(qNo); // qNo 문제를 '완료'로 기록
+      const next = new Map(prev);
+      next.set(qNo, optionText);
       return next;
     });
   };
@@ -115,12 +111,18 @@ function QuestionArea({
   };
 
   const goNext = () => {
-    if (currentQuestionIndex < 10) {
+    if (currentQuestionIndex < questions.questionLength) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (currentQuestionIndex === 10 && solvedCheck.size === 10) {
+    } else if (currentQuestionIndex === questions.questionLength && solvedCheck.size === questions.questionLength) {
       setIsAllSolved(true);
-    }
+    } else if(currentQuestionIndex === questions.questionLength && solvedCheck.size !== questions.questionLength) {
+      toast("모든 문제를 체크해야 넘어갈 수 있습니다");
+    } 
   };
+
+  useEffect(() => {
+    setSelectedOption(null);
+  }, [currentQuestionIndex]);
 
   return (
     <QuestionAreaWrapper>
@@ -128,14 +130,14 @@ function QuestionArea({
         <QuestionAreaTitle>문제 {currentQuestionIndex}</QuestionAreaTitle>
       </QuestionAreaHeader>
       <QuestionWrapper>
-        <QuestionStem>{questions[currentQuestionIndex - 1].questionText}</QuestionStem>
+        <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
         <OptionList>
-          {questions[currentQuestionIndex - 1].options.map((opt, i) => (
+          {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
             <OptionItem
               key={i}
               active={selectedOption === i}
               onClick={() => {
-                markSolved(currentQuestionIndex);
+                markSolved(currentQuestionIndex, opt);
                 setSelectedOption(i);
               }}
             >{`${i + 1}. ${opt}`}</OptionItem>

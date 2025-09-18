@@ -45,21 +45,21 @@ const QuestionNumberItem = styled.div<{ active?: boolean; solved?: boolean }>`
 
 type QuestionNavigatorProps = {
   currentQuestionIndex: number;
-  solvedCheck: Set<number>;
+  solvedCheck: Map<number, string>;
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
+  questionLength: number;
 };
 function QuestionNavigator({
   currentQuestionIndex,
   solvedCheck,
   setCurrentQuestionIndex,
+  questionLength
 }: QuestionNavigatorProps) {
   return (
     <QuestionNavigatorWrapper>
       <QuestionNavigatorTitle>문제 바로가기</QuestionNavigatorTitle>
       <QuestionNumberList>
-        {/* 이부분 나중에 api나오면 map으로 동적으로 그리게 할거임 */}
-        {/* 아님 걍 state 값으로 map돌릴까? */}
-        {Array.from({ length: 10 }, (_, i) => (
+        {Array.from({ length: questionLength }, (_, i) => (
           <QuestionNumberItem
             key={i + 1}
             active={i + 1 === currentQuestionIndex}
