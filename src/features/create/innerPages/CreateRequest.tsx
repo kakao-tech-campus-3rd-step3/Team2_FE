@@ -12,7 +12,6 @@ interface CreateRequestProps {
   questionSetReady: boolean;
 }
 
-// ... (styled-components and NextComponent remain the same)
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -76,45 +75,37 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
   setSelectedMenu,
   questionSetReady,
 }) => {
-  // The local state now only tracks the API request status.
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // A guard clause to prevent running the effect without a selected file.
     if (!selectedFile) return;
 
     const createQuestionSet = async () => {
-      // Reset status to 'requesting' when a new request is initiated.
       setStatus('requesting');
       setError(null);
 
       try {
+        console.log(selectedFile);
         await api.post('/question-set', {
+          title: selectedFile.name,
           difficulty: 'EASY',
           questionCount: 20,
-          type: 'SUBJECTIVE',
+          type: 'MULTIPLE_CHOICE',
           sourceIds: [parseInt(selectedFile.id)],
         });
-        // We no longer set a 'next' or 'success' state here.
-        // The component will wait for the parent to update `questionSetReady`.
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(`문제집 생성 중 오류: ${err.message}`);
         } else {
           setError('문제집 생성 중 알 수 없는 오류가 발생했습니다.');
         }
-        // Set status to 'error' only on failure.
         setStatus('error');
       }
     };
 
     createQuestionSet();
   }, [selectedFile]);
-
-  // --- Main Render Logic ---
-
-  // 1. If the parent component signals that the set is ready, show the complete screen.
   if (questionSetReady) {
     return (
       <NextComponent
@@ -124,8 +115,6 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       />
     );
   }
-
-  // 2. If the API call resulted in an error, show the error message.
   if (status === 'error') {
     return (
       <Container>
@@ -136,8 +125,6 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       </Container>
     );
   }
-
-  // 3. Otherwise, show the loading/spinner screen.
   return (
     <Container>
       <Spinner />
