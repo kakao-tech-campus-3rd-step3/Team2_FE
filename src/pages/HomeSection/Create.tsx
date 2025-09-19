@@ -20,8 +20,10 @@ const Container = styled.div`
   width: 100%;
   min-height: 400px;
 `;
-
-const Create = () => {
+type CreateProps = {
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+};
+const Create = ({ setSelectedMenu }: CreateProps) => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
@@ -54,7 +56,13 @@ const Create = () => {
           />
         );
       case 3:
-        return <CreateRequest selectedFile={selectedFile} onReset={handleReset} />;
+        return (
+          <CreateRequest
+            selectedFile={selectedFile}
+            onReset={handleReset}
+            setSelectedMenu={setSelectedMenu}
+          />
+        );
       default:
         return null;
     }

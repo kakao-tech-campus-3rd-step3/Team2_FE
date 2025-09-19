@@ -8,6 +8,7 @@ import { api } from '@/shared/api/axiosClient';
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
   onReset: () => void;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>; // ✅ 수정: 이름 일치
 }
 
 const Container = styled.div`
@@ -57,16 +58,21 @@ const RetryButton = styled.button`
   }
 `;
 
-const NextComponent: React.FC<{ fileName: string | null; onReset: () => void }> = ({
-  fileName,
-  onReset,
-}) => (
+const NextComponent: React.FC<{
+  fileName: string | null;
+  onReset: () => void;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ fileName, onReset, setSelectedMenu }) => (
   <Container>
-    <Complete fileName={fileName} onReset={onReset} />
+    <Complete fileName={fileName} onReset={onReset} setSelectedMenu={setSelectedMenu} />
   </Container>
 );
 
-const CreateRequest: React.FC<CreateRequestProps> = ({ selectedFile, onReset }) => {
+const CreateRequest: React.FC<CreateRequestProps> = ({
+  selectedFile,
+  onReset,
+  setSelectedMenu,
+}) => {
   const [step, setStep] = useState<'loading' | 'next' | 'error'>('loading');
   const [error, setError] = useState<string | null>(null);
 
@@ -91,7 +97,13 @@ const CreateRequest: React.FC<CreateRequestProps> = ({ selectedFile, onReset }) 
   }, [selectedFile]);
 
   if (step === 'next') {
-    return <NextComponent fileName={selectedFile?.name ?? null} onReset={onReset} />;
+    return (
+      <NextComponent
+        fileName={selectedFile?.name ?? null}
+        onReset={onReset}
+        setSelectedMenu={setSelectedMenu}
+      />
+    );
   }
 
   return (
