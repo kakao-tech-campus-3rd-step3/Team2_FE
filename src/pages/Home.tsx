@@ -65,7 +65,7 @@ function Home() {
       case '학습소스 관리':
         return <Source />;
       case '문제집 생성':
-        return <Create/>;
+        return <Create />;
       case '문제풀이':
         return <Solve setSelectedMenu={setSelectedMenu} questionSetId={questionSetId} />;
       case '나의 문제집':
