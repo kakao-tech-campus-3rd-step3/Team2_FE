@@ -6,7 +6,11 @@ import Spacer from '@/shared/components/Spacer';
 
 interface Step2Props {
   onValidChange: (isValid: boolean) => void;
+<<<<<<< HEAD
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+=======
+  selectedFile: { id: string; name: string | null } | null;
+>>>>>>> e6f6c8006a9ec1b83034b902239fe84bce4094cd
 }
 
 const InfoContainer = styled.div`
@@ -24,6 +28,10 @@ const SettingInfoBox = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
+=======
+  min-width: 0;
+>>>>>>> e6f6c8006a9ec1b83034b902239fe84bce4094cd
   padding: 15px;
 `;
 
@@ -42,6 +50,7 @@ const InfoSpan = styled.span`
   width: 100%;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray6};
+<<<<<<< HEAD
 `;
 
 const CreateButtonContainer = styled.div`
@@ -85,6 +94,36 @@ const CreateSummary: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu })
     onValidChange(false);
   }, []);
 
+=======
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const CreateSummary: React.FC<Step2Props> = ({ onValidChange, selectedFile }) => {
+  useEffect(() => {
+    onValidChange(true);
+  }, []);
+
+  const infoData = [
+    {
+      title: '선택된 PDF',
+      content: '1개',
+      description: selectedFile?.name ?? '선택된 파일이 없습니다.',
+    },
+    {
+      title: '문제 개수',
+      content: '20문제',
+      description: 'PDF 내용으로만',
+    },
+    {
+      title: '문제 유형',
+      content: '객관식',
+      description: '4지 선다형',
+    },
+  ];
+
+>>>>>>> e6f6c8006a9ec1b83034b902239fe84bce4094cd
   return (
     <>
       <Title>문제집을 생성합니다</Title>
@@ -100,9 +139,12 @@ const CreateSummary: React.FC<Step2Props> = ({ onValidChange, setSelectedMenu })
         ))}
       </InfoContainer>
       <Spacer height="20px" />
+<<<<<<< HEAD
       <CreateButtonContainer>
         <CreateButton onClick={() => setSelectedMenu('문제풀이')}>문제 생성</CreateButton>
       </CreateButtonContainer>
+=======
+>>>>>>> e6f6c8006a9ec1b83034b902239fe84bce4094cd
     </>
   );
 };
