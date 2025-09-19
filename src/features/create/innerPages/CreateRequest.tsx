@@ -9,8 +9,10 @@ interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
   onReset: () => void;
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  questionSetReady: boolean;
 }
 
+// ... (styled-components and NextComponent remain the same)
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -72,35 +74,48 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
   selectedFile,
   onReset,
   setSelectedMenu,
+  questionSetReady,
 }) => {
-  const [step, setStep] = useState<'loading' | 'next' | 'error'>('loading');
+  // The local state now only tracks the API request status.
+  const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // A guard clause to prevent running the effect without a selected file.
+    if (!selectedFile) return;
+
     const createQuestionSet = async () => {
+      // Reset status to 'requesting' when a new request is initiated.
+      setStatus('requesting');
+      setError(null);
+
       try {
         await api.post('/question-set', {
-          difficulty: 'EASY', // 난이도 normal로 하면 에러 발생 : 확인 필요
+          difficulty: 'EASY',
           questionCount: 20,
           type: 'SUBJECTIVE',
-          sourceIds: selectedFile ? [parseInt(selectedFile.id)] : [],
+          sourceIds: [parseInt(selectedFile.id)],
         });
-
-        setStep('next');
+        // We no longer set a 'next' or 'success' state here.
+        // The component will wait for the parent to update `questionSetReady`.
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(`문제집 생성 중 오류: ${err.message}`);
         } else {
           setError('문제집 생성 중 알 수 없는 오류가 발생했습니다.');
         }
-        setStep('error');
+        // Set status to 'error' only on failure.
+        setStatus('error');
       }
     };
 
     createQuestionSet();
   }, [selectedFile]);
 
-  if (step === 'next') {
+  // --- Main Render Logic ---
+
+  // 1. If the parent component signals that the set is ready, show the complete screen.
+  if (questionSetReady) {
     return (
       <NextComponent
         fileName={selectedFile?.name ?? null}
@@ -110,28 +125,28 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     );
   }
 
+  // 2. If the API call resulted in an error, show the error message.
+  if (status === 'error') {
+    return (
+      <Container>
+        <NoticeTitle>문제 생성 중 오류가 발생했습니다.</NoticeTitle>
+        <ErrorMessage>{error}</ErrorMessage>
+        <Spacer height="20px" />
+        <RetryButton onClick={onReset}>문제 다시 생성하기</RetryButton>
+      </Container>
+    );
+  }
+
+  // 3. Otherwise, show the loading/spinner screen.
   return (
     <Container>
-      {step === 'loading' && (
-        <>
-          <Spinner />
-          <Spacer height="25px" />
-          <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
-          <NoticeContent>
-            선택하신 PDF에서 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
-            <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
-          </NoticeContent>
-        </>
-      )}
-
-      {step === 'error' && (
-        <>
-          <NoticeTitle>문제 생성 중 오류가 발생했습니다.</NoticeTitle>
-          <ErrorMessage>{error}</ErrorMessage>
-          <Spacer height="20px" />
-          <RetryButton onClick={onReset}>문제 다시 생성하기</RetryButton>
-        </>
-      )}
+      <Spinner />
+      <Spacer height="25px" />
+      <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
+      <NoticeContent>
+        선택하신 PDF에서 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
+        <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
+      </NoticeContent>
     </Container>
   );
 };

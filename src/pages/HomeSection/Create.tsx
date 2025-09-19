@@ -22,8 +22,9 @@ const Container = styled.div`
 `;
 type CreateProps = {
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  questionSetReady: boolean;
 };
-const Create = ({ setSelectedMenu }: CreateProps) => {
+const Create = ({ setSelectedMenu, questionSetReady }: CreateProps) => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
@@ -61,6 +62,7 @@ const Create = ({ setSelectedMenu }: CreateProps) => {
             selectedFile={selectedFile}
             onReset={handleReset}
             setSelectedMenu={setSelectedMenu}
+            questionSetReady={questionSetReady}
           />
         );
       default:
