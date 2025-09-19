@@ -9,6 +9,7 @@ interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
   onReset: () => void;
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  questionSetReady: boolean;
 }
 
 const Container = styled.div`
@@ -72,35 +73,40 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
   selectedFile,
   onReset,
   setSelectedMenu,
+  questionSetReady,
 }) => {
-  const [step, setStep] = useState<'loading' | 'next' | 'error'>('loading');
+  const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const createQuestionSet = async () => {
-      try {
-        await api.post('/question-set', {
-          difficulty: 'EASY', // 난이도 normal로 하면 에러 발생 : 확인 필요
-          questionCount: 20,
-          type: 'SUBJECTIVE',
-          sourceIds: selectedFile ? [parseInt(selectedFile.id)] : [],
-        });
+    if (!selectedFile) return;
 
-        setStep('next');
+    const createQuestionSet = async () => {
+      setStatus('requesting');
+      setError(null);
+
+      try {
+        console.log(selectedFile);
+        await api.post('/question-set', {
+          title: selectedFile.name,
+          difficulty: 'EASY',
+          questionCount: 20,
+          type: 'MULTIPLE_CHOICE',
+          sourceIds: [parseInt(selectedFile.id)],
+        });
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(`문제집 생성 중 오류: ${err.message}`);
         } else {
           setError('문제집 생성 중 알 수 없는 오류가 발생했습니다.');
         }
-        setStep('error');
+        setStatus('error');
       }
     };
 
     createQuestionSet();
   }, [selectedFile]);
-
-  if (step === 'next') {
+  if (questionSetReady) {
     return (
       <NextComponent
         fileName={selectedFile?.name ?? null}
@@ -109,29 +115,25 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       />
     );
   }
-
+  if (status === 'error') {
+    return (
+      <Container>
+        <NoticeTitle>문제 생성 중 오류가 발생했습니다.</NoticeTitle>
+        <ErrorMessage>{error}</ErrorMessage>
+        <Spacer height="20px" />
+        <RetryButton onClick={onReset}>문제 다시 생성하기</RetryButton>
+      </Container>
+    );
+  }
   return (
     <Container>
-      {step === 'loading' && (
-        <>
-          <Spinner />
-          <Spacer height="25px" />
-          <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
-          <NoticeContent>
-            선택하신 PDF에서 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
-            <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
-          </NoticeContent>
-        </>
-      )}
-
-      {step === 'error' && (
-        <>
-          <NoticeTitle>문제 생성 중 오류가 발생했습니다.</NoticeTitle>
-          <ErrorMessage>{error}</ErrorMessage>
-          <Spacer height="20px" />
-          <RetryButton onClick={onReset}>문제 다시 생성하기</RetryButton>
-        </>
-      )}
+      <Spinner />
+      <Spacer height="25px" />
+      <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
+      <NoticeContent>
+        선택하신 PDF에서 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
+        <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
+      </NoticeContent>
     </Container>
   );
 };

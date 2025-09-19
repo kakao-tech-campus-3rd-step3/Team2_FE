@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(true); // LSB의 열림, 닫힘 state
   const [selectedMenu, setSelectedMenu] = useState<string>('문제집 생성'); // TODO: 현재 state로 어는 페이지에 있는지 저장하고 페이징, 하지만 리액트 라우터 아울렛을 사용하는 방식으로 리펙토링 해야함
-  const [, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state, 구조 개선하면 지울수도 있는 state, questionSetReady 쓸때 구조분해할당에 추가
+  const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state, 구조 개선하면 지울수도 있는 state, questionSetReady 쓸때 구조분해할당에 추가
   const [questionSetId, setQuestionSetId] = useState<number>(5); // 문제 조회할때 보낼 state, questionSetId 쓸때 구조분해할당에 추가
 
   // sse 연결
@@ -65,7 +65,7 @@ function Home() {
       case '학습소스 관리':
         return <Source />;
       case '문제집 생성':
-        return <Create setSelectedMenu={setSelectedMenu} />;
+        return <Create setSelectedMenu={setSelectedMenu} questionSetReady={questionSetReady} />;
       case '문제풀이':
         return <Solve setSelectedMenu={setSelectedMenu} questionSetId={questionSetId} />;
       case '나의 문제집':
