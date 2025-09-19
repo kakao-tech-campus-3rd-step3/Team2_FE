@@ -20,9 +20,9 @@ const PageTitle = styled.h1`
   margin-left: ${({ theme }) => theme.spacing.spacing3};
 `;
 
+// 여기도 props 타입이 일관되지않네....
 interface PageHeaderProps {
   selectedMenu: string;
-  setSelectedMenu: (menu: string) => void;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

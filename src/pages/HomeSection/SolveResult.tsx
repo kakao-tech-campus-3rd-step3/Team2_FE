@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import type { QuestionSet } from '@/features/solve/types/question';
+import { useEffect, useState } from 'react';
 
 const SolveResultTitle = styled.h1`
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
@@ -103,21 +105,38 @@ const GoToDashboardButton = styled.button`
   background-color: ${({ theme }) => theme.colors.semantic.primary};
 `;
 
-interface Question {
-  id: number; // 문제 고유 ID
-  questionText: string; // 문제 텍스트
-  options: string[]; // 오답 목록
-  answer: string; // 정답
-  explanation: string; // 해설
-}
-
 type SolveResultProps = {
-  questions: Question[];
-  solvedCheck: Set<number>;
+  questionLength: number;
+  solvedCheck: Map<number, string>;
   setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  questions: QuestionSet;
 };
 
-function SolveResult({ questions, solvedCheck, setSelectedMenu }: SolveResultProps) {
+function SolveResult({
+  questionLength,
+  solvedCheck,
+  setSelectedMenu,
+  questions,
+}: SolveResultProps) {
+  const [correctCount, setCorrectCount] = useState(0);
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    let correct = 0;
+
+    questions.questions.forEach((q, idx) => {
+      const qNo = idx + 1;
+      const userAnswer = solvedCheck.get(qNo);
+
+      if (userAnswer && userAnswer.trim() === q.answer.trim()) {
+        correct++;
+      }
+    });
+
+    setCorrectCount(correct);
+    setScore(Math.round((correct / questionLength) * 100));
+  }, [questions, solvedCheck, questionLength]);
+
   return (
     <>
       <SolveResultTitle>문제 풀이 완료!</SolveResultTitle>
@@ -128,7 +147,7 @@ function SolveResult({ questions, solvedCheck, setSelectedMenu }: SolveResultPro
           <ResultStats>
             <ResultStatItem>
               <ResultStatLabel>전체 문제</ResultStatLabel>
-              <ResultStatValue>{questions.length}문제</ResultStatValue>
+              <ResultStatValue>{questionLength}문제</ResultStatValue>
             </ResultStatItem>
             <ResultStatItem>
               <ResultStatLabel>답변한 문제</ResultStatLabel>
@@ -136,15 +155,17 @@ function SolveResult({ questions, solvedCheck, setSelectedMenu }: SolveResultPro
             </ResultStatItem>
             <ResultStatItem>
               <ResultStatLabel>정답 수</ResultStatLabel>
-              <ResultStatValue>0문제</ResultStatValue>
+              <ResultStatValue>{correctCount}문제</ResultStatValue>
             </ResultStatItem>
           </ResultStats>
         </ResultCard>
         <ResultCard>
           <ResultCardTitle>점수</ResultCardTitle>
           <ResultScoreWrapper>
-            <ResultScore>0점</ResultScore>
-            <ResultScoreDescription>다시 공부해보세요!</ResultScoreDescription>
+            <ResultScore>{score}점</ResultScore>
+            <ResultScoreDescription>
+              {score === 100 ? '완벽합니다!' : score >= 70 ? '잘하셨어요!' : '다시 공부해보세요!'}
+            </ResultScoreDescription>
           </ResultScoreWrapper>
         </ResultCard>
       </ResultCardsWrapper>

@@ -2,9 +2,11 @@ import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
 import Spacer from '@/shared/components/Spacer';
+import Loading from './Loading';
+import { useEffect, useState } from 'react';
 
 const FileListBox = styled.div`
-  background-color: #${({ theme }) => theme.colors.background.foreground};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
   border-radius: ${({ theme }) => theme.radius.radius2};
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
   width: 100%;
@@ -57,24 +59,48 @@ const FileListDivWithScroll = styled.div`
   border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
-const PdfFileList = ({
-  fileList,
-  selectedFileId,
-  onSelect,
-  onUpload,
-}: PdfFileListProps & { onUpload: (file: File) => void }) => {
+const LoadingDiv = styled.div`
+  width: 100%;
+  height: 200px;
+  border: 1px solid lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: ${({ theme }) => theme.radius.radius2};
+`;
+
+interface Props extends PdfFileListProps {
+  onAddFile: (file: File) => void;
+  isLoading: boolean;
+}
+
+const PdfFileList = ({ fileList, selectedFileId, onSelect, onAddFile, isLoading }: Props) => {
+  const [searchText, setSearchText] = useState('');
+  const [debouncedSearchText, setDebouncedSearchText] = useState('');
+
+  // debounce: 입력이 멈춘 후 300ms 뒤에 검색어를 업데이트
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchText(searchText.trim());
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [searchText]);
+
+  // 검색어에 맞게 필터링된 파일 리스트
+  const filteredFiles = debouncedSearchText
+    ? fileList.filter((file) => file.name.toLowerCase().includes(debouncedSearchText.toLowerCase()))
+    : fileList;
+
   const handleButtonClick = () => {
     document.getElementById('pdf-upload-input')?.click();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      onUpload(file);
-    } else {
-      alert('PDF 파일만 업로드 가능합니다.');
-    }
-    e.target.value = ''; // 같은 파일 재업로드 가능하게 초기화
+    e.target.value = '';
+    if (!file) return;
+    onAddFile(file);
   };
 
   return (
@@ -89,19 +115,33 @@ const PdfFileList = ({
           onChange={handleFileChange}
         />
       </FileListFirstBox>
+
       <Spacer height="12px" />
+
       <FileListSecondBox>
-        <FileListSearchInput placeholder="PDF 파일 검색" />
+        <FileListSearchInput
+          placeholder="PDF 파일 검색"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
         <Spacer height="12px" />
         <FileListDivWithScroll>
-          {fileList.map((file) => (
-            <PdfFileItem
-              key={file.id}
-              file={file}
-              isSelected={selectedFileId === file.id}
-              onClick={() => onSelect(file.id)}
-            />
-          ))}
+          {isLoading ? (
+            <LoadingDiv>
+              <Loading size="25px" />
+            </LoadingDiv>
+          ) : filteredFiles.length === 0 ? (
+            <LoadingDiv>검색 결과가 없습니다.</LoadingDiv>
+          ) : (
+            filteredFiles.map((file) => (
+              <PdfFileItem
+                key={file.id}
+                file={file}
+                isSelected={selectedFileId === file.id}
+                onClick={() => onSelect(file.id)}
+              />
+            ))
+          )}
         </FileListDivWithScroll>
       </FileListSecondBox>
     </FileListBox>

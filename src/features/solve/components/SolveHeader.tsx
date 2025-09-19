@@ -62,24 +62,36 @@ const QuestionIndexViewTxt = styled.span`
 
 type SolveHeaderProps = {
   currentQuestionIndex: number;
+  title: string;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  questionLength: number;
 };
 
-function SolveHeader({ currentQuestionIndex }: SolveHeaderProps) {
+function SolveHeader({
+  currentQuestionIndex,
+  title,
+  setSelectedMenu,
+  questionLength,
+}: SolveHeaderProps) {
   return (
     <SolveHeaderWrapper>
       <BackBtnTitleWrapper>
         <SolveHeaderBackBtn>
           <ArrowLeft size={20} />
-          <SolveHeaderBackBtnTxt>돌아가기</SolveHeaderBackBtnTxt>
+          <SolveHeaderBackBtnTxt onClick={() => setSelectedMenu('문제집 생성')}>
+            돌아가기
+          </SolveHeaderBackBtnTxt>
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
-          <SolveTitle>데이터 분석 기초.pdf</SolveTitle>
+          <SolveTitle>{title}</SolveTitle>
           <SolveDescription>객관식 20문제</SolveDescription>
         </TitleDescriptionWrapper>
       </BackBtnTitleWrapper>
       <QuestionIndexViewWrapper>
         <GraduationCap size={16} />
-        <QuestionIndexViewTxt>{currentQuestionIndex}/10</QuestionIndexViewTxt>
+        <QuestionIndexViewTxt>
+          {currentQuestionIndex}/{questionLength}
+        </QuestionIndexViewTxt>
       </QuestionIndexViewWrapper>
     </SolveHeaderWrapper>
   );

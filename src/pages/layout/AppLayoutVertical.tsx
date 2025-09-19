@@ -1,4 +1,4 @@
-import { MIN_HEIGHT } from '@/shared/constants';
+import { MIN_HEIGHT } from '@/shared/config/constants';
 import styled from '@emotion/styled';
 
 export const PageLayout = styled.div`
