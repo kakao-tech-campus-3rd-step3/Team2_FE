@@ -41,26 +41,18 @@ const ProgressStatValue = styled.span`
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
 `;
 
-interface Question {
-  id: number; // 문제 고유 ID
-  questionText: string; // 문제 텍스트
-  options: string[]; // 오답 목록
-  answer: string; // 정답
-  explanation: string; // 해설
-}
-
 type ProgressCardProps = {
-  questions: Question[];
-  solvedCheck: Set<number>;
+  questionLength: number;
+  solvedCheck: Map<number, string>;
 };
-function ProgressCard({ questions, solvedCheck }: ProgressCardProps) {
+function ProgressCard({ questionLength, solvedCheck }: ProgressCardProps) {
   return (
     <ProgressCardWrapper>
       <CardTitle>진행 현황</CardTitle>
       <ProgressStats>
         <ProgressStatItem>
           <ProgressStatLabel>전체 문제</ProgressStatLabel>
-          <ProgressStatValue>{questions.length}</ProgressStatValue>
+          <ProgressStatValue>{questionLength}</ProgressStatValue>
         </ProgressStatItem>
         <ProgressStatItem>
           <ProgressStatLabel>답변 완료</ProgressStatLabel>
@@ -68,7 +60,7 @@ function ProgressCard({ questions, solvedCheck }: ProgressCardProps) {
         </ProgressStatItem>
         <ProgressStatItem>
           <ProgressStatLabel>남은 문제</ProgressStatLabel>
-          <ProgressStatValue>{questions.length - solvedCheck.size}</ProgressStatValue>
+          <ProgressStatValue>{questionLength - solvedCheck.size}</ProgressStatValue>
         </ProgressStatItem>
       </ProgressStats>
     </ProgressCardWrapper>

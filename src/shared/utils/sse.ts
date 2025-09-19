@@ -1,42 +1,45 @@
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
-// TODO: 환경변수로 관리
-const SSE_SUB_URL = 'notification/sub';
-const BASE_URL = 'http://local.pull.it.kr:8080';
-
-interface NotificationCallbacks {
-  onOpen?: () => void;
-  onHandShake?: () => void; // TODO: backend 수정 후 payload 타입 정의
-  onQuestionSetCreationComplete?: (payload: onQuestionSetCreationCompletePayload) => void;
-}
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const SSE_SUB_URL = '/api/notifications/subscribe';
+const BASIC_USER = import.meta.env.VITE_BASIC_USER;
+const BASIC_PASS = import.meta.env.VITE_BASIC_PASS;
 
 interface onQuestionSetCreationCompletePayload {
   success: boolean;
   questionSetId: number;
   message: string;
 }
+interface NotificationCallbacks {
+  onOpen?: () => void;
+  onHandShake?: () => void; // TODO: backend 수정 후 payload 타입 정의
+  onQuestionSetCreationComplete?: (payload: onQuestionSetCreationCompletePayload) => void;
+}
 
 const EVENT_NAME = {
+  OPEN: 'open',
   HANDSHAKE: 'handShakeComplete',
   QUESTION_SET_CREATION_COMPLETE: 'questionSetCreationComplete',
 } as const;
 
-export function createEventSource(token: string, callback: NotificationCallbacks) {
+export function createEventSource(callback: NotificationCallbacks) {
   const {
     onOpen,
     onHandShake,
     onQuestionSetCreationComplete: onQuestionCreationComplete,
   } = callback;
 
-  const eventSource = new EventSourcePolyfill(`${BASE_URL}/${SSE_SUB_URL}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  const encodedCredentials = btoa(`${BASIC_USER}:${BASIC_PASS}`);
+
+  const eventSource = new EventSourcePolyfill(`${BASE_URL}${SSE_SUB_URL}`, {
     withCredentials: true,
+    headers: {
+      Authorization: `Basic ${encodedCredentials}`,
+    },
   });
 
   if (onOpen) {
-    eventSource.addEventListener('open', () => {
+    eventSource.addEventListener(EVENT_NAME.OPEN, () => {
       onOpen();
     });
   }
@@ -53,4 +56,6 @@ export function createEventSource(token: string, callback: NotificationCallbacks
       onQuestionCreationComplete(data);
     });
   }
+
+  return eventSource;
 }
