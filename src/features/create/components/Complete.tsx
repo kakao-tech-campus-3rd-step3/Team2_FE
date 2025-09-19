@@ -3,24 +3,34 @@ import Celebration from '@/features/create/components/Celebration';
 import { Play, RefreshCw } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
 
+interface CompleteProps {
+  fileName: string | null;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  onReset: () => void;
+}
+
 const NoticeTitle = styled.h3`
   width: 100%;
   text-align: center;
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
 `;
+
 const NoticeContent = styled.p`
   width: 100%;
   padding: 10px;
   text-align: center;
 `;
+
 const NoticeContentHighlight = styled.span`
   color: ${({ theme }) => theme.colors.semantic.primary};
   font-weight: ${({ theme }) => theme.typography.body1Bold.fontWeight};
 `;
+
 const CompletedInfo = styled.h4`
   width: 100%;
   text-align: center;
 `;
+
 const ButtonBox = styled.div`
   width: 50%;
   display: flex;
@@ -28,6 +38,7 @@ const ButtonBox = styled.div`
   gap: 10px;
   height: 70px;
 `;
+
 const ReCreateButton = styled.button`
   flex: 1;
   border-radius: ${({ theme }) => theme.radius.radius2};
@@ -41,6 +52,7 @@ const ReCreateButton = styled.button`
     transform: rotate(180deg);
   }
 `;
+
 const GoSolvingButton = styled.button`
   flex: 1;
   border-radius: ${({ theme }) => theme.radius.radius2};
@@ -56,7 +68,7 @@ const GoSolvingButton = styled.button`
     filter 0.3s ease;
 
   &:hover {
-    filter: brightness(1.05); /* 살짝 진해짐 */
+    filter: brightness(1.05);
   }
 
   &:hover svg {
@@ -68,21 +80,25 @@ const ButtonTitle = styled.p`
   font-size: ${({ theme }) => theme.typography.body3Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.body3Bold.fontWeight};
 `;
+
 const ButtonSubtitle = styled.p`
   font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
   opacity: 0.9;
 `;
+
 const PlayIcon = styled(Play)`
   width: 20px;
   height: 20px;
   transition: transform 0.3s ease;
 `;
+
 const RefreshIcon = styled(RefreshCw)`
   width: 1.25rem;
   height: 1.25rem;
   transition: transform 0.5s ease;
 `;
-const Complete = () => {
+
+const Complete: React.FC<CompleteProps> = ({ fileName, onReset, setSelectedMenu }) => {
   return (
     <>
       <Spacer height="70px" />
@@ -94,15 +110,16 @@ const Complete = () => {
         <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 완성했어요!
       </NoticeContent>
       <Spacer height="20px" />
-      <CompletedInfo> 기계학습 입문 문제집.pdf</CompletedInfo>
+      <CompletedInfo>{fileName ?? '선택된 파일 없음'}</CompletedInfo>
       <Spacer height="12px" />
       <ButtonBox>
-        <ReCreateButton>
+        <ReCreateButton onClick={onReset}>
           <RefreshIcon />
           <ButtonTitle>다른 문제 만들기</ButtonTitle>
           <ButtonSubtitle>새로운 문제 생성</ButtonSubtitle>
         </ReCreateButton>
-        <GoSolvingButton>
+
+        <GoSolvingButton onClick={() => setSelectedMenu('문제풀이')}>
           <PlayIcon />
           <ButtonTitle>문제 풀러가기</ButtonTitle>
           <ButtonSubtitle>바로 학습 시작</ButtonSubtitle>

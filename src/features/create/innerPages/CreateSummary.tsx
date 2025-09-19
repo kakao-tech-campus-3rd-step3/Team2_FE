@@ -6,6 +6,7 @@ import Spacer from '@/shared/components/Spacer';
 
 interface Step2Props {
   onValidChange: (isValid: boolean) => void;
+  selectedFile: { id: string; name: string | null } | null;
 }
 
 const InfoContainer = styled.div`
@@ -23,6 +24,7 @@ const SettingInfoBox = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   padding: 15px;
 `;
 
@@ -41,30 +43,33 @@ const InfoSpan = styled.span`
   width: 100%;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray6};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const infoData = [
-  {
-    title: '선택된 PDF',
-    content: '1개',
-    description: '개발자 면접 가이드.pdf',
-  },
-  {
-    title: '문제 개수',
-    content: '20문제',
-    description: 'PDF 내용으로만',
-  },
-  {
-    title: '문제 유형',
-    content: '객관식',
-    description: '4지 선다형',
-  },
-];
-
-const CreateSummary: React.FC<Step2Props> = ({ onValidChange }) => {
+const CreateSummary: React.FC<Step2Props> = ({ onValidChange, selectedFile }) => {
   useEffect(() => {
     onValidChange(true);
   }, []);
+
+  const infoData = [
+    {
+      title: '선택된 PDF',
+      content: '1개',
+      description: selectedFile?.name ?? '선택된 파일이 없습니다.',
+    },
+    {
+      title: '문제 개수',
+      content: '20문제',
+      description: 'PDF 내용으로만',
+    },
+    {
+      title: '문제 유형',
+      content: '객관식',
+      description: '4지 선다형',
+    },
+  ];
 
   return (
     <>
