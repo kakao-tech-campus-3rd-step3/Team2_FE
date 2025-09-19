@@ -17,13 +17,16 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
   const [fileList, setFileList] = useState<FileData[]>([]);
   const [isLoadingList, setIsLoadingList] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+
+  // ✅ useEffect 의존성 수정
   useEffect(() => {
     onValidChange(false);
+
     const fetchFileList = async () => {
       try {
         const files = await getPdfFileList();
         setFileList(files);
-      } catch (error) {
+      } catch {
         alert('PDF 목록을 불러오는 데 실패했습니다.');
       } finally {
         setIsLoadingList(false);
@@ -52,8 +55,12 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
 
       setFileList((prev) => [uploadedFile, ...prev]);
       handleSelectFile(uploadedFile.id);
-    } catch (error: any) {
-      alert(error.message || '파일 업로드 실패');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('파일 업로드 실패');
+      }
     }
     setIsUploading(false);
   };

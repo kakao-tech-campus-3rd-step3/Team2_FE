@@ -68,8 +68,13 @@ export const uploadPdfFile = async (file: File): Promise<UploadResponse> => {
       date: new Date().toISOString().split('T')[0].replace(/-/g, '. ') + '.',
       new: true,
     };
-  } catch (error: any) {
-    console.error('업로드 실패:', error);
-    throw error;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('업로드 실패:', error.message);
+      throw new Error(error.message);
+    } else {
+      console.error('업로드 실패: 알 수 없는 에러', error);
+      throw new Error('알 수 없는 에러가 발생했습니다.');
+    }
   }
 };

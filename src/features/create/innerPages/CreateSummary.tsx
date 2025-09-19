@@ -52,6 +52,7 @@ const CreateSummary: React.FC<Step2Props> = ({ onValidChange, selectedFile }) =>
   useEffect(() => {
     onValidChange(true);
   }, []);
+
   const infoData = [
     {
       title: '선택된 PDF',

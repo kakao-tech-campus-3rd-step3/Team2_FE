@@ -8,7 +8,7 @@ import { api } from '@/shared/api/axiosClient';
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
   onReset: () => void;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>; // ✅ 수정: 이름 일치
+  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Container = styled.div`
@@ -87,8 +87,12 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
         });
 
         setStep('next');
-      } catch (err: any) {
-        setError('문제집 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(`문제집 생성 중 오류: ${err.message}`);
+        } else {
+          setError('문제집 생성 중 알 수 없는 오류가 발생했습니다.');
+        }
         setStep('error');
       }
     };
