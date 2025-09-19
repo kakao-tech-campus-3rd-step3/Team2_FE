@@ -20,17 +20,17 @@ const ProgressDescriptionPercentTxt = styled.span`
 `;
 
 type ProgressDescriptionProps = {
-  solvedCheckPercent: number;
+  percentageOfProblemSolved: number;
 };
 
-function ProgressDescription({ solvedCheckPercent }: ProgressDescriptionProps) {
+function ProgressDescription({ percentageOfProblemSolved }: ProgressDescriptionProps) {
   return (
     <>
       <ProgressDescriptionWrapper>
         <ProgressDescriptionTitle>진행상황</ProgressDescriptionTitle>
-        <ProgressDescriptionPercentTxt>{solvedCheckPercent}%</ProgressDescriptionPercentTxt>
+        <ProgressDescriptionPercentTxt>{percentageOfProblemSolved}%</ProgressDescriptionPercentTxt>
       </ProgressDescriptionWrapper>
-      <CommonProgress progress={solvedCheckPercent} stepLabels={[]}></CommonProgress>
+      <CommonProgress progress={percentageOfProblemSolved} stepLabels={[]}></CommonProgress>
     </>
   );
 }
