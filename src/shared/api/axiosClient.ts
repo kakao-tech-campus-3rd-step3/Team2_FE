@@ -8,8 +8,19 @@ const isLocalEnv = (): boolean => {
 };
 
 const resolveBaseURL = (): string => {
-  // 프록시가 '/api'로 시작하는 요청만 가로채므로 항상 '/api' 고정
-  return '/api';
+  // 개발 환경에서는 Vite 프록시를 사용하기 위해 '/api'를 반환합니다.
+  if (import.meta.env.DEV) {
+    return '/api';
+  }
+  // 프로덕션 환경에서는 환경 변수에 설정된 전체 URL을 사용합니다.
+  /*
+  프로덕션 환경(Vercel에 배포된 환경)에서는 Vite 개발 서버가 존재하지 않습니다.
+  따라서 vite.config.ts에 설정한 프록시(proxy) 기능은 전혀 작동하지 않습니다.
+  import.meta.env.DEV = false가 됩니다.
+  import.meta.env.DEV는 vite에 내장된 변수로 개발 서버에서만 true가 됩니다.
+  즉, 프로덕션 환경에서는 프록시를 거치지 않고 API 서버로 직접 요청이 전송됩니다.
+  */
+  return import.meta.env.VITE_API_BASE_URL;
 };
 
 export const api: AxiosInstance = axios.create({

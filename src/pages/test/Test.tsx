@@ -353,7 +353,7 @@ function Test() {
             <Text fontSize="sm" color="gray.700" sx={{ whiteSpace: 'pre-line' }}>
               로컬에서는 URL을 <b>상대경로(/)</b>로 호출하세요. Vite dev proxy가{' '}
               <b>env(.env.local)</b>에 설정된 Basic Auth를 서버로 전달합니다.
-              {'\n'}VITE_API_BASE_URL=https://api-qa.pull.it.kr{'\n'}VITE_BASIC_USER=아이디{'\n'}
+              {'\n'}VITE_API_BASE_URL=https://qa.api.pull.it.kr{'\n'}VITE_BASIC_USER=아이디{'\n'}
               VITE_BASIC_PASS=비밀번호 이런식으로 설정하세요.
             </Text>
             <Text fontSize="sm" color="gray.700" mt={2}>
