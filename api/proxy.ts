@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   const { url, method, body, headers: originalHeaders } = request;
 
-  const requestPath = url?.replace('/api', '') || '';
+  const requestPath = url || '';
   const targetUrl = `${API_BASE_URL}${requestPath}`;
   const token = Buffer.from(`${BASIC_USER}:${BASIC_PASS}`).toString('base64');
 
