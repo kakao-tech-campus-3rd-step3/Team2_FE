@@ -106,7 +106,7 @@ const Complete: React.FC<CompleteProps> = ({ fileName, onReset, setSelectedMenu 
       <Spacer height="25px" />
       <NoticeTitle>문제집 생성 완료!</NoticeTitle>
       <NoticeContent>
-        AI가 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
+        AI가 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
         <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 완성했어요!
       </NoticeContent>
       <Spacer height="20px" />

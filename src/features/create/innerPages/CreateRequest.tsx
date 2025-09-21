@@ -90,7 +90,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
         await api.post('/question-set', {
           title: selectedFile.name,
           difficulty: 'EASY',
-          questionCount: 20,
+          questionCount: 10,
           type: 'MULTIPLE_CHOICE',
           sourceIds: [parseInt(selectedFile.id)],
         });
@@ -131,7 +131,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       <Spacer height="25px" />
       <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
       <NoticeContent>
-        선택하신 PDF에서 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
+        선택하신 PDF에서 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
         <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
       </NoticeContent>
     </Container>
