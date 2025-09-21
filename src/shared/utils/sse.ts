@@ -1,9 +1,6 @@
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SSE_SUB_URL = '/api/notifications/subscribe';
-const BASIC_USER = import.meta.env.VITE_BASIC_USER;
-const BASIC_PASS = import.meta.env.VITE_BASIC_PASS;
 
 interface onQuestionSetCreationCompletePayload {
   success: boolean;
@@ -29,13 +26,8 @@ export function createEventSource(callback: NotificationCallbacks) {
     onQuestionSetCreationComplete: onQuestionCreationComplete,
   } = callback;
 
-  const encodedCredentials = btoa(`${BASIC_USER}:${BASIC_PASS}`);
-
-  const eventSource = new EventSourcePolyfill(`${BASE_URL}${SSE_SUB_URL}`, {
+  const eventSource = new EventSourcePolyfill(SSE_SUB_URL, {
     withCredentials: true,
-    headers: {
-      Authorization: `Basic ${encodedCredentials}`,
-    },
   });
 
   if (onOpen) {
