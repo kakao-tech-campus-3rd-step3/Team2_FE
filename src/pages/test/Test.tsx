@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { isAxiosError } from 'axios';
 import { Global, css } from '@emotion/react';
 import type { AxiosRequestConfig, RawAxiosResponseHeaders, AxiosResponseHeaders } from 'axios';
-import { api, isLocal } from '@/shared/api/axiosClient';
+import { api } from '@/shared/api/axiosClient';
 
 // API 요청 정보를 담을 타입
 interface ApiRequestData {
@@ -338,7 +338,7 @@ function Test() {
         </InputGroup>
 
         {/* 로컬 환경용 Basic Auth 로그인 (인터셉터 자동 첨부) */}
-        {isLocal() && (
+        {import.meta.env.DEV && (
           <Box
             w="100%"
             p={4}

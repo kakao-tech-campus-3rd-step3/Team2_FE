@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import axios, { type AxiosError } from 'axios';
 
 // 백엔드 API의 기본 URL
 const API_BASE_URL = process.env.API_BASE_URL;
@@ -11,33 +12,48 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  // 1. 원본 요청 정보 가져오기
-  // '/api/learning/source' -> '/learning/source'
-  const requestPath = request.url?.replace('/api', '') || '';
-  const targetUrl = `${API_BASE_URL}${requestPath}`;
+  const { url, method, body, headers: originalHeaders } = request;
 
-  // 2. Basic Auth 토큰 생성
-  // 이 정보는 Vercel 서버에만 저장되어 클라이언트에는 노출되지 않습니다.
+  const requestPath = url?.replace('/api', '') || '';
+  const targetUrl = `${API_BASE_URL}${requestPath}`;
   const token = Buffer.from(`${BASIC_USER}:${BASIC_PASS}`).toString('base64');
 
   try {
-    // 3. 실제 백엔드 API로 요청 전달 (fetch 사용)
-    const apiResponse = await fetch(targetUrl, {
-      method: request.method,
-      headers: {
-        ...request.headers, // 원본 요청 헤더 복사
-        Authorization: `Basic ${token}`, // Basic Auth 헤더 추가
-        'Content-Type': 'application/json',
-      },
-      // POST, PUT 등의 요청일 경우 body를 그대로 전달
-      body: request.method !== 'GET' ? JSON.stringify(request.body) : undefined,
+    // 3. 헤더를 간단한 자바스크립트 객체로 만듭니다.
+    const headers: { [key: string]: string } = {
+      Authorization: `Basic ${token}`,
+    };
+
+    // Content-Type 헤더가 있다면 추가합니다.
+    if (originalHeaders['content-type']) {
+      headers['Content-Type'] = originalHeaders['content-type'];
+    }
+
+    // Cookie 헤더가 있다면 추가합니다.
+    if (originalHeaders.cookie) {
+      headers.Cookie = originalHeaders.cookie;
+    }
+
+    // 4. axios는 이 간단한 헤더 객체를 처리할 수 있습니다.
+    const axiosResponse = await axios({
+      method: method as 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+      url: targetUrl,
+      headers,
+      data: body,
     });
 
-    // 4. 백엔드 API의 응답을 클라이언트로 그대로 전달
-    const data = await apiResponse.json();
-    response.status(apiResponse.status).json(data);
+    // 5. 백엔드 API의 응답을 클라이언트로 그대로 전달
+    response.status(axiosResponse.status).json(axiosResponse.data);
   } catch (error) {
     console.error('Proxy Error:', error);
-    response.status(500).json({ message: 'Error proxying to API' });
+
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      if (err.response) {
+        response.status(err.response.status).json(err.response.data);
+        return;
+      }
+    }
+    response.status(500).json({ message: 'An internal server error occurred.' });
   }
 }
