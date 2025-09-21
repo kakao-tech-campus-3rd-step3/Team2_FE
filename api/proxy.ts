@@ -9,13 +9,9 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  const { method, body, headers: originalHeaders, query } = request;
+  const { url, method, body, headers: originalHeaders } = request;
 
-  // 1. [...slug].ts 파일명에 따라, 경로는 query.slug 배열로 들어옵니다.
-  // 예: /api/learning/source -> query.slug = ['learning', 'source']
-  const slug = (query.slug as string[]).join('/');
-  const requestPath = `/${slug}`;
-
+  const requestPath = url?.replace('/api', '') || '';
   const targetUrl = `${API_BASE_URL}${requestPath}`;
   const token = Buffer.from(`${BASIC_USER}:${BASIC_PASS}`).toString('base64');
 
@@ -35,8 +31,6 @@ export default async function handler(
       url: targetUrl,
       headers,
       data: body,
-      // 쿼리 파라미터는 원본 요청의 것을 그대로 전달
-      params: query,
     });
 
     response.status(axiosResponse.status).json(axiosResponse.data);
