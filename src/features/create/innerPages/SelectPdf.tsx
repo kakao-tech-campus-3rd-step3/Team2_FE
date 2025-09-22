@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PdfFileList from '@/features/create/components/PdfFileList';
 import type { FileData } from '@/features/create/types/types';
 import Title from '@/features/create/components/Title';
@@ -14,55 +15,48 @@ interface Step1Props {
 
 const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
-  const [fileList, setFileList] = useState<FileData[]>([]);
-  const [isLoadingList, setIsLoadingList] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
+  const queryClient = useQueryClient();
 
-  // ✅ useEffect 의존성 수정
+  const {
+    data: fileList = [], // data가 없을 경우를 대비해 기본값으로 빈 배열 설정
+    isLoading: isLoadingList,
+    isError,
+  } = useQuery<FileData[]>({
+    queryKey: ['pdfFiles'],
+    queryFn: getPdfFileList,
+  });
+
+  const { mutate: upload, isPending: isUploading } = useMutation({
+    mutationFn: uploadPdfFile,
+    onSuccess: (uploadedFile) => {
+      queryClient.invalidateQueries({ queryKey: ['pdfFiles'] });
+
+      handleSelectFile(uploadedFile.id, uploadedFile.name);
+    },
+    onError: (error) => {
+      alert(error instanceof Error ? error.message : '파일 업로드 실패');
+    },
+  });
+
   useEffect(() => {
-    onValidChange(false);
+    if (isError) {
+      alert('PDF 목록을 불러오는 데 실패했습니다.');
+    }
+  }, [isError]);
 
-    const fetchFileList = async () => {
-      try {
-        const files = await getPdfFileList();
-        setFileList(files);
-      } catch {
-        alert('PDF 목록을 불러오는 데 실패했습니다.');
-      } finally {
-        setIsLoadingList(false);
-      }
-    };
-
-    fetchFileList();
-  }, []);
-
-  const handleSelectFile = (fileId: string | null) => {
+  const handleSelectFile = (fileId: string | null, fileName?: string | null) => {
     setSelectedFileId(fileId);
     onValidChange(!!fileId);
 
     if (fileId) {
-      const selected = fileList.find((file) => file.id === fileId);
-      if (selected) {
-        onSelectFile({ id: fileId, name: selected.name });
+      const name = fileName ?? fileList.find((file) => file.id === fileId)?.name;
+      if (name) {
+        onSelectFile({ id: fileId, name });
       }
     }
   };
-
-  const handleUpload = async (file: File) => {
-    setIsUploading(true);
-    try {
-      const uploadedFile = await uploadPdfFile(file);
-
-      setFileList((prev) => [uploadedFile, ...prev]);
-      handleSelectFile(uploadedFile.id);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert('파일 업로드 실패');
-      }
-    }
-    setIsUploading(false);
+  const handleUpload = (file: File) => {
+    upload(file);
   };
 
   return (
@@ -75,8 +69,9 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
       <PdfFileList
         fileList={fileList}
         selectedFileId={selectedFileId}
-        onSelect={handleSelectFile}
+        onSelect={(id) => handleSelectFile(id)}
         onAddFile={handleUpload}
+        // 목록 로딩 상태와 업로드 중 상태를 모두 isLoading으로 전달
         isLoading={isLoadingList || isUploading}
       />
     </>
