@@ -1,5 +1,9 @@
 export const ROUTES = {
-  HOME: '/home',
-  LOGIN: '/',
+  LOGIN: '/login',
+  DASHBOARD: '/',
+  SOURCE: '/sources',
+  CREATE: 'create',
+  SOLVE: '/solve',
+  WRONG: 'wrong',
   TEST_CORS: '/test/cors',
 } as const;
