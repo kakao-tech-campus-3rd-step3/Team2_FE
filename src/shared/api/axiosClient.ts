@@ -11,4 +11,3 @@ const resolveBaseURL = (): string => {
 export const api: AxiosInstance = axios.create({
   baseURL: resolveBaseURL(),
 });
-
