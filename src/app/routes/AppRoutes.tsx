@@ -1,15 +1,27 @@
 import { Routes, Route } from 'react-router-dom';
-import Test from '@/pages/test/Test';
-import Login from '@/pages/Login';
-import Home from '@/pages/Home';
 import { ROUTES } from '@/app/routePaths';
+import Home from '@/pages/Home';
+
+// 페이지들
+import Login from '@/pages/Login';
+import Dashboard from '@/pages/HomeSection/Dashboard';
+import Source from '@/pages/HomeSection/Source';
+import Create from '@/pages/HomeSection/Create';
+import Solve from '@/pages/HomeSection/Solve';
+import Wrong from '@/pages/HomeSection/Wrong';
+import Test from '@/pages/test/Test';
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* 추후 로그인 여부에 따라 / 경로가 로그인 페이지 혹은 main 페이지로 유동적 이동 */}
-      <Route path={ROUTES.HOME} element={<Home />} />
       <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route element={<Home />}>
+        <Route path={ROUTES.DASHBOARD} element={<Dashboard />}/>
+        <Route path={ROUTES.SOURCE} element={<Source />}/>
+        <Route path={ROUTES.CREATE} element={<Create />}/>
+        <Route path={ROUTES.SOLVE} element={<Solve />}/>
+        <Route path={ROUTES.WRONG} element={<Wrong />}/>
+      </Route>
       <Route path={ROUTES.TEST_CORS} element={<Test />} />
     </Routes>
   );

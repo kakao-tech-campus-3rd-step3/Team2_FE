@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { createEventSource } from '@/shared/utils/sse';
 
 import { toast } from 'react-toastify';
+import { Outlet } from 'react-router-dom';
 
 function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(true); // LSB의 열림, 닫힘 state
@@ -58,24 +59,24 @@ function Home() {
     };
   }, []);
 
-  const renderContent = () => {
-    switch (selectedMenu) {
-      case '대시보드':
-        return <Dashboard />;
-      case '학습소스 관리':
-        return <Source />;
-      case '문제집 생성':
-        return <Create setSelectedMenu={setSelectedMenu} questionSetReady={questionSetReady} />;
-      case '문제풀이':
-        return <Solve setSelectedMenu={setSelectedMenu} questionSetId={questionSetId} />;
-      case '나의 문제집':
-        return <Quiz />;
-      case '오답노트':
-        return <Wrong />;
-      default:
-        return <Dashboard />;
-    }
-  };
+  // const renderContent = () => {
+  //   switch (selectedMenu) {
+  //     case '대시보드':
+  //       return <Dashboard />;
+  //     case '학습소스 관리':
+  //       return <Source />;
+  //     case '문제집 생성':
+  //       return <Create setSelectedMenu={setSelectedMenu} questionSetReady={questionSetReady} />;
+  //     case '문제풀이':
+  //       return <Solve setSelectedMenu={setSelectedMenu} questionSetId={questionSetId} />;
+  //     case '나의 문제집':
+  //       return <Quiz />;
+  //     case '오답노트':
+  //       return <Wrong />;
+  //     default:
+  //       return <Dashboard />;
+  //   }
+  // };
 
   return (
     <AppLayout>
@@ -90,7 +91,8 @@ function Home() {
         {/* 페이지 헤더 */}
         <PageHeader selectedMenu={selectedMenu} isOpen={isOpen} setIsOpen={setIsOpen} />
         {/* 페이지 컨텐츠 */}
-        <PageContent>{renderContent()}</PageContent>
+        {/* <PageContent>{renderContent()}</PageContent> */}
+        <Outlet />
       </PageLayout>
     </AppLayout>
   );
