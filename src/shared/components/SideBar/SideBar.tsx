@@ -2,6 +2,8 @@ import BrainIconWithBadge from '@/shared/assets/IconBadge';
 import { MIN_HEIGHT } from '@/shared/config/constants';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { ROUTES } from '@/app/routePaths';
 
 import {
   FileText,
@@ -86,7 +88,8 @@ const SideBarNav = styled.nav`
   flex-direction: column;
 `;
 
-const SideBarNavItem = styled.div<{ active: boolean }>`
+
+const SideBarNavItem = styled.div<{active:boolean}>`
   display: flex;
   align-items: center;
   border-radius: ${({ theme }) => theme.radius.radius2};
@@ -94,7 +97,9 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
   padding: ${({ theme }) => theme.spacing.spacing1};
 
-  background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : 'transparent')};
+  background-color: 'transparent';
+
+  &.active { background: ${({theme}) => theme.colors.gray.gray3} }; 
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray.gray1};
@@ -164,15 +169,14 @@ const SideBarUserInfoEmail = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
-// TODO: 이거 props 타입도 일관되지않네...
 interface SideBarProps {
-  selectedMenu: string;
-  setSelectedMenu: (menu: string) => void;
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  closeSideBar: () => void;
+  selectedMenu: string;
+  changeMenu: (menu: string) => void;
 }
 
-function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarProps) {
+function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProps) {
   const navigate = useNavigate();
 
   return (
@@ -188,48 +192,47 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
             </ItemTitleWrapper>
           </IconTitleWrapper>
           {/* TODO: 이 부분 페이지 컴포넌트랑 이름이 같네? 문제가 생길수도? */}
-          <Sidebar size={16} onClick={() => setIsOpen(false)} />
+          <Sidebar size={16} onClick={closeSideBar} />
         </SideBarHeaderItemWrapper>
       </SideBarHeader>
 
       {/* 사이드바 메인 부분 */}
       <SideBarMain>
         <SideBarNav>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.DASHBOARD)}
-            active={MENUS.DASHBOARD === selectedMenu}
-          >
-            <LayoutDashboard size={14} />
-            <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.SOURCE)}
-            active={MENUS.SOURCE === selectedMenu}
-          >
-            <FileText size={14} />
-            <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.CREATE)}
-            active={MENUS.CREATE === selectedMenu}
-          >
-            <Plus size={14} />
-            <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.QUIZ)}
-            active={MENUS.QUIZ === selectedMenu}
-          >
-            <BookOpen size={14} />
-            <SideBarNavTxt>{MENUS.QUIZ}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.WRONG)}
-            active={MENUS.WRONG === selectedMenu}
-          >
-            <CircleX size={14} />
-            <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
-          </SideBarNavItem>
+          <NavLink to={ROUTES.DASHBOARD}>
+            <SideBarNavItem active={MENUS.DASHBOARD === selectedMenu} onClick={() => changeMenu(MENUS.DASHBOARD)}>
+              <LayoutDashboard size={14} />
+              <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.SOURCE}>
+            <SideBarNavItem active={MENUS.SOURCE === selectedMenu} onClick={() => changeMenu(MENUS.SOURCE)}>
+              <FileText size={14} />
+              <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.CREATE}>
+            <SideBarNavItem active={MENUS.CREATE === selectedMenu} onClick={() => changeMenu(MENUS.CREATE)}>
+              <Plus size={14} />
+              <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.LIBRARY}>
+            <SideBarNavItem active={MENUS.LIBRARY === selectedMenu} onClick={() => changeMenu(MENUS.LIBRARY)}>
+              <BookOpen size={14} />
+              <SideBarNavTxt>{MENUS.LIBRARY}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.WRONG}>
+            <SideBarNavItem active={MENUS.WRONG === selectedMenu} onClick={() => changeMenu(MENUS.LIBRARY)}>
+              <CircleX size={14} />
+              <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
         </SideBarNav>
       </SideBarMain>
 
