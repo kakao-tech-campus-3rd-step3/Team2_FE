@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
+import { Link } from "react-router-dom";
 
 const SolveHeaderWrapper = styled.div`
   width: 100%;
@@ -63,14 +64,12 @@ const QuestionIndexViewTxt = styled.span`
 type SolveHeaderProps = {
   currentQuestionIndex: number;
   title: string;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
   questionLength: number;
 };
 
 function SolveHeader({
   currentQuestionIndex,
   title,
-  setSelectedMenu,
   questionLength,
 }: SolveHeaderProps) {
   return (
@@ -78,9 +77,9 @@ function SolveHeader({
       <BackBtnTitleWrapper>
         <SolveHeaderBackBtn>
           <ArrowLeft size={20} />
-          <SolveHeaderBackBtnTxt onClick={() => setSelectedMenu('문제집 생성')}>
-            돌아가기
-          </SolveHeaderBackBtnTxt>
+          <Link to="/create">
+            <SolveHeaderBackBtnTxt>돌아가기</SolveHeaderBackBtnTxt>
+          </Link>
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
