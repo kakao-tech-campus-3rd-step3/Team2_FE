@@ -1,28 +1,30 @@
 import { Routes, Route } from 'react-router-dom';
-import { ROUTES } from '@/app/routePaths';
-import Home from '@/pages/Home';
-
-// 페이지들
+import AppLayout from '@/pages/layout/AppLayout';
 import Login from '@/pages/Login';
-import Dashboard from '@/pages/HomeSection/Dashboard';
-import Source from '@/pages/HomeSection/Source';
-import Create from '@/pages/HomeSection/Create';
-import Solve from '@/pages/HomeSection/Solve';
-import Wrong from '@/pages/HomeSection/Wrong';
+import Dashboard from '@/pages/Dashboard';
+import Source from '@/pages/Source';
+import Create from '@/pages/Create';
+import Solve from '@/pages/Solve';
+import Library from '@/pages/Library';
+import Wrong from '@/pages/Wrong';
+import NotFound from '@/pages/NotFound';
 import Test from '@/pages/test/Test';
 
+import { ROUTES } from '@/app/routePaths';
 function AppRoutes() {
   return (
     <Routes>
       <Route path={ROUTES.LOGIN} element={<Login />} />
-      <Route element={<Home />}>
-        <Route path={ROUTES.DASHBOARD} element={<Dashboard />}/>
-        <Route path={ROUTES.SOURCE} element={<Source />}/>
-        <Route path={ROUTES.CREATE} element={<Create />}/>
-        <Route path={ROUTES.SOLVE} element={<Solve />}/>
-        <Route path={ROUTES.WRONG} element={<Wrong />}/>
+      <Route element={<AppLayout />}>
+        <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+        <Route path={ROUTES.SOURCE} element={<Source />} />
+        <Route path={ROUTES.CREATE} element={<Create />} />
+        <Route path={ROUTES.SOLVE} element={<Solve />} />
+        <Route path={ROUTES.LIBRARY} element={<Library />} />
+        <Route path={ROUTES.WRONG} element={<Wrong />} />
       </Route>
-      <Route path={ROUTES.TEST_CORS} element={<Test />} />
+      <Route path="*" element={<NotFound />} />
+      {import.meta.env.DEV && <Route path={ROUTES.TEST_CORS} element={<Test />} />}
     </Routes>
   );
 }

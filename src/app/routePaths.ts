@@ -1,9 +1,12 @@
 export const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/',
-  SOURCE: '/sources',
+  SOURCE: '/source',
   CREATE: 'create',
-  SOLVE: '/solve',
-  WRONG: 'wrong',
+  SOLVE: '/solve/:questionSetId',
+  LIBRARY: '/library',
+  WRONG: '/wrong',
   TEST_CORS: '/test/cors',
 } as const;
+
+
