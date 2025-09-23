@@ -2,8 +2,8 @@ export interface FileData {
   id: string;
   name: string;
   size: string;
-  pages: string;
   date: string;
+  new?: boolean;
 }
 
 export interface PdfFileListProps {
