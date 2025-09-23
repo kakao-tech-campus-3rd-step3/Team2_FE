@@ -45,6 +45,7 @@ function AppLayout() {
   };
 
   // TODO: sse 연결 이 부분 나중에 분리하자
+
   useEffect(() => {
     const es = createEventSource({
       onOpen: () => {
@@ -73,7 +74,7 @@ function AppLayout() {
     return () => {
       es?.close?.();
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <AppLayoutWrapper>
@@ -86,7 +87,7 @@ function AppLayout() {
       <AppLayoutVertical>
         <PageHeader isOpen={isOpen} openSideBar={openSideBar} selectedMenu={selectedMenu} />
         <Main>
-          <Outlet context={{ questionSetId, questionSetReady }}/>
+          <Outlet context={{ questionSetId, questionSetReady }} />
         </Main>
       </AppLayoutVertical>
     </AppLayoutWrapper>

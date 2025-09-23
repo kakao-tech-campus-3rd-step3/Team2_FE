@@ -4,7 +4,6 @@ import { Play, RefreshCw } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
 import { useNavigate } from 'react-router-dom';
 
-
 interface CompleteProps {
   fileName: string | null;
   onReset: () => void;

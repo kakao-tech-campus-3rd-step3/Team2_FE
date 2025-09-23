@@ -88,8 +88,7 @@ const SideBarNav = styled.nav`
   flex-direction: column;
 `;
 
-
-const SideBarNavItem = styled.div<{active:boolean}>`
+const SideBarNavItem = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   border-radius: ${({ theme }) => theme.radius.radius2};
@@ -99,7 +98,9 @@ const SideBarNavItem = styled.div<{active:boolean}>`
 
   background-color: 'transparent';
 
-  &.active { background: ${({theme}) => theme.colors.gray.gray3} }; 
+  &.active {
+    background: ${({ theme }) => theme.colors.gray.gray3};
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray.gray1};
@@ -200,35 +201,50 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProp
       <SideBarMain>
         <SideBarNav>
           <NavLink to={ROUTES.DASHBOARD}>
-            <SideBarNavItem active={MENUS.DASHBOARD === selectedMenu} onClick={() => changeMenu(MENUS.DASHBOARD)}>
+            <SideBarNavItem
+              active={MENUS.DASHBOARD === selectedMenu}
+              onClick={() => changeMenu(MENUS.DASHBOARD)}
+            >
               <LayoutDashboard size={14} />
               <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.SOURCE}>
-            <SideBarNavItem active={MENUS.SOURCE === selectedMenu} onClick={() => changeMenu(MENUS.SOURCE)}>
+            <SideBarNavItem
+              active={MENUS.SOURCE === selectedMenu}
+              onClick={() => changeMenu(MENUS.SOURCE)}
+            >
               <FileText size={14} />
               <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.CREATE}>
-            <SideBarNavItem active={MENUS.CREATE === selectedMenu} onClick={() => changeMenu(MENUS.CREATE)}>
+            <SideBarNavItem
+              active={MENUS.CREATE === selectedMenu}
+              onClick={() => changeMenu(MENUS.CREATE)}
+            >
               <Plus size={14} />
               <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.LIBRARY}>
-            <SideBarNavItem active={MENUS.LIBRARY === selectedMenu} onClick={() => changeMenu(MENUS.LIBRARY)}>
+            <SideBarNavItem
+              active={MENUS.LIBRARY === selectedMenu}
+              onClick={() => changeMenu(MENUS.LIBRARY)}
+            >
               <BookOpen size={14} />
               <SideBarNavTxt>{MENUS.LIBRARY}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.WRONG}>
-            <SideBarNavItem active={MENUS.WRONG === selectedMenu} onClick={() => changeMenu(MENUS.LIBRARY)}>
+            <SideBarNavItem
+              active={MENUS.WRONG === selectedMenu}
+              onClick={() => changeMenu(MENUS.LIBRARY)}
+            >
               <CircleX size={14} />
               <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
             </SideBarNavItem>

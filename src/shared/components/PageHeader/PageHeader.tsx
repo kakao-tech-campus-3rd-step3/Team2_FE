@@ -23,7 +23,7 @@ const PageTitle = styled.h1`
 interface PageHeaderProps {
   isOpen: boolean;
   openSideBar: () => void;
-  selectedMenu: string
+  selectedMenu: string;
 }
 
 function PageHeader({ isOpen, openSideBar, selectedMenu }: PageHeaderProps) {

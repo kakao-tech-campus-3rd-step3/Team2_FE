@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const SolveHeaderWrapper = styled.div`
   width: 100%;
@@ -67,11 +67,7 @@ type SolveHeaderProps = {
   questionLength: number;
 };
 
-function SolveHeader({
-  currentQuestionIndex,
-  title,
-  questionLength,
-}: SolveHeaderProps) {
+function SolveHeader({ currentQuestionIndex, title, questionLength }: SolveHeaderProps) {
   return (
     <SolveHeaderWrapper>
       <BackBtnTitleWrapper>

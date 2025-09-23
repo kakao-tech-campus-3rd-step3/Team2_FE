@@ -63,9 +63,9 @@ const NextComponent: React.FC<{
   fileName: string | null;
   onReset: () => void;
   questionSetId: number;
-}> = ({ fileName, onReset, questionSetId  }) => (
+}> = ({ fileName, onReset, questionSetId }) => (
   <Container>
-    <Complete fileName={fileName} onReset={onReset} questionSetId={questionSetId}/>
+    <Complete fileName={fileName} onReset={onReset} questionSetId={questionSetId} />
   </Container>
 );
 

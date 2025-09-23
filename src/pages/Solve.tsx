@@ -16,7 +16,7 @@ import type { QuestionSet } from '@/features/solve/types/question';
 
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api/axiosClient';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
