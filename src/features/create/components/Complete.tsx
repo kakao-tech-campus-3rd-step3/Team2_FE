@@ -2,11 +2,13 @@ import styled from '@emotion/styled';
 import Celebration from '@/features/create/components/Celebration';
 import { Play, RefreshCw } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
+import { useNavigate } from 'react-router-dom';
+
 
 interface CompleteProps {
   fileName: string | null;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
   onReset: () => void;
+  questionSetId: number;
 }
 
 const NoticeTitle = styled.h3`
@@ -98,7 +100,8 @@ const RefreshIcon = styled(RefreshCw)`
   transition: transform 0.5s ease;
 `;
 
-const Complete: React.FC<CompleteProps> = ({ fileName, onReset, setSelectedMenu }) => {
+const Complete: React.FC<CompleteProps> = ({ fileName, onReset, questionSetId }) => {
+  const navigate = useNavigate();
   return (
     <>
       <Spacer height="70px" />
@@ -119,7 +122,7 @@ const Complete: React.FC<CompleteProps> = ({ fileName, onReset, setSelectedMenu 
           <ButtonSubtitle>새로운 문제 생성</ButtonSubtitle>
         </ReCreateButton>
 
-        <GoSolvingButton onClick={() => setSelectedMenu('문제풀이')}>
+        <GoSolvingButton onClick={() => navigate(`/solve/${questionSetId}`)}>
           <PlayIcon />
           <ButtonTitle>문제 풀러가기</ButtonTitle>
           <ButtonSubtitle>바로 학습 시작</ButtonSubtitle>
