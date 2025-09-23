@@ -3,7 +3,7 @@ export const MENUS = {
   DASHBOARD: '대시보드',
   SOURCE: '학습소스 관리',
   CREATE: '문제집 생성',
-  QUIZ: '나의 문제집',
+  LIBRARY: '나의 문제집',
   WRONG: '오답노트',
 } as const;
 
