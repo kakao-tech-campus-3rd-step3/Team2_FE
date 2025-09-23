@@ -95,7 +95,7 @@ const RightPanel = () => {
   const navigate = useNavigate();
 
   const handleKakaoLogin = () => {
-    navigate(ROUTES.HOME);
+    navigate(ROUTES.ROOT);
   };
 
   return (
