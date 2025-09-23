@@ -9,5 +9,3 @@ export const ROUTES = {
   WRONG: '/wrong',
   TEST_CORS: '/test/cors',
 } as const;
-
-
