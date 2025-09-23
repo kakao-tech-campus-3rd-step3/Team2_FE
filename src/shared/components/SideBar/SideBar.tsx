@@ -263,7 +263,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProp
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
           {/* TODO: 임시로 설정 아이콘 누르면 로그인 페이지로 가게함 */}
-          <Settings size={16} onClick={() => navigate('/')} />
+          <Settings size={16} onClick={() => navigate('/login')} />
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
     </SideBarWrapper>
