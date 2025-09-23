@@ -20,17 +20,16 @@ const PageTitle = styled.h1`
   margin-left: ${({ theme }) => theme.spacing.spacing3};
 `;
 
-// 여기도 props 타입이 일관되지않네....
 interface PageHeaderProps {
-  selectedMenu: string;
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openSideBar: () => void;
+  selectedMenu: string
 }
 
-function PageHeader({ selectedMenu, isOpen, setIsOpen }: PageHeaderProps) {
+function PageHeader({ isOpen, openSideBar, selectedMenu }: PageHeaderProps) {
   return (
     <PageHeaderWrapper>
-      {!isOpen && <Sidebar size={16} onClick={() => setIsOpen(true)} />}
+      {!isOpen && <Sidebar size={16} onClick={openSideBar} />}
       <PageTitle>{selectedMenu}</PageTitle>
     </PageHeaderWrapper>
   );
