@@ -16,6 +16,7 @@ function AppRoutes() {
     <Routes>
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route element={<AppLayout />}>
+        <Route path={ROUTES.ROOT} element={<Create />} />
         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTES.SOURCE} element={<Source />} />
         <Route path={ROUTES.CREATE} element={<Create />} />
