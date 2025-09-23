@@ -8,8 +8,8 @@ import { api } from '@/shared/api/axiosClient';
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
   onReset: () => void;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
   questionSetReady: boolean;
+  questionSetId: number;
 }
 
 const Container = styled.div`
@@ -62,18 +62,18 @@ const RetryButton = styled.button`
 const NextComponent: React.FC<{
   fileName: string | null;
   onReset: () => void;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ fileName, onReset, setSelectedMenu }) => (
+  questionSetId: number;
+}> = ({ fileName, onReset, questionSetId }) => (
   <Container>
-    <Complete fileName={fileName} onReset={onReset} setSelectedMenu={setSelectedMenu} />
+    <Complete fileName={fileName} onReset={onReset} questionSetId={questionSetId} />
   </Container>
 );
 
 const CreateRequest: React.FC<CreateRequestProps> = ({
   selectedFile,
   onReset,
-  setSelectedMenu,
   questionSetReady,
+  questionSetId,
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +111,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       <NextComponent
         fileName={selectedFile?.name ?? null}
         onReset={onReset}
-        setSelectedMenu={setSelectedMenu}
+        questionSetId={questionSetId}
       />
     );
   }

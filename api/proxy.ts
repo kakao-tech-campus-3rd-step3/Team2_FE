@@ -39,10 +39,7 @@ function buildForwardHeaders(
 /**
  * SSE (Server-Sent Events) 요청을 스트리밍으로 처리합니다.
  */
-async function handleSseRequest(
-  request: VercelRequest,
-  response: VercelResponse,
-) {
+async function handleSseRequest(request: VercelRequest, response: VercelResponse) {
   const { method, headers: originalHeaders } = request;
   const targetUrl = getApiTargetUrl(request.url);
   const token = createAuthToken();
@@ -63,7 +60,6 @@ async function handleSseRequest(
 
     // axios 응답 스트림을 클라이언트 응답으로 파이핑합니다.
     sseResponse.data.pipe(response);
-
   } catch (error) {
     console.error('SSE Proxy Error:', error);
     if (!response.writableEnded) {
@@ -75,10 +71,7 @@ async function handleSseRequest(
 /**
  * 일반 API 요청을 처리합니다.
  */
-async function handleApiRequest(
-  request: VercelRequest,
-  response: VercelResponse,
-) {
+async function handleApiRequest(request: VercelRequest, response: VercelResponse) {
   const { method, body, headers: originalHeaders } = request;
   const targetUrl = getApiTargetUrl(request.url);
   const token = createAuthToken();
@@ -113,10 +106,7 @@ async function handleApiRequest(
  * Vercel 서버리스 함수의 메인 핸들러입니다.
  * 요청 경로를 분석하여 SSE 요청과 일반 API 요청을 분기 처리합니다.
  */
-export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse,
-) {
+export default async function handler(request: VercelRequest, response: VercelResponse) {
   if (request.url?.includes('/api/notifications/subscribe')) {
     await handleSseRequest(request, response);
   } else {
