@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { createEventSource } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
 import SideBar from '@/shared/components/SideBar/SideBar';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 import { MIN_HEIGHT } from '@/shared/config/constants';
+import { useAuth } from '@/app/auth/AuthProvider';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
@@ -35,7 +35,7 @@ function AppLayout() {
   const [selectedMenu, setSelectedMenu] = useState<string>('대시보드'); // 현재 페이지 저장 state
   const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state
   const [questionSetId, setQuestionSetId] = useState<number>(0); // 문제 조회할때 보낼 state
-  const navigate = useNavigate();
+  const { user } = useAuth(); // 인증 컨텍스트에서 사용자 정보 가져오기
 
   // wrapper 함수들
   const openSideBar = () => setIsOpen(true); // LSB 여는 함수
@@ -54,14 +54,14 @@ function AppLayout() {
       onHandShake: () => {
         console.log('SSE HandShake'); // 이 단계에서 sse연결이 완료
       },
-      onQuestionSetCreationComplete: (payload) => {
+      onQuestionSetCreationComplete: payload => {
         if (payload.success) {
           console.log('문제집 생성 완료');
           setQuestionSetReady(true);
           setQuestionSetId(payload.questionSetId);
           toast(payload.message, {
             onClick: () => {
-              navigate(`/solve/${payload.questionSetId}`);
+              // navigate(`/solve/${payload.questionSetId}`);
             },
           });
         } else {
@@ -74,7 +74,7 @@ function AppLayout() {
     return () => {
       es?.close?.();
     };
-  }, [navigate]);
+  }, []);
 
   return (
     <AppLayoutWrapper>
@@ -85,7 +85,12 @@ function AppLayout() {
         changeMenu={changeMenu}
       />
       <AppLayoutVertical>
-        <PageHeader isOpen={isOpen} openSideBar={openSideBar} selectedMenu={selectedMenu} />
+        <PageHeader
+          isOpen={isOpen}
+          openSideBar={openSideBar}
+          selectedMenu={selectedMenu}
+          user={user}
+        />
         <Main>
           <Outlet context={{ questionSetId, questionSetReady }} />
         </Main>

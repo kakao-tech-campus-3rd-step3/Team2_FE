@@ -38,10 +38,18 @@ export default defineConfig(({ mode }) => {
           target: proxyTarget,
           changeOrigin: true,
           secure: true,
-          configure: (proxy) => {
-            if (!authHeader) return;
-            proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Authorization', authHeader);
+          configure: proxy => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              // Vercel 프록시('api/proxy.ts')와 동일한 로직을 적용합니다.
+              // '/api/oauth2/...'로 시작하는 요청은 '/api'를 제거하여 백엔드로 전달합니다.
+              if (req.url?.startsWith('/api/oauth2/')) {
+                proxyReq.path = req.url.substring(4);
+              }
+
+              // 기존 Basic 인증 헤더 추가 로직은 그대로 유지합니다.
+              if (authHeader) {
+                proxyReq.setHeader('Authorization', authHeader);
+              }
             });
           },
         },

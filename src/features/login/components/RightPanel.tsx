@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { ROUTES } from '@/app/routePaths';
 import BenefitList from '@/features/login/components/BenefitList';
 import SampleLottie from '@/shared/assets/lotties/sample.lottie';
+import { getKakaoLoginUrl } from '@/shared/api/apiService';
 
 const RightSide = styled.div`
   width: 50%;
@@ -97,7 +97,7 @@ const RightPanel = () => {
   const navigate = useNavigate();
 
   const handleKakaoLogin = () => {
-    navigate(ROUTES.ROOT);
+    window.location.href = getKakaoLoginUrl();
   };
 
   return (

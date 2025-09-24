@@ -9,21 +9,30 @@ import Library from '@/pages/Library';
 import Wrong from '@/pages/Wrong';
 import NotFound from '@/pages/NotFound';
 import Test from '@/pages/test/Test';
+import LoginSuccess from '@/pages/LoginSuccess';
 
 import { ROUTES } from '@/app/routePaths';
+import ProtectedRoute from '@/app/auth/ProtectedRoute';
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path={ROUTES.LOGIN} element={<Login />} />
-      <Route element={<AppLayout />}>
-        <Route path={ROUTES.ROOT} element={<Create />} />
-        <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-        <Route path={ROUTES.SOURCE} element={<Source />} />
-        <Route path={ROUTES.CREATE} element={<Create />} />
-        <Route path={ROUTES.SOLVE} element={<Solve />} />
-        <Route path={ROUTES.LIBRARY} element={<Library />} />
-        <Route path={ROUTES.WRONG} element={<Wrong />} />
+      <Route path={ROUTES.LOGIN_SUCCESS} element={<LoginSuccess />} />
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route path={ROUTES.ROOT} element={<Create />} />
+          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          <Route path={ROUTES.SOURCE} element={<Source />} />
+          <Route path={ROUTES.CREATE} element={<Create />} />
+          <Route path={ROUTES.SOLVE} element={<Solve />} />
+          <Route path={ROUTES.LIBRARY} element={<Library />} />
+          <Route path={ROUTES.WRONG} element={<Wrong />} />
+        </Route>
       </Route>
+
       <Route path="*" element={<NotFound />} />
       {import.meta.env.DEV && <Route path={ROUTES.TEST_CORS} element={<Test />} />}
     </Routes>

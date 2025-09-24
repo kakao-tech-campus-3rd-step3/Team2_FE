@@ -9,8 +9,15 @@ function createAuthToken(): string {
   return Buffer.from(`${BASIC_USER}:${BASIC_PASS}`).toString('base64');
 }
 
-function getApiTargetUrl(requestUrl: string | undefined): string {
-  return `${API_BASE_URL}${requestUrl || ''}`;
+function getApiTargetUrl(requestUrl: string | undefined): string {  
+  const url = requestUrl || '';
+  // OAuth 인증 요청('/api/oauth2/...')은 '/api' 접두사를 제거하고 전달
+  if (url.startsWith('/api/oauth2/')) {
+    const backendPath = url.substring(4); // '/api' 제거
+    return `${API_BASE_URL}${backendPath}`;
+  }
+  // 그 외 모든 API 요청은 기존 경로 그대로 사용
+  return `${API_BASE_URL}${url}`;
 }
 
 /**
@@ -84,7 +91,26 @@ async function handleApiRequest(request: VercelRequest, response: VercelResponse
       url: targetUrl,
       headers,
       data: body,
+      // 3xx, 4xx 응답 코드를 받아도 예외를 발생시키지 않도록 설정
+      validateStatus: status => status < 500,
     });
+
+    // 백엔드에서 받은 Set-Cookie 헤더를 클라이언트에 전달
+    const setCookieHeader = axiosResponse.headers['set-cookie'];
+    if (setCookieHeader) {
+      response.setHeader('Set-Cookie', setCookieHeader);
+    }
+
+    // 리다이렉트 응답 처리
+    if (
+      axiosResponse.status >= 300 &&
+      axiosResponse.status < 400 &&
+      axiosResponse.headers.location
+    ) {
+      response.setHeader('Location', axiosResponse.headers.location);
+      response.status(axiosResponse.status).end();
+      return;
+    }
 
     response.status(axiosResponse.status).json(axiosResponse.data);
   } catch (error) {
