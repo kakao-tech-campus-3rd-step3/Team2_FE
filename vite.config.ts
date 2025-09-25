@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    assetsInclude: ['**/*.lottie'],
     server: {
       host: 'local.pull.it.kr',
       port: 5173,

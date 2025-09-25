@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import type { QuestionSet } from '@/features/solve/types/question';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const SolveResultTitle = styled.h1`
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
@@ -108,16 +109,10 @@ const GoToDashboardButton = styled.button`
 type SolveResultProps = {
   questionLength: number;
   solvedCheck: Map<number, string>;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
   questions: QuestionSet;
 };
 
-function SolveResult({
-  questionLength,
-  solvedCheck,
-  setSelectedMenu,
-  questions,
-}: SolveResultProps) {
+function SolveResult({ questionLength, solvedCheck, questions }: SolveResultProps) {
   const [correctCount, setCorrectCount] = useState(0);
   const [score, setScore] = useState(0);
 
@@ -170,13 +165,15 @@ function SolveResult({
         </ResultCard>
       </ResultCardsWrapper>
       <ResultActions>
-        <ReviewWrongAnswersButton onClick={() => setSelectedMenu('오답노트')}>
-          오답노트 확인
-        </ReviewWrongAnswersButton>
-        <RetryButton onClick={() => setSelectedMenu('문제집 생성')}>다시 생성하기</RetryButton>
-        <GoToDashboardButton onClick={() => setSelectedMenu('대시보드')}>
-          대시보드로 이동
-        </GoToDashboardButton>
+        <Link to="/wrong">
+          <ReviewWrongAnswersButton>오답노트 확인</ReviewWrongAnswersButton>
+        </Link>
+        <Link to="/create">
+          <RetryButton>다시 생성하기</RetryButton>
+        </Link>
+        <Link to="/dashboard">
+          <GoToDashboardButton>대시보드로 이동</GoToDashboardButton>
+        </Link>
       </ResultActions>
     </>
   );
