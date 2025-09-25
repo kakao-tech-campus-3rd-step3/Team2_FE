@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import { createEventSource } from '@/shared/utils/sse';
+import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
 import SideBar from '@/shared/components/SideBar/SideBar';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
@@ -47,32 +47,29 @@ function AppLayout() {
   // TODO: sse 연결 이 부분 나중에 분리하자
 
   useEffect(() => {
-    const es = createEventSource({
-      onOpen: () => {
-        console.log('SSE Open');
-      },
-      onHandShake: () => {
-        console.log('SSE HandShake'); // 이 단계에서 sse연결이 완료
-      },
-      onQuestionSetCreationComplete: (payload) => {
-        if (payload.success) {
-          console.log('문제집 생성 완료');
-          setQuestionSetReady(true);
-          setQuestionSetId(payload.questionSetId);
-          toast(payload.message, {
-            onClick: () => {
-              navigate(`/solve/${payload.questionSetId}`);
-            },
-          });
-        } else {
-          console.log('문제집 생성 실패');
-        }
-      },
+    const es = new NotificationSse();
+
+    es.onOpen(() => console.log('SSE Open'));
+    es.onHandShake(() => console.log('SSE HandShake'));
+    es.onError((e) => console.log(`ERROR: ${JSON.stringify(e.target)}`));
+    es.onQuestionCreationComplete((payload) => {
+      if (payload.success) {
+        console.log('문제집 생성 완료');
+        setQuestionSetReady(true);
+        setQuestionSetId(payload.questionSetId);
+        toast(payload.message, {
+          onClick: () => {
+            navigate(`/solve/${payload.questionSetId}`);
+          },
+        });
+      } else {
+        console.log('문제집 생성 실패');
+      }
     });
 
     // TODO: 추후 로그아웃시 sse 연결 해제로 구현
     return () => {
-      es?.close?.();
+      es.close();
     };
   }, [navigate]);
 
