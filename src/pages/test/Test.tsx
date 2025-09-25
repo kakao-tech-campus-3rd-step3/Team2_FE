@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { isAxiosError } from 'axios';
 import { Global, css } from '@emotion/react';
 import type { AxiosRequestConfig, RawAxiosResponseHeaders, AxiosResponseHeaders } from 'axios';
-import { api } from '@/shared/api/axiosClient';
+import api from '@/shared/api/axiosClient';
 
 // API 요청 정보를 담을 타입
 interface ApiRequestData {

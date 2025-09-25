@@ -1,10 +1,10 @@
-import apiClient from '@/shared/api/apiClient';
+import api from '@/shared/api/axiosClient';
 import { clearToken } from '@/shared/utils/tokenManager';
 
 const LogoutButton = () => {
   const handleLogout = async () => {
     try {
-      await apiClient.post('/auth/logout');
+      await api.post('/auth/logout');
       clearToken(); // 클로저에서 토큰 제거
       window.location.href = '/login';
     } catch (error) {

@@ -1,4 +1,4 @@
-import { api } from '@/shared/api/axiosClient';
+import api from '@/shared/api/axiosClient';
 import type { FileData } from '@/features/create/types/types';
 
 interface ServerPdfFile {

@@ -3,7 +3,7 @@ import Spinner from '@/features/create/components/Spinner';
 import Spacer from '@/shared/components/Spacer';
 import { useEffect, useState } from 'react';
 import Complete from '@/features/create/components/Complete';
-import { api } from '@/shared/api/axiosClient';
+import api from '@/shared/api/axiosClient';
 
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;

@@ -5,8 +5,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import { refreshAccessToken, getUserInfo } from '@/shared/api/apiService';
 import { getToken } from '@/shared/utils/tokenManager';
+import { ROUTES } from '../routePaths';
 
 interface User {
   name: string;
@@ -16,46 +18,59 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  isLoading: boolean;
+  isAuthLoading: boolean; // isLoading -> isAuthLoading
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthLoading, setIsAuthLoading] = useState(true); // isLoading -> isAuthLoading
+  const location = useLocation();
 
   useEffect(() => {
+    // 이 useEffect는 앱이 최초 렌더링될 때 단 한 번만 실행되어야 합니다.
     const initializeAuth = async () => {
       try {
-        let tokenExists = !!getToken();
+        console.log('[인증 공급자] 인증 상태 초기화를 시작합니다...');
 
-        // 1. 메모리에 토큰이 없으면 '조용한 재인증' 시도
-        if (!tokenExists) {
+        // 페이지 새로고침 시에는 쿠키의 리프레시 토큰으로 '조용한 재인증'을 시도합니다.
+        // 이 과정은 메모리에 토큰이 없을 때만 실행됩니다.
+        if (!getToken()) {
+          console.log(
+            "[인증 공급자] '조용한 재인증(Silent Refresh)'을 시도합니다...",
+          );
           await refreshAccessToken();
-          tokenExists = !!getToken();
         }
 
-        // 2. 토큰이 존재하면 (원래 있었거나, 재인증 성공했거나) 사용자 정보 조회
+        // 토큰이 존재하면(원래 있었거나, 재인증에 성공했거나) 사용자 정보를 조회합니다.
+        const tokenExists = !!getToken();
         if (tokenExists) {
+          console.log('[인증 공급자] 사용자 정보를 조회합니다...');
           const userData = await getUserInfo();
           setUser(userData);
+          console.log('[인증 공급자] 사용자 정보 조회 성공:', userData);
+        } else {
+          console.log(
+            '[인증 공급자] 유효한 토큰이 없어 비로그인 상태로 처리합니다.',
+          );
         }
       } catch (error) {
-        // 재인증 또는 사용자 정보 조회 실패 시, 로그인하지 않은 상태로 간주
-        console.error('Authentication initialization failed:', error);
+        console.error('[인증 공급자] 인증 초기화 과정에서 오류 발생:', error);
         setUser(null);
       } finally {
-        // 인증 절차가 끝나면 로딩 상태 해제
-        setIsLoading(false);
+        console.log('[인증 공급자] 인증 상태 초기화가 완료되었습니다.');
+        setIsAuthLoading(false); // setIsLoading -> setIsAuthLoading
       }
     };
 
     void initializeAuth();
-  }, []);
+  }, []); // 의존성 배열을 비워서 최초 렌더링 시에만 실행되도록 수정
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, isAuthLoading }} // isLoading -> isAuthLoading
+    >
       {children}
     </AuthContext.Provider>
   );
