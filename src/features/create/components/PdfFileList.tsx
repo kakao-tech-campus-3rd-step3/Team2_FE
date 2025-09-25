@@ -3,7 +3,8 @@ import PdfFileItem from '@/features/create/components/PdfFileItem';
 import type { PdfFileListProps } from '@/features/create/types/types';
 import Spacer from '@/shared/components/Spacer';
 import Loading from './Loading';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useDebounce from '@/features/create/hooks/useDebounce';
 
 const FileListBox = styled.div`
   background-color: ${({ theme }) => theme.colors.background.foreground};
@@ -76,20 +77,13 @@ interface Props extends PdfFileListProps {
 
 const PdfFileList = ({ fileList, selectedFileId, onSelect, onAddFile, isLoading }: Props) => {
   const [searchText, setSearchText] = useState('');
-  const [debouncedSearchText, setDebouncedSearchText] = useState('');
-
-  // debounce: 입력이 멈춘 후 300ms 뒤에 검색어를 업데이트
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchText(searchText.trim());
-    }, 300);
-
-    return () => clearTimeout(handler);
-  }, [searchText]);
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   // 검색어에 맞게 필터링된 파일 리스트
   const filteredFiles = debouncedSearchText
-    ? fileList.filter((file) => file.name.toLowerCase().includes(debouncedSearchText.toLowerCase()))
+    ? fileList.filter((file) =>
+        file.name.toLowerCase().includes(debouncedSearchText.trim().toLowerCase()),
+      )
     : fileList;
 
   const handleButtonClick = () => {

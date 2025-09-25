@@ -92,7 +92,9 @@ function AppLayout() {
           user={user}
         />
         <Main>
-          <Outlet context={{ questionSetId, questionSetReady }} />
+          <Outlet
+            context={{ questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady }}
+          />
         </Main>
       </AppLayoutVertical>
     </AppLayoutWrapper>

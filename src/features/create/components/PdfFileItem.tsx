@@ -2,6 +2,8 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { LucideFileText } from 'lucide-react';
 
+const FILE_INFO_SEPARATOR = ' · ';
+
 const FileContentBox = styled.div<{ isSelected: boolean }>`
   width: 100%;
   border-radius: ${({ theme }) => theme.radius.radius1};
@@ -63,7 +65,6 @@ interface FileItemProps {
 }
 
 const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
-  const FILE_INFO_SEPARATOR = ' · ';
   const fileInfoItems = [file.size, file.date];
   const theme = useTheme();
 

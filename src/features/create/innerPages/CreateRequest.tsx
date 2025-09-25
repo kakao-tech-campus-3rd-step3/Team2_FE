@@ -10,6 +10,8 @@ interface CreateRequestProps {
   onReset: () => void;
   questionSetReady: boolean;
   questionSetId: number;
+  setQuestionSetId: (id: number) => void;
+  setQuestionSetReady: (isReady: boolean) => void;
 }
 
 const Container = styled.div`
@@ -74,6 +76,8 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
   onReset,
   questionSetReady,
   questionSetId,
+  setQuestionSetId,
+  setQuestionSetReady,
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
@@ -82,6 +86,10 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     if (!selectedFile) return;
 
     const createQuestionSet = async () => {
+      // api 호출 전에 이전 생성 요청 무시하기 위한 초기화
+      setQuestionSetId(0);
+      setQuestionSetReady(false);
+
       setStatus('requesting');
       setError(null);
 
@@ -105,7 +113,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     };
 
     createQuestionSet();
-  }, [selectedFile]);
+  }, [selectedFile, setQuestionSetId, setQuestionSetReady]);
   if (questionSetReady) {
     return (
       <NextComponent
