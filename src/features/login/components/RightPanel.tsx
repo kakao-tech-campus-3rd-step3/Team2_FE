@@ -94,7 +94,6 @@ const LinkButton = styled.button`
 `;
 
 const RightPanel = () => {
-  const navigate = useNavigate();
 
   const handleKakaoLogin = () => {
     window.location.href = getKakaoLoginUrl();
