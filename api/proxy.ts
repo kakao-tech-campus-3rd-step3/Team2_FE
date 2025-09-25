@@ -95,12 +95,12 @@ async function handleApiRequest(
     
     const headersFromBackend = axiosResponse.headers;
 
-    // 2. VercelResponse.setHeader를 사용하여 헤더를 하나씩 설정합니다.
+    delete headersFromBackend['transfer-encoding'];
+
     for (const [key, value] of Object.entries(headersFromBackend)) {
       response.setHeader(key, value as string | number | readonly string[]);
     }
 
-    // 3. 상태 코드와 응답 본문을 전달합니다.
     response.status(axiosResponse.status).send(axiosResponse.data);
 
   } catch (error) {
