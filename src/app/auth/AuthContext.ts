@@ -3,7 +3,6 @@ import { createContext } from 'react';
 export interface UserInfo {
   id: string;
   name: string;
-  // TODO: Add other user properties
 }
 
 export interface AuthContext {
