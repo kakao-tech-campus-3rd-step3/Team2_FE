@@ -24,12 +24,15 @@ const Container = styled.div`
 type CreateProps = {
   questionSetId: number;
   questionSetReady: boolean;
+  setQuestionSetId: React.Dispatch<React.SetStateAction<number>>;
+  setQuestionSetReady: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const Create = () => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
-  const { questionSetId, questionSetReady } = useOutletContext<CreateProps>(); // outlet context
+  const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
+    useOutletContext<CreateProps>(); // outlet context
 
   // 각 스텝별 유효성 상태 (초기값은 false, 필요에 따라 조정)
   const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
@@ -65,6 +68,8 @@ const Create = () => {
             onReset={handleReset}
             questionSetReady={questionSetReady}
             questionSetId={questionSetId}
+            setQuestionSetId={setQuestionSetId}
+            setQuestionSetReady={setQuestionSetReady}
           />
         );
       default:
@@ -87,6 +92,8 @@ const Create = () => {
     setCurrentStep(1);
     setSelectedFile(null);
     setStepValidity({ 1: false, 2: false, 3: false });
+    setQuestionSetId(0);
+    setQuestionSetReady(false);
   };
 
   const progress = ((currentStep - 1) / (stepLabels.length - 1)) * 100;
