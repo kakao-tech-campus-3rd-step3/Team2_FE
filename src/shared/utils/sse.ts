@@ -1,4 +1,4 @@
-import { EventSourcePolyfill } from 'event-source-polyfill';
+import { EventSourcePolyfill, type Event } from 'event-source-polyfill';
 import { getToken } from './tokenManager';
 
 const SSE_SUB_URL = '/api/notifications/subscribe';
@@ -8,24 +8,21 @@ interface onQuestionSetCreationCompletePayload {
   questionSetId: number;
   message: string;
 }
-interface NotificationCallbacks {
-  onOpen?: () => void;
-  onHandShake?: () => void; // TODO: backend 수정 후 payload 타입 정의
-  onQuestionSetCreationComplete?: (payload: onQuestionSetCreationCompletePayload) => void;
-}
+type EventCallback = (v: Event) => void;
 
 const EVENT_NAME = {
-  OPEN: 'open',
-  HANDSHAKE: 'handShakeComplete',
   QUESTION_SET_CREATION_COMPLETE: 'questionSetCreationComplete',
+  HANDSHAKE_COMPLETE: 'handShakeComplete',
 } as const;
 
-export function createEventSource(callback: NotificationCallbacks) {
-  const {
-    onOpen,
-    onHandShake,
-    onQuestionSetCreationComplete: onQuestionCreationComplete,
-  } = callback;
+export class NotificationSse {
+  private eventSource: EventSourcePolyfill;
+  constructor() {
+    // TODO: Bearer token 넣기
+    this.eventSource = new EventSourcePolyfill(SSE_SUB_URL, {
+      withCredentials: true,
+    });
+  }
 
   const token = getToken();
   if (!token) {
@@ -41,24 +38,35 @@ export function createEventSource(callback: NotificationCallbacks) {
     withCredentials: true,
   });
 
-  if (onOpen) {
-    eventSource.addEventListener(EVENT_NAME.OPEN, () => {
-      onOpen();
-    });
+  onError(callback: EventCallback) {
+    this.eventSource.addEventListener('error', callback);
   }
 
-  if (onHandShake) {
-    eventSource.addEventListener(EVENT_NAME.HANDSHAKE, () => {
-      onHandShake();
-    });
+  onHandShake(callback: EventCallback) {
+    this.eventSource.addEventListener(EVENT_NAME.HANDSHAKE_COMPLETE, callback);
   }
 
-  if (onQuestionCreationComplete) {
-    eventSource.addEventListener(EVENT_NAME.QUESTION_SET_CREATION_COMPLETE, (v) => {
+  readyState() {
+    // 0 = CONNECTING, 1 = OPEN, 2 = CLOSED
+    return this.eventSource.readyState;
+  }
+
+  onQuestionCreationComplete(callback: (v: onQuestionSetCreationCompletePayload) => void) {
+    this.eventSource.addEventListener(EVENT_NAME.QUESTION_SET_CREATION_COMPLETE, (v) => {
       const data: onQuestionSetCreationCompletePayload = JSON.parse((v as MessageEvent).data); // d.ts에 custom event 정의 없어서 임의로 캐스팅
-      onQuestionCreationComplete(data);
+      callback(data);
     });
   }
 
-  return eventSource;
+  onCustom(eventName: string, callback: (v: Event) => void) {
+    this.eventSource.addEventListener(eventName, callback);
+  }
+
+  removeListener(eventName: string, callback: (v: Event) => void) {
+    this.eventSource.removeEventListener(eventName, callback);
+  }
+
+  close() {
+    this.eventSource.close();
+  }
 }
