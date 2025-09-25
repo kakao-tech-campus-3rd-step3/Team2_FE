@@ -87,7 +87,9 @@ function AppLayout() {
       <AppLayoutVertical>
         <PageHeader isOpen={isOpen} openSideBar={openSideBar} selectedMenu={selectedMenu} />
         <Main>
-          <Outlet context={{ questionSetId, questionSetReady }} />
+          <Outlet
+            context={{ questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady }}
+          />
         </Main>
       </AppLayoutVertical>
     </AppLayoutWrapper>
