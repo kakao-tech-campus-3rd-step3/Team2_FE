@@ -74,64 +74,35 @@ async function handleApiRequest(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  const { method, body, headers: originalHeaders } = request;
+  const { method, body } = request;
   const targetUrl = getApiTargetUrl(request.url);
 
   try {
-    const headers = buildForwardHeaders(originalHeaders);
+    // 1. 원본 요청 헤더를 복사
+    const headersToForward = { ...request.headers };
+
+    // 2. Host 헤더만 백엔드 서버의 주소로 변경
+    headersToForward.host = new URL(targetUrl).host;
 
     const axiosResponse = await axios({
-      method: method as 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+      method: method as 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS',
       url: targetUrl,
-      headers: headers as { [key: string]: string },
+      headers: headersToForward,
       data: body,
       // 3xx, 4xx 응답 코드를 받아도 예외를 발생시키지 않도록 설정
       validateStatus: (status) => status < 500,
     });
+    
+    const headersFromBackend = axiosResponse.headers;
 
-    // 백엔드에서 받은 Set-Cookie 헤더를 클라이언트에 전달 (필요 시 SameSite 속성 추가)
-    const setCookieHeader = axiosResponse.headers['set-cookie'];
-
-    // ================= [디버깅 로그 추가] =================
-    console.log('[PROXY] Backend Response headers:', axiosResponse.headers);
-    console.log('[PROXY] Original Set-Cookie header from backend:', setCookieHeader);
-    // ====================================================
-
-    if (setCookieHeader) {
-      const modifiedCookies = setCookieHeader.map((cookie) => {
-        let newCookie = cookie;
-        // SameSite=None; Secure 속성이 없는 경우에만 추가
-        if (!/SameSite/i.test(newCookie)) {
-          newCookie = `${newCookie}; SameSite=None; Secure`;
-        }
-        
-        // Path 속성이 없다면 추가 (더 넓은 범위에서 쿠키 사용 가능)
-        if (!/Path/i.test(newCookie)) {
-          newCookie = `${newCookie}; Path=/`;
-        }
-
-        // ================= [디버깅 로그 추가] =================
-        console.log(`[PROXY] Original cookie: ${cookie}`);
-        console.log(`[PROXY] Modified cookie: ${newCookie}`);
-        // ====================================================
-        return newCookie;
-      });
-
-      response.setHeader('Set-Cookie', modifiedCookies);
+    // 2. VercelResponse.setHeader를 사용하여 헤더를 하나씩 설정합니다.
+    for (const [key, value] of Object.entries(headersFromBackend)) {
+      response.setHeader(key, value as string | number | readonly string[]);
     }
 
-    // 리다이렉트 응답 처리
-    if (
-      axiosResponse.status >= 300 &&
-      axiosResponse.status < 400 &&
-      axiosResponse.headers.location
-    ) {
-      response.setHeader('Location', axiosResponse.headers.location);
-      response.status(axiosResponse.status).end();
-      return;
-    }
+    // 3. 상태 코드와 응답 본문을 전달합니다.
+    response.status(axiosResponse.status).send(axiosResponse.data);
 
-    response.status(axiosResponse.status).json(axiosResponse.data);
   } catch (error) {
     console.error('API Proxy Error:', error);
     if (axios.isAxiosError(error)) {
