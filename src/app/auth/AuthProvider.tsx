@@ -5,10 +5,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { useLocation } from 'react-router-dom';
 import { refreshAccessToken, getUserInfo } from '@/shared/api/apiService';
 import { getToken } from '@/shared/utils/tokenManager';
-import { ROUTES } from '../routePaths';
 
 interface User {
   name: string;
@@ -26,7 +24,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true); // isLoading -> isAuthLoading
-  const location = useLocation();
 
   useEffect(() => {
     // 이 useEffect는 앱이 최초 렌더링될 때 단 한 번만 실행되어야 합니다.
