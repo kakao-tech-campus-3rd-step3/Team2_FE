@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
@@ -44,33 +44,27 @@ function AppLayout() {
   };
 
   // TODO: sse 연결 이 부분 나중에 분리하자
+  const es = new NotificationSse();
 
-  useEffect(() => {
-    const es = new NotificationSse();
+  es.onOpen(() => console.log('SSE Open'));
+  es.onHandShake(() => console.log('SSE HandShake'));
+  es.onError((e) => console.log(`ERROR: ${JSON.stringify(e.target)}`));
+  es.onQuestionCreationComplete((payload) => {
+    if (payload.success) {
+      console.log('문제집 생성 완료');
+      setQuestionSetReady(true);
+      setQuestionSetId(payload.questionSetId);
+      toast(payload.message, {
+        onClick: () => {
+          navigate(`/solve/${payload.questionSetId}`);
+        },
+      });
+    } else {
+      console.log('문제집 생성 실패');
+    }
+  });
 
-    es.onOpen(() => console.log('SSE Open'));
-    es.onHandShake(() => console.log('SSE HandShake'));
-    es.onError((e) => console.log(`ERROR: ${JSON.stringify(e.target)}`));
-    es.onQuestionCreationComplete((payload) => {
-      if (payload.success) {
-        console.log('문제집 생성 완료');
-        setQuestionSetReady(true);
-        setQuestionSetId(payload.questionSetId);
-        toast(payload.message, {
-          onClick: () => {
-            navigate(`/solve/${payload.questionSetId}`);
-          },
-        });
-      } else {
-        console.log('문제집 생성 실패');
-      }
-    });
-
-    // TODO: 추후 로그아웃시 sse 연결 해제로 구현
-    return () => {
-      es.close();
-    };
-  }, []);
+  const esClose = () => es.close();
 
   return (
     <AppLayoutWrapper>
@@ -79,6 +73,7 @@ function AppLayout() {
         closeSideBar={closeSideBar}
         selectedMenu={selectedMenu}
         changeMenu={changeMenu}
+        esClose={esClose}
       />
       <AppLayoutVertical>
         <PageHeader isOpen={isOpen} openSideBar={openSideBar} selectedMenu={selectedMenu} />
