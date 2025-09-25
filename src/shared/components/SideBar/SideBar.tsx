@@ -214,7 +214,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
   const handleLogout = async () => {
     try {
       await api.post('/auth/logout');
-      esClose()
+      esClose();
       clearToken(); // 클로저에서 토큰 제거
 
       window.location.href = '/login';
@@ -318,10 +318,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
                 <Settings size={16} />
                 <DropdownItemTxt>설정</DropdownItemTxt>
               </DropdownItem>
-              <DropdownItem
-                className="danger"
-                onClick={handleLogout}
-              >
+              <DropdownItem className="danger" onClick={handleLogout}>
                 <LogOut size={16} />
                 <DropdownItemTxt>로그아웃</DropdownItemTxt>
               </DropdownItem>
