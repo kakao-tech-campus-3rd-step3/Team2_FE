@@ -70,7 +70,10 @@ async function handleSseRequest(request: VercelRequest, response: VercelResponse
 /**
  * 일반 API 요청을 처리합니다.
  */
-async function handleApiRequest(request: VercelRequest, response: VercelResponse) {
+async function handleApiRequest(
+  request: VercelRequest,
+  response: VercelResponse,
+) {
   const { method, body, headers: originalHeaders } = request;
   const targetUrl = getApiTargetUrl(request.url);
 
@@ -86,18 +89,15 @@ async function handleApiRequest(request: VercelRequest, response: VercelResponse
       validateStatus: (status) => status < 500,
     });
 
-    // 백엔드에서 받은 Set-Cookie 헤더를 클라이언트에 전달
+    // 백엔드에서 받은 Set-Cookie 헤더를 클라이언트에 전달 (필요 시 SameSite 속성 추가)
     const setCookieHeader = axiosResponse.headers['set-cookie'];
     if (setCookieHeader) {
-      const clientHost = request.headers['x-forwarded-host'] || request.headers.host;
       const modifiedCookies = setCookieHeader.map((cookie) => {
-        // Domain 속성을 클라이언트의 호스트로 변경
-        let newCookie = cookie.replace(/Domain=[^;]+;?/i, `Domain=${clientHost};`);
-        // SameSite=None; Secure 추가 (크로스-사이트 쿠키 전송을 위해)
-        if (!/SameSite/i.test(newCookie)) {
-          newCookie += ' SameSite=None; Secure';
+        // SameSite=None; Secure 속성이 없는 경우에만 추가
+        if (!/SameSite/i.test(cookie)) {
+          return `${cookie}; SameSite=None; Secure`;
         }
-        return newCookie;
+        return cookie;
       });
       response.setHeader('Set-Cookie', modifiedCookies);
     }
