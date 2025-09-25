@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
 import SideBar from '@/shared/components/SideBar/SideBar';
@@ -30,6 +30,7 @@ const Main = styled.div`
 `;
 
 function AppLayout() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [selectedMenu, setSelectedMenu] = useState<string>('대시보드'); // 현재 페이지 저장 state
   const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state

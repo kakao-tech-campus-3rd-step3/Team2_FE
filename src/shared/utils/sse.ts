@@ -17,7 +17,7 @@ const EVENT_NAME = {
 
 export class NotificationSse {
   private eventSource: EventSourcePolyfill;
-  
+
   constructor() {
     const token = getToken();
     if (!token) {
@@ -32,6 +32,10 @@ export class NotificationSse {
       },
       withCredentials: true,
     });
+  }
+
+  onOpen(callback: EventCallback) {
+    this.eventSource.addEventListener('open', callback);
   }
 
   onError(callback: EventCallback) {
