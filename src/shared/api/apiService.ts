@@ -1,10 +1,6 @@
 import api from './axiosClient';
 import { clearToken, setToken } from '../utils/tokenManager';
-
-// temp type
-interface UserInfo {
-  name: string;
-}
+import { type UserInfo } from '@/app/auth/AuthContext';
 
 export const getUserInfo = async (): Promise<UserInfo> => {
   try {

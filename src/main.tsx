@@ -10,12 +10,12 @@ import App from '@/app/App.tsx';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-    <BrowserRouter>
-      <ChakraProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-          <ToastContainer position="bottom-center" hideProgressBar={true} />
-        </QueryClientProvider>
-      </ChakraProvider>
-    </BrowserRouter>
+  <BrowserRouter>
+    <ChakraProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <ToastContainer position="bottom-center" hideProgressBar={true} />
+      </QueryClientProvider>
+    </ChakraProvider>
+  </BrowserRouter>,
 );

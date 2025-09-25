@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
+import { useAuth } from './useAuth';
 import { ROUTES } from '@/app/routePaths';
 import Spinner from '@/features/create/components/Spinner'; // 전역 스피너로 대체 가능
 

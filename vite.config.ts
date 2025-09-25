@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
           target: proxyTarget,
           changeOrigin: true,
           secure: true,
-          configure: proxy => {
+          configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq, req) => {
               // Vercel 프록시와 동일하게 '/api/oauth2/...' 요청 경로 수정
               if (req.url?.startsWith('/api/oauth2/')) {

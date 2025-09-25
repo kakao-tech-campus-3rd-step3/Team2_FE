@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LeftPanel from '@/features/login/components/LeftPanel';
 import RightPanel from '@/features/login/components/RightPanel';
-import { useAuth } from '@/app/auth/AuthProvider';
+import { useAuth } from '@/app/auth/useAuth';
 import { ROUTES } from '@/app/routePaths';
 import Spinner from '@/features/create/components/Spinner';
 

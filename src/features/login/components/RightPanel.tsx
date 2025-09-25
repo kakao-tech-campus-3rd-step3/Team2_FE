@@ -93,7 +93,6 @@ const LinkButton = styled.button`
 `;
 
 const RightPanel = () => {
-
   const handleKakaoLogin = () => {
     window.location.href = getKakaoLoginUrl();
   };

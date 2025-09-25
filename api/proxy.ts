@@ -21,9 +21,9 @@ function getApiTargetUrl(requestUrl: string | undefined): string {
  * 클라이언트의 원본 헤더 중 필요한 것들을 그대로 전달합니다.
  * @param originalHeaders - VercelRequest에서 받은 원본 헤더
  */
-function buildForwardHeaders(
-  originalHeaders: VercelRequest['headers'],
-): { [key: string]: string | string[] | undefined } {
+function buildForwardHeaders(originalHeaders: VercelRequest['headers']): {
+  [key: string]: string | string[] | undefined;
+} {
   const headers: { [key: string]: string | string[] | undefined } = {};
 
   // 클라이언트가 보낸 Authorization 헤더(Bearer 토큰)를 그대로 전달
@@ -88,19 +88,16 @@ async function handleApiRequest(request: VercelRequest, response: VercelResponse
       headers: headers as { [key: string]: string },
       data: body,
       // 3xx, 4xx 응답 코드를 받아도 예외를 발생시키지 않도록 설정
-      validateStatus: status => status < 500,
+      validateStatus: (status) => status < 500,
     });
 
     // 백엔드에서 받은 Set-Cookie 헤더를 클라이언트에 전달
     const setCookieHeader = axiosResponse.headers['set-cookie'];
     if (setCookieHeader) {
       const clientHost = request.headers['x-forwarded-host'] || request.headers.host;
-      const modifiedCookies = setCookieHeader.map(cookie => {
+      const modifiedCookies = setCookieHeader.map((cookie) => {
         // Domain 속성을 클라이언트의 호스트로 변경
-        let newCookie = cookie.replace(
-          /Domain=[^;]+;?/i,
-          `Domain=${clientHost};`,
-        );
+        let newCookie = cookie.replace(/Domain=[^;]+;?/i, `Domain=${clientHost};`);
         // SameSite=None; Secure 추가 (크로스-사이트 쿠키 전송을 위해)
         if (!/SameSite/i.test(newCookie)) {
           newCookie += ' SameSite=None; Secure';

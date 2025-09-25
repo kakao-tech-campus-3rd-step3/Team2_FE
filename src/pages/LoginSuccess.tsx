@@ -8,9 +8,7 @@ const LoginSuccess = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    console.log(
-      '[로그인 성공 페이지] 로드 완료. URL에서 액세스 토큰을 확인합니다...',
-    );
+    console.log('[로그인 성공 페이지] 로드 완료. URL에서 액세스 토큰을 확인합니다...');
     // 1. URL 쿼리 파라미터에서 'accessToken' 값을 읽어옵니다.
     const accessToken = searchParams.get('accessToken');
 

@@ -1,19 +1,12 @@
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
 import { MIN_HEIGHT } from '@/shared/config/constants';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { ROUTES } from '@/app/routePaths';
+import { useAuth } from '@/app/auth/useAuth';
+import LogoutButton from '@/features/login/components/LogoutButton';
 
-import {
-  FileText,
-  Sidebar,
-  Settings,
-  LayoutDashboard,
-  Plus,
-  BookOpen,
-  CircleX,
-} from 'lucide-react';
+import { FileText, Sidebar, LayoutDashboard, Plus, BookOpen, CircleX } from 'lucide-react';
 
 import { MENUS } from '@/shared/config/constants';
 
@@ -178,7 +171,7 @@ interface SideBarProps {
 }
 
 function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProps) {
-  const navigate = useNavigate();
+  const { userInfo } = useAuth();
 
   return (
     <SideBarWrapper isOpen={isOpen}>
@@ -256,14 +249,15 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProp
       <SideBarUserInfo>
         <SideBarUserInfoItemWrapper>
           <SideBarUserInfoAvatarTextWrapper>
-            <SideBarUserInfoAvatar>김학</SideBarUserInfoAvatar>
+            <SideBarUserInfoAvatar>
+              {userInfo?.name ? userInfo.name.charAt(0) : '?'}
+            </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
-              <SideBarUserInfoName>김학습</SideBarUserInfoName>
-              <SideBarUserInfoEmail>user@kakao.com</SideBarUserInfoEmail>
+              <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
+              <SideBarUserInfoEmail>{userInfo?.id || 'user@example.com'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
-          {/* TODO: 임시로 설정 아이콘 누르면 로그인 페이지로 가게함 */}
-          <Settings size={16} onClick={() => navigate('/login')} />
+          <LogoutButton />
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
     </SideBarWrapper>
