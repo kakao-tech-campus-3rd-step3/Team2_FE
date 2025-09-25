@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import BenefitList from '@/features/login/components/BenefitList';
 import SampleLottie from '@/shared/assets/lotties/sample.lottie';
