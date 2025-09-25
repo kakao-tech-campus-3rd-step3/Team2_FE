@@ -18,7 +18,7 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
   const queryClient = useQueryClient();
 
   const {
-    data: fileList = [], // data가 없을 경우를 대비해 기본값으로 빈 배열 설정
+    data: fileList = [],
     isLoading: isLoadingList,
     isError,
   } = useQuery<FileData[]>({
@@ -26,12 +26,13 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
     queryFn: getPdfFileList,
   });
 
+  // ✅ 수정된 부분
   const { mutate: upload, isPending: isUploading } = useMutation({
     mutationFn: uploadPdfFile,
-    onSuccess: (uploadedFile) => {
+    onSuccess: () => {
+      // 업로드 성공 시, 파일 목록 쿼리만 무효화시켜서 목록을 다시 불러옵니다.
+      // 자동 선택 로직을 제거했습니다.
       queryClient.invalidateQueries({ queryKey: ['pdfFiles'] });
-
-      handleSelectFile(uploadedFile.id, uploadedFile.name);
     },
     onError: (error) => {
       alert(error instanceof Error ? error.message : '파일 업로드 실패');
@@ -46,7 +47,7 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
 
   const handleSelectFile = (fileId: string | null, fileName?: string | null) => {
     setSelectedFileId(fileId);
-    onValidChange(!!fileId);
+    onValidChange(!!fileId); // 파일이 선택되거나, 선택이 해제될 때만 valid 상태 변경
 
     if (fileId) {
       const name = fileName ?? fileList.find((file) => file.id === fileId)?.name;
@@ -55,7 +56,11 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
       }
     }
   };
+
   const handleUpload = (file: File) => {
+    // 업로드를 시작할 때, 기존 선택을 해제하고 다음 버튼을 비활성화
+    setSelectedFileId(null);
+    onValidChange(false);
     upload(file);
   };
 
@@ -71,7 +76,6 @@ const SelectPdf = ({ onValidChange, onSelectFile }: Step1Props) => {
         selectedFileId={selectedFileId}
         onSelect={(id) => handleSelectFile(id)}
         onAddFile={handleUpload}
-        // 목록 로딩 상태와 업로드 중 상태를 모두 isLoading으로 전달
         isLoading={isLoadingList || isUploading}
       />
     </>
