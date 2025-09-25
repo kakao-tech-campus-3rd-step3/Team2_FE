@@ -7,11 +7,6 @@ const { API_BASE_URL } = process.env;
 
 function getApiTargetUrl(requestUrl: string | undefined): string {
   const url = requestUrl || '';
-  // OAuth 인증 요청('/api/oauth2/...')은 '/api' 접두사를 제거하고 전달
-  if (url.startsWith('/api/oauth2/')) {
-    const backendPath = url.substring(4); // '/api' 제거
-    return `${API_BASE_URL}${backendPath}`;
-  }
   // 그 외 모든 API 요청은 기존 경로 그대로 사용
   return `${API_BASE_URL}${url}`;
 }
@@ -139,6 +134,15 @@ async function handleApiRequest(request: VercelRequest, response: VercelResponse
  * 요청 경로를 분석하여 SSE 요청과 일반 API 요청을 분기 처리합니다.
  */
 export default async function handler(request: VercelRequest, response: VercelResponse) {
+  const url = request.url || '';
+
+  // OAuth 시작 엔드포인트: /api 프리픽스를 제거하여 브라우저가 직접 이동하도록 리다이렉트
+  if (url.startsWith('/api/oauth2/authorization/')) {
+    const location = `${API_BASE_URL}${url.replace(/^\/api/, '')}`;
+    response.status(302).setHeader('Location', location).end();
+    return;
+  }
+
   if (request.url?.includes('/api/notifications/subscribe')) {
     await handleSseRequest(request, response);
   } else {
