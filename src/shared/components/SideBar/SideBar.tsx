@@ -1,14 +1,26 @@
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
 import { MIN_HEIGHT } from '@/shared/config/constants';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { ROUTES } from '@/app/routePaths';
 import { useAuth } from '@/app/auth/useAuth';
-import LogoutButton from '@/features/login/components/LogoutButton';
 
-import { FileText, Sidebar, LayoutDashboard, Plus, BookOpen, CircleX } from 'lucide-react';
+import {
+  FileText,
+  Sidebar,
+  LayoutDashboard,
+  Plus,
+  BookOpen,
+  CircleX,
+  Settings,
+  LogOut,
+} from 'lucide-react';
 
 import { MENUS } from '@/shared/config/constants';
+import { useState } from 'react';
+
+import { clearToken } from '@/shared/utils/tokenManager';
+import api from '@/shared/api/axiosClient';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
@@ -156,15 +168,60 @@ const SideBarUserInfoName = styled.p`
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
 `;
 
+const DropdownWrapper = styled.div`
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  z-index: 1000;
+`;
+
+const DropdownItem = styled.div`
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.gray.gray1};
+  }
+  &.danger {
+    color: ${({ theme }) => theme.colors.red.red4};
+  }
+`;
+
+const DropdownItemTxt = styled.span``;
 interface SideBarProps {
   isOpen: boolean;
   closeSideBar: () => void;
   selectedMenu: string;
   changeMenu: (menu: string) => void;
+  esClose: () => void;
 }
 
-function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProps) {
+function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: SideBarProps) {
   const { userInfo } = useAuth();
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await api.post('/auth/logout');
+      esClose()
+      clearToken(); // 클로저에서 토큰 제거
+
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+    }
+  };
 
   return (
     <SideBarWrapper isOpen={isOpen}>
@@ -249,7 +306,27 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProp
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
-          <LogoutButton />
+          <Settings
+            size={16}
+            onClick={() => setOpen((prev) => !prev)}
+            style={{ cursor: 'pointer' }}
+          />
+
+          {open && (
+            <DropdownWrapper>
+              <DropdownItem onClick={() => navigate('/settings')}>
+                <Settings size={16} />
+                <DropdownItemTxt>설정</DropdownItemTxt>
+              </DropdownItem>
+              <DropdownItem
+                className="danger"
+                onClick={handleLogout}
+              >
+                <LogOut size={16} />
+                <DropdownItemTxt>로그아웃</DropdownItemTxt>
+              </DropdownItem>
+            </DropdownWrapper>
+          )}
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
     </SideBarWrapper>
