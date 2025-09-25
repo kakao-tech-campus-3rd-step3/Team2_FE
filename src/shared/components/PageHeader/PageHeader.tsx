@@ -9,6 +9,12 @@ const PageHeaderWrapper = styled.header`
   background-color: ${({ theme }) => theme.colors.gray.gray1};
   display: flex;
   align-items: center;
+  justify-content: space-between;
+`;
+
+const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const PageTitle = styled.h1`
@@ -29,8 +35,10 @@ interface PageHeaderProps {
 function PageHeader({ isOpen, openSideBar, selectedMenu }: PageHeaderProps) {
   return (
     <PageHeaderWrapper>
-      {!isOpen && <Sidebar size={16} onClick={openSideBar} />}
-      <PageTitle>{selectedMenu}</PageTitle>
+      <HeaderLeft>
+        {!isOpen && <Sidebar size={16} onClick={openSideBar} />}
+        <PageTitle>{selectedMenu}</PageTitle>
+      </HeaderLeft>
     </PageHeaderWrapper>
   );
 }

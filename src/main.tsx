@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from './shared/styles/theme';
@@ -11,14 +10,12 @@ import App from '@/app/App.tsx';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <ChakraProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-          <ToastContainer position="bottom-center" hideProgressBar={true} />
-        </QueryClientProvider>
-      </ChakraProvider>
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <ChakraProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <ToastContainer position="bottom-center" hideProgressBar={true} />
+      </QueryClientProvider>
+    </ChakraProvider>
+  </BrowserRouter>,
 );

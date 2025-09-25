@@ -1,6 +1,7 @@
 export const ROUTES = {
-  LOGIN: '/login',
   ROOT: '/',
+  LOGIN: '/login',
+  LOGIN_SUCCESS: '/login-success', // 카카오 로그인 성공 리다이렉트
   DASHBOARD: '/dashboard',
   SOURCE: '/source',
   CREATE: '/create',

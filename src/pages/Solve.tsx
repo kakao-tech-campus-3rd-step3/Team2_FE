@@ -15,7 +15,7 @@ import SolveResult from './SolveResult';
 import type { QuestionSet } from '@/features/solve/types/question';
 
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/shared/api/axiosClient';
+import api from '@/shared/api/axiosClient';
 import { useParams } from 'react-router-dom';
 
 const SolveWrapper = styled.div`
