@@ -156,13 +156,6 @@ const SideBarUserInfoName = styled.p`
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
 `;
 
-const SideBarUserInfoEmail = styled.p`
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray.gray7};
-`;
-
 interface SideBarProps {
   isOpen: boolean;
   closeSideBar: () => void;
@@ -254,7 +247,6 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu }: SideBarProp
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
-              <SideBarUserInfoEmail>{userInfo?.id || 'user@example.com'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
           <LogoutButton />
