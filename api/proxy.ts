@@ -91,14 +91,32 @@ async function handleApiRequest(
 
     // 백엔드에서 받은 Set-Cookie 헤더를 클라이언트에 전달 (필요 시 SameSite 속성 추가)
     const setCookieHeader = axiosResponse.headers['set-cookie'];
+
+    // ================= [디버깅 로그 추가] =================
+    console.log('[PROXY] Backend Response headers:', axiosResponse.headers);
+    console.log('[PROXY] Original Set-Cookie header from backend:', setCookieHeader);
+    // ====================================================
+
     if (setCookieHeader) {
       const modifiedCookies = setCookieHeader.map((cookie) => {
+        let newCookie = cookie;
         // SameSite=None; Secure 속성이 없는 경우에만 추가
-        if (!/SameSite/i.test(cookie)) {
-          return `${cookie}; SameSite=None; Secure`;
+        if (!/SameSite/i.test(newCookie)) {
+          newCookie = `${newCookie}; SameSite=None; Secure`;
         }
-        return cookie;
+        
+        // Path 속성이 없다면 추가 (더 넓은 범위에서 쿠키 사용 가능)
+        if (!/Path/i.test(newCookie)) {
+          newCookie = `${newCookie}; Path=/`;
+        }
+
+        // ================= [디버깅 로그 추가] =================
+        console.log(`[PROXY] Original cookie: ${cookie}`);
+        console.log(`[PROXY] Modified cookie: ${newCookie}`);
+        // ====================================================
+        return newCookie;
       });
+
       response.setHeader('Set-Cookie', modifiedCookies);
     }
 
