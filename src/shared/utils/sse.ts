@@ -17,26 +17,22 @@ const EVENT_NAME = {
 
 export class NotificationSse {
   private eventSource: EventSourcePolyfill;
+  
   constructor() {
-    // TODO: Bearer token 넣기
+    const token = getToken();
+    if (!token) {
+      console.error('SSE 연결 실패: 인증 토큰이 없습니다.');
+      // 필요하다면 여기서 연결을 시도하지 않고 바로 반환할 수 있습니다.
+      // return null;
+    }
+
     this.eventSource = new EventSourcePolyfill(SSE_SUB_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       withCredentials: true,
     });
   }
-
-  const token = getToken();
-  if (!token) {
-    console.error('SSE 연결 실패: 인증 토큰이 없습니다.');
-    // 필요하다면 여기서 연결을 시도하지 않고 바로 반환할 수 있습니다.
-    // return null;
-  }
-
-  const eventSource = new EventSourcePolyfill(SSE_SUB_URL, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    withCredentials: true,
-  });
 
   onError(callback: EventCallback) {
     this.eventSource.addEventListener('error', callback);
