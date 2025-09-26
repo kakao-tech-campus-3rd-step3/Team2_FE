@@ -1,4 +1,4 @@
-import { api } from '@/shared/api/axiosClient';
+import api from '@/shared/api/axiosClient';
 import axios from 'axios';
 
 interface UploadPresignResponse {

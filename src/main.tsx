@@ -1,26 +1,21 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from '@/app/App.tsx';
-
+import { BrowserRouter } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from './shared/styles/theme';
-import '@/shared/styles/global.css';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
-import { BrowserRouter } from 'react-router-dom';
 
+import '@/shared/styles/global.css';
+import App from '@/app/App.tsx';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
+  <BrowserRouter>
+    <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <App />
-          <ToastContainer position="bottom-center" hideProgressBar={true} />
-        </ChakraProvider>
+        <App />
+        <ToastContainer position="bottom-center" hideProgressBar={true} />
       </QueryClientProvider>
-    </BrowserRouter>
-  </StrictMode>,
+    </ChakraProvider>
+  </BrowserRouter>,
 );
