@@ -1,14 +1,16 @@
 import axios, { type AxiosRequestConfig } from 'axios';
 import { clearToken, getToken, setToken } from '../utils/tokenManager';
 
+const baseURL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api`;
+
 const api = axios.create({
-  baseURL: '/api', // Vite와 Vercel의 프록시를 사용
+  baseURL,
   withCredentials: true, // 쿠키 전송을 위해 추가
 });
 
-// 토큰 갱신 전용 axios 인스턴스
+// 토큰 갱신 전용 axios 인스턴스 (인터셉터 무한 루프 방지)
 const refreshApi = axios.create({
-  baseURL: '/api',
+  baseURL,
   withCredentials: true,
 });
 
@@ -25,7 +27,28 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// 응답 인터셉터: 401 시 토큰 갱신
+// --- 토큰 재발급 로직 중앙화 ---
+
+/**
+ * 실제로 API를 호출하여 새로운 액세스 토큰을 발급받고 저장하는 중앙화된 함수.
+ * @returns 새로운 액세스 토큰
+ */
+export const issueNewToken = async (): Promise<string> => {
+  try {
+    console.log('[Token Logic] 새로운 액세스 토큰 발급을 요청합니다...');
+    // `baseURL`이 `.../api`이므로, 여기서는 `/auth/refresh`를 호출해야 함
+    const response = await refreshApi.post('/auth/refresh');
+    const newToken = response.data.accessToken as string;
+    setToken(newToken);
+    console.log('[Token Logic] 액세스 토큰 발급 성공.');
+    return newToken;
+  } catch (error) {
+    console.error('[Token Logic] 액세스 토큰 발급 실패:', error);
+    clearToken();
+    throw error;
+  }
+};
+
 let isRefreshing = false;
 let failedQueue: {
   resolve: (value: unknown) => void;
@@ -50,10 +73,10 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      console.log('[API Response] 401 Unauthorized. Attempting to refresh token.');
+      console.log('[API Interceptor] 401 Unauthorized. 토큰 재발급을 시도합니다.');
 
       if (isRefreshing) {
-        console.log('[API Response] Token refresh is already in progress. Waiting in queue.');
+        console.log('[API Interceptor] 이미 토큰 재발급이 진행 중입니다. 잠시 대기합니다.');
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
@@ -68,20 +91,14 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        console.log('[API 클라이언트] 새로운 액세스 토큰 발급을 요청합니다... (/api/auth/refresh)');
-        const response = await refreshApi.post('/auth/refresh');
-        const newToken = response.data.accessToken as string;
-        console.log('[API Response] Successfully refreshed token.');
-        setToken(newToken);
+        const newToken = await issueNewToken();
         processQueue(null, newToken);
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
         }
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('[API 클라이언트] 액세스 토큰 발급에 실패했습니다.', refreshError);
         processQueue(refreshError as Error, null);
-        clearToken();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
