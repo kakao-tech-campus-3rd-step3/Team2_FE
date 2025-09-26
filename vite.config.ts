@@ -1,12 +1,9 @@
 import path from 'path';
-import { defineConfig, loadEnv, type UserConfig } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), 'VITE_');
-  const proxyTarget = env.VITE_API_BASE_URL;
-
   const config: UserConfig = {
     plugins: [react()],
     resolve: {
