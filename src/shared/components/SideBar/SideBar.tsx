@@ -297,7 +297,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
 
       {/* 사이드바 유저 정보 부분 */}
       <SideBarUserInfo>
-        <SideBarUserInfoItemWrapper>
+        <SideBarUserInfoItemWrapper style={{ position: 'relative' }}>
           <SideBarUserInfoAvatarTextWrapper>
             <SideBarUserInfoAvatar>
               {userInfo?.name ? userInfo.name.charAt(0) : '?'}
