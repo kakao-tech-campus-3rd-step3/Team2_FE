@@ -70,10 +70,7 @@ async function handleSseRequest(request: VercelRequest, response: VercelResponse
 /**
  * 일반 API 요청을 처리합니다.
  */
-async function handleApiRequest(
-  request: VercelRequest,
-  response: VercelResponse,
-) {
+async function handleApiRequest(request: VercelRequest, response: VercelResponse) {
   const { method, body } = request;
   const targetUrl = getApiTargetUrl(request.url);
 
@@ -92,7 +89,7 @@ async function handleApiRequest(
       // 3xx, 4xx 응답 코드를 받아도 예외를 발생시키지 않도록 설정
       validateStatus: (status) => status < 500,
     });
-    
+
     const headersFromBackend = axiosResponse.headers;
 
     delete headersFromBackend['transfer-encoding'];
@@ -102,7 +99,6 @@ async function handleApiRequest(
     }
 
     response.status(axiosResponse.status).send(axiosResponse.data);
-
   } catch (error) {
     console.error('API Proxy Error:', error);
     if (axios.isAxiosError(error)) {
