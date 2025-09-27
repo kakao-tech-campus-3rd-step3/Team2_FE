@@ -1,4 +1,4 @@
-import api, { issueNewToken } from './axiosClient';
+import api, { administratorApi, issueNewToken } from './axiosClient';
 import { clearToken } from '../utils/tokenManager';
 import { type UserInfo } from '@/app/auth/AuthContext';
 
@@ -24,7 +24,7 @@ export const getSources = async () => {
 
 export const logout = async () => {
   try {
-    await api.post('/auth/logout');
+    await administratorApi.post('/auth/logout');
     clearToken(); // API 호출 성공 시 토큰 제거
     window.location.href = '/login';
   } catch (error) {

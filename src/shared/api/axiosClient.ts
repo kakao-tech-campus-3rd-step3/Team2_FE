@@ -2,15 +2,15 @@ import axios, { type AxiosRequestConfig } from 'axios';
 import { clearToken, getToken, setToken } from '../utils/tokenManager';
 
 const baseURL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api`;
+const baseUrLWithoutApi = `${import.meta.env.VITE_API_BASE_URL ?? ''}`;
 
 const api = axios.create({
   baseURL,
   withCredentials: true, // 쿠키 전송을 위해 추가
 });
 
-// 토큰 갱신 전용 axios 인스턴스 (인터셉터 무한 루프 방지)
-const refreshApi = axios.create({
-  baseURL,
+export const administratorApi = axios.create({
+  baseURL: baseUrLWithoutApi,
   withCredentials: true,
 });
 
@@ -37,7 +37,7 @@ export const issueNewToken = async (): Promise<string> => {
   try {
     console.log('[Token Logic] 새로운 액세스 토큰 발급을 요청합니다...');
     // `baseURL`이 `.../api`이므로, 여기서는 `/auth/refresh`를 호출해야 함
-    const response = await refreshApi.post('/auth/refresh');
+    const response = await administratorApi.post('/auth/refresh');
     const newToken = response.data.accessToken as string;
     setToken(newToken);
     console.log('[Token Logic] 액세스 토큰 발급 성공.');
