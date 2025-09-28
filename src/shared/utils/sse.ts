@@ -1,7 +1,7 @@
 import { EventSourcePolyfill, type Event } from 'event-source-polyfill';
 import { getToken } from './tokenManager';
 
-const SSE_SUB_URL = '/api/notifications/subscribe';
+const SSE_SUB_URL = `${import.meta.env.VITE_API_BASE_URL}/api/notifications/subscribe`;
 
 interface onQuestionSetCreationCompletePayload {
   success: boolean;
