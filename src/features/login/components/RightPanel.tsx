@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/app/routePaths';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import BenefitList from '@/features/login/components/BenefitList';
+import SampleLottie from '@/shared/assets/lotties/sample.lottie';
+import { getKakaoLoginUrl } from '@/shared/api/apiService';
 
 const RightSide = styled.div`
   width: 50%;
@@ -92,10 +93,8 @@ const LinkButton = styled.button`
 `;
 
 const RightPanel = () => {
-  const navigate = useNavigate();
-
   const handleKakaoLogin = () => {
-    navigate(ROUTES.HOME);
+    window.location.href = getKakaoLoginUrl();
   };
 
   return (
@@ -104,6 +103,9 @@ const RightPanel = () => {
         <Card>
           <CardHeader>
             <CardTitle>시작하기</CardTitle>
+            <div style={{ width: 200, height: 200, margin: '0 auto' }}>
+              <DotLottieReact src={SampleLottie} loop autoplay />
+            </div>
             <CardDescription>카카오계정으로 3초 만에 시작하세요</CardDescription>
           </CardHeader>
           <CardContent>

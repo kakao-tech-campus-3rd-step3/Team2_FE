@@ -3,7 +3,6 @@ export interface FileData {
   name: string;
   size: string;
   date: string;
-  new?: boolean;
 }
 
 export interface PdfFileListProps {

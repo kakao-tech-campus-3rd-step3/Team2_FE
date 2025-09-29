@@ -7,6 +7,7 @@ import NavigationButtons from '@/features/create/components/NavigationButtons';
 import styled from '@emotion/styled';
 import CreateRequest from '@/features/create/innerPages/CreateRequest';
 import Spacer from '@/shared/components/Spacer';
+import { useOutletContext } from 'react-router-dom';
 
 const CreateWrapper = styled.div`
   display: flex;
@@ -21,13 +22,17 @@ const Container = styled.div`
   min-height: 400px;
 `;
 type CreateProps = {
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
+  questionSetId: number;
   questionSetReady: boolean;
+  setQuestionSetId: React.Dispatch<React.SetStateAction<number>>;
+  setQuestionSetReady: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const Create = ({ setSelectedMenu, questionSetReady }: CreateProps) => {
+const Create = () => {
   const stepLabels = ['PDF 선택', '설정', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
+  const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
+    useOutletContext<CreateProps>(); // outlet context
 
   // 각 스텝별 유효성 상태 (초기값은 false, 필요에 따라 조정)
   const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
@@ -61,8 +66,10 @@ const Create = ({ setSelectedMenu, questionSetReady }: CreateProps) => {
           <CreateRequest
             selectedFile={selectedFile}
             onReset={handleReset}
-            setSelectedMenu={setSelectedMenu}
             questionSetReady={questionSetReady}
+            questionSetId={questionSetId}
+            setQuestionSetId={setQuestionSetId}
+            setQuestionSetReady={setQuestionSetReady}
           />
         );
       default:
@@ -85,6 +92,8 @@ const Create = ({ setSelectedMenu, questionSetReady }: CreateProps) => {
     setCurrentStep(1);
     setSelectedFile(null);
     setStepValidity({ 1: false, 2: false, 3: false });
+    setQuestionSetId(0);
+    setQuestionSetReady(false);
   };
 
   const progress = ((currentStep - 1) / (stepLabels.length - 1)) * 100;

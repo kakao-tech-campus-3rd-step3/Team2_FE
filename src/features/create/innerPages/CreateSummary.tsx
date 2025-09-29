@@ -61,7 +61,7 @@ const CreateSummary: React.FC<Step2Props> = ({ onValidChange, selectedFile }) =>
     },
     {
       title: '문제 개수',
-      content: '20문제',
+      content: '10문제',
       description: 'PDF 내용으로만',
     },
     {

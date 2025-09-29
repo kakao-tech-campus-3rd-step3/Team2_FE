@@ -3,13 +3,15 @@ import Spinner from '@/features/create/components/Spinner';
 import Spacer from '@/shared/components/Spacer';
 import { useEffect, useState } from 'react';
 import Complete from '@/features/create/components/Complete';
-import { api } from '@/shared/api/axiosClient';
+import api from '@/shared/api/axiosClient';
 
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
   onReset: () => void;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
   questionSetReady: boolean;
+  questionSetId: number;
+  setQuestionSetId: (id: number) => void;
+  setQuestionSetReady: (isReady: boolean) => void;
 }
 
 const Container = styled.div`
@@ -62,18 +64,20 @@ const RetryButton = styled.button`
 const NextComponent: React.FC<{
   fileName: string | null;
   onReset: () => void;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ fileName, onReset, setSelectedMenu }) => (
+  questionSetId: number;
+}> = ({ fileName, onReset, questionSetId }) => (
   <Container>
-    <Complete fileName={fileName} onReset={onReset} setSelectedMenu={setSelectedMenu} />
+    <Complete fileName={fileName} onReset={onReset} questionSetId={questionSetId} />
   </Container>
 );
 
 const CreateRequest: React.FC<CreateRequestProps> = ({
   selectedFile,
   onReset,
-  setSelectedMenu,
   questionSetReady,
+  questionSetId,
+  setQuestionSetId,
+  setQuestionSetReady,
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
@@ -82,6 +86,10 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     if (!selectedFile) return;
 
     const createQuestionSet = async () => {
+      // api 호출 전에 이전 생성 요청 무시하기 위한 초기화
+      setQuestionSetId(0);
+      setQuestionSetReady(false);
+
       setStatus('requesting');
       setError(null);
 
@@ -90,7 +98,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
         await api.post('/question-set', {
           title: selectedFile.name,
           difficulty: 'EASY',
-          questionCount: 20,
+          questionCount: 10,
           type: 'MULTIPLE_CHOICE',
           sourceIds: [parseInt(selectedFile.id)],
         });
@@ -105,13 +113,13 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     };
 
     createQuestionSet();
-  }, [selectedFile]);
+  }, [selectedFile, setQuestionSetId, setQuestionSetReady]);
   if (questionSetReady) {
     return (
       <NextComponent
         fileName={selectedFile?.name ?? null}
         onReset={onReset}
-        setSelectedMenu={setSelectedMenu}
+        questionSetId={questionSetId}
       />
     );
   }
@@ -131,7 +139,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       <Spacer height="25px" />
       <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
       <NoticeContent>
-        선택하신 PDF에서 <NoticeContentHighlight>20개</NoticeContentHighlight>의{' '}
+        선택하신 PDF에서 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
         <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
       </NoticeContent>
     </Container>

@@ -1,19 +1,26 @@
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
 import { MIN_HEIGHT } from '@/shared/config/constants';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
+import { ROUTES } from '@/app/routePaths';
+import { useAuth } from '@/app/auth/useAuth';
 
 import {
   FileText,
   Sidebar,
-  Settings,
   LayoutDashboard,
   Plus,
   BookOpen,
   CircleX,
+  Settings,
+  LogOut,
 } from 'lucide-react';
 
 import { MENUS } from '@/shared/config/constants';
+import { useState } from 'react';
+
+import { clearToken } from '@/shared/utils/tokenManager';
+import api from '@/shared/api/axiosClient';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
@@ -94,7 +101,11 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
   padding: ${({ theme }) => theme.spacing.spacing1};
 
-  background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : 'transparent')};
+  background-color: 'transparent';
+
+  &.active {
+    background: ${({ theme }) => theme.colors.gray.gray3};
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray.gray1};
@@ -157,23 +168,60 @@ const SideBarUserInfoName = styled.p`
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
 `;
 
-const SideBarUserInfoEmail = styled.p`
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray.gray7};
+const DropdownWrapper = styled.div`
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  z-index: 1000;
 `;
 
-// TODO: 이거 props 타입도 일관되지않네...
+const DropdownItem = styled.div`
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.gray.gray1};
+  }
+  &.danger {
+    color: ${({ theme }) => theme.colors.red.red4};
+  }
+`;
+
+const DropdownItemTxt = styled.span``;
 interface SideBarProps {
-  selectedMenu: string;
-  setSelectedMenu: (menu: string) => void;
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  closeSideBar: () => void;
+  selectedMenu: string;
+  changeMenu: (menu: string) => void;
+  esClose: () => void;
 }
 
-function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarProps) {
+function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: SideBarProps) {
+  const { userInfo } = useAuth();
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await api.post('/auth/logout');
+      esClose();
+      clearToken(); // 클로저에서 토큰 제거
+
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+    }
+  };
 
   return (
     <SideBarWrapper isOpen={isOpen}>
@@ -188,48 +236,62 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
             </ItemTitleWrapper>
           </IconTitleWrapper>
           {/* TODO: 이 부분 페이지 컴포넌트랑 이름이 같네? 문제가 생길수도? */}
-          <Sidebar size={16} onClick={() => setIsOpen(false)} />
+          <Sidebar size={16} onClick={closeSideBar} />
         </SideBarHeaderItemWrapper>
       </SideBarHeader>
 
       {/* 사이드바 메인 부분 */}
       <SideBarMain>
         <SideBarNav>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.DASHBOARD)}
-            active={MENUS.DASHBOARD === selectedMenu}
-          >
-            <LayoutDashboard size={14} />
-            <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.SOURCE)}
-            active={MENUS.SOURCE === selectedMenu}
-          >
-            <FileText size={14} />
-            <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.CREATE)}
-            active={MENUS.CREATE === selectedMenu}
-          >
-            <Plus size={14} />
-            <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.QUIZ)}
-            active={MENUS.QUIZ === selectedMenu}
-          >
-            <BookOpen size={14} />
-            <SideBarNavTxt>{MENUS.QUIZ}</SideBarNavTxt>
-          </SideBarNavItem>
-          <SideBarNavItem
-            onClick={() => setSelectedMenu(MENUS.WRONG)}
-            active={MENUS.WRONG === selectedMenu}
-          >
-            <CircleX size={14} />
-            <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
-          </SideBarNavItem>
+          <NavLink to={ROUTES.DASHBOARD}>
+            <SideBarNavItem
+              active={MENUS.DASHBOARD === selectedMenu}
+              onClick={() => changeMenu(MENUS.DASHBOARD)}
+            >
+              <LayoutDashboard size={14} />
+              <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.SOURCE}>
+            <SideBarNavItem
+              active={MENUS.SOURCE === selectedMenu}
+              onClick={() => changeMenu(MENUS.SOURCE)}
+            >
+              <FileText size={14} />
+              <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.CREATE}>
+            <SideBarNavItem
+              active={MENUS.CREATE === selectedMenu}
+              onClick={() => changeMenu(MENUS.CREATE)}
+            >
+              <Plus size={14} />
+              <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.LIBRARY}>
+            <SideBarNavItem
+              active={MENUS.LIBRARY === selectedMenu}
+              onClick={() => changeMenu(MENUS.LIBRARY)}
+            >
+              <BookOpen size={14} />
+              <SideBarNavTxt>{MENUS.LIBRARY}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
+
+          <NavLink to={ROUTES.WRONG}>
+            <SideBarNavItem
+              active={MENUS.WRONG === selectedMenu}
+              onClick={() => changeMenu(MENUS.LIBRARY)}
+            >
+              <CircleX size={14} />
+              <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
+            </SideBarNavItem>
+          </NavLink>
         </SideBarNav>
       </SideBarMain>
 
@@ -237,14 +299,31 @@ function SideBar({ selectedMenu, setSelectedMenu, isOpen, setIsOpen }: SideBarPr
       <SideBarUserInfo>
         <SideBarUserInfoItemWrapper>
           <SideBarUserInfoAvatarTextWrapper>
-            <SideBarUserInfoAvatar>김학</SideBarUserInfoAvatar>
+            <SideBarUserInfoAvatar>
+              {userInfo?.name ? userInfo.name.charAt(0) : '?'}
+            </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
-              <SideBarUserInfoName>김학습</SideBarUserInfoName>
-              <SideBarUserInfoEmail>user@kakao.com</SideBarUserInfoEmail>
+              <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
-          {/* TODO: 임시로 설정 아이콘 누르면 로그인 페이지로 가게함 */}
-          <Settings size={16} onClick={() => navigate('/')} />
+          <Settings
+            size={16}
+            onClick={() => setOpen((prev) => !prev)}
+            style={{ cursor: 'pointer' }}
+          />
+
+          {open && (
+            <DropdownWrapper>
+              <DropdownItem onClick={() => navigate('/settings')}>
+                <Settings size={16} />
+                <DropdownItemTxt>설정</DropdownItemTxt>
+              </DropdownItem>
+              <DropdownItem className="danger" onClick={handleLogout}>
+                <LogOut size={16} />
+                <DropdownItemTxt>로그아웃</DropdownItemTxt>
+              </DropdownItem>
+            </DropdownWrapper>
+          )}
         </SideBarUserInfoItemWrapper>
       </SideBarUserInfo>
     </SideBarWrapper>
