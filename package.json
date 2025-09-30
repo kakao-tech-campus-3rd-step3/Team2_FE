@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "prettier-check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "lint-check": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "tsc-check": "tsc --noEmit"
+    "tsc-check": "tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.10.9",
@@ -50,6 +51,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "terser": "^5.44.0",
     "typescript": "~5.8.3",
