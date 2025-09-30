@@ -49,7 +49,7 @@ const Create = () => {
     4: false,
   });
 
-  // ✅ useCallback으로 함수들을 감싸서 불필요한 재생성을 방지합니다.
+  // useCallback을 사용해 불필요한 재생성 방지(의존성 배열 수칙 위배 경고에 따른 대처)
   const handleStep1ValidChange = useCallback((isValid: boolean) => {
     setStepValidity((prev) => ({ ...prev, 1: isValid }));
   }, []);
