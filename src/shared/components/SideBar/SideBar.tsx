@@ -20,7 +20,7 @@ import { MENUS } from '@/shared/config/constants';
 import { useState } from 'react';
 
 import { clearToken } from '@/shared/utils/tokenManager';
-import api from '@/shared/api/axiosClient';
+import { administratorApi } from '@/shared/api/axiosClient';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
@@ -213,7 +213,8 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
 
   const handleLogout = async () => {
     try {
-      await api.post('/auth/logout');
+      await administratorApi.post('/auth/logout');
+
       esClose();
       clearToken(); // 클로저에서 토큰 제거
 
@@ -297,7 +298,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
 
       {/* 사이드바 유저 정보 부분 */}
       <SideBarUserInfo>
-        <SideBarUserInfoItemWrapper>
+        <SideBarUserInfoItemWrapper style={{ position: 'relative' }}>
           <SideBarUserInfoAvatarTextWrapper>
             <SideBarUserInfoAvatar>
               {userInfo?.name ? userInfo.name.charAt(0) : '?'}
