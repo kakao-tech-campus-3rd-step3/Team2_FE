@@ -59,9 +59,10 @@ const InfoContent = styled.p<{ selected: boolean }>`
 `;
 
 const ChooseType: React.FC<ChooseTypeProps> = ({ selectedType, onValidChange, onSelectType }) => {
+  // ✅ onValidChange를 의존성 배열에 추가합니다.
   useEffect(() => {
     onValidChange(!!selectedType);
-  }, [selectedType]);
+  }, [selectedType, onValidChange]);
 
   const handleSelect = (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER') => {
     onSelectType(type);

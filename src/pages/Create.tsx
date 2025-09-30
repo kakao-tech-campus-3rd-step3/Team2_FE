@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 import PageLayout from '@/shared/components/Layout/PageLayout';
 import SelectPdf from '@/features/create/innerPages/SelectPdf';
@@ -49,6 +49,30 @@ const Create = () => {
     4: false,
   });
 
+  // ✅ useCallback으로 함수들을 감싸서 불필요한 재생성을 방지합니다.
+  const handleStep1ValidChange = useCallback((isValid: boolean) => {
+    setStepValidity((prev) => ({ ...prev, 1: isValid }));
+  }, []);
+
+  const handleStep2ValidChange = useCallback((isValid: boolean) => {
+    setStepValidity((prev) => ({ ...prev, 2: isValid }));
+  }, []);
+
+  const handleStep3ValidChange = useCallback((isValid: boolean) => {
+    setStepValidity((prev) => ({ ...prev, 3: isValid }));
+  }, []);
+
+  const handleSelectFile = useCallback((fileInfo: { id: string; name: string } | null) => {
+    setSelectedFile(fileInfo);
+  }, []);
+
+  const handleSelectType = useCallback(
+    (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER') => {
+      setQuestionType(type);
+    },
+    [],
+  );
+
   const isNextDisabled = !stepValidity[currentStep];
 
   const renderStepComponent = () => {
@@ -57,16 +81,16 @@ const Create = () => {
         return (
           <SelectPdf
             selectedFileId={selectedFile?.id ?? null}
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
-            onSelectFile={(fileInfo) => setSelectedFile(fileInfo)}
+            onValidChange={handleStep1ValidChange}
+            onSelectFile={handleSelectFile}
           />
         );
       case 2:
         return (
           <ChooseType
             selectedType={questionType}
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
-            onSelectType={(type) => setQuestionType(type)}
+            onValidChange={handleStep2ValidChange}
+            onSelectType={handleSelectType}
           />
         );
       case 3:
@@ -74,7 +98,7 @@ const Create = () => {
           <CreateSummary
             selectedFile={selectedFile}
             questionType={questionType}
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 3: isValid }))}
+            onValidChange={handleStep3ValidChange}
           />
         );
       case 4:

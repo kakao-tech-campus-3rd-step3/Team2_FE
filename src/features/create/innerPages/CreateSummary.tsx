@@ -53,9 +53,10 @@ const CreateSummary: React.FC<CreateSummaryProps> = ({
   selectedFile,
   questionType,
 }) => {
+  // ✅ onValidChange를 의존성 배열에 추가합니다.
   useEffect(() => {
     onValidChange(true);
-  }, []);
+  }, [onValidChange]);
 
   const questionTypeDetails = {
     MULTIPLE_CHOICE: { content: '객관식', description: '4개 선택지 중 정답 선택' },
