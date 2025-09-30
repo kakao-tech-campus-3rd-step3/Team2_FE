@@ -213,7 +213,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
 
   const handleLogout = async () => {
     try {
-      await administratorApi.post('/auth/logout')
+      await administratorApi.post('/auth/logout');
 
       esClose();
       clearToken(); // 클로저에서 토큰 제거
