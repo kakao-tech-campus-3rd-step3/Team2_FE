@@ -6,9 +6,9 @@ import Spacer from '@/shared/components/Spacer';
 import { ListChecks, Binary, PenLine } from 'lucide-react';
 
 interface ChooseTypeProps {
-  selectedType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null;
+  selectedType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER' | null;
   onValidChange: (isValid: boolean) => void;
-  onSelectType: (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT') => void;
+  onSelectType: (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER') => void;
 }
 
 const InfoContainer = styled.div`
@@ -63,7 +63,7 @@ const ChooseType: React.FC<ChooseTypeProps> = ({ selectedType, onValidChange, on
     onValidChange(!!selectedType);
   }, [selectedType]);
 
-  const handleSelect = (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT') => {
+  const handleSelect = (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER') => {
     onSelectType(type);
   };
 
@@ -81,7 +81,7 @@ const ChooseType: React.FC<ChooseTypeProps> = ({ selectedType, onValidChange, on
       icon: Binary,
     },
     {
-      id: 'SHORT' as const,
+      id: 'SHORT_ANSWER' as const,
       title: '단답형',
       content: '짧은 답변 직접 작성',
       icon: PenLine,

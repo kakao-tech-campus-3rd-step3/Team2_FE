@@ -7,7 +7,7 @@ import Spacer from '@/shared/components/Spacer';
 interface CreateSummaryProps {
   onValidChange: (isValid: boolean) => void;
   selectedFile: { id: string; name: string | null } | null;
-  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null;
+  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER' | null;
 }
 
 const InfoContainer = styled.div`
@@ -58,9 +58,9 @@ const CreateSummary: React.FC<CreateSummaryProps> = ({
   }, []);
 
   const questionTypeDetails = {
-    MULTIPLE_CHOICE: { content: '객관식', description: '4지 선다형' },
+    MULTIPLE_CHOICE: { content: '객관식', description: '4개 선택지 중 정답 선택' },
     TRUE_FALSE: { content: '참/거짓', description: '참 또는 거짓 중 선택' },
-    SHORT: { content: '단답형', description: '짧은 답변 직접 작성' },
+    SHORT_ANSWER: { content: '단답형', description: '짧은 답변 직접 작성' },
   };
 
   const selectedTypeDetails = questionType

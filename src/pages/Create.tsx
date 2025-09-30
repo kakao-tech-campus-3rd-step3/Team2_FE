@@ -36,7 +36,7 @@ const Create = () => {
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
 
   const [questionType, setQuestionType] = useState<
-    'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null
+    'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER' | null
   >(null);
 
   const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
@@ -115,7 +115,7 @@ const Create = () => {
     setQuestionSetReady(false);
   };
 
-  const progress = ((currentStep - 1) / (stepLabels.length - 1)) * 100;
+  const progress = (currentStep / stepLabels.length) * 100;
 
   return (
     <PageLayout>

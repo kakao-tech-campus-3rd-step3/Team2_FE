@@ -12,7 +12,7 @@ interface CreateRequestProps {
   questionSetId: number;
   setQuestionSetId: (id: number) => void;
   setQuestionSetReady: (isReady: boolean) => void;
-  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null;
+  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER' | null;
 }
 
 const Container = styled.div`
@@ -141,7 +141,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
         return '객관식';
       case 'TRUE_FALSE':
         return '참/거짓';
-      case 'SHORT':
+      case 'SHORT_ANSWER':
         return '단답형';
       default:
         return '알 수 없음';
