@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# ESLint 자동 실행
+pnpm exec eslint . --ext .js,.jsx,.ts,.tsx --fix
+
+# Prettier 자동 실행
+pnpm exec prettier . --write
