@@ -12,6 +12,7 @@ interface CreateRequestProps {
   questionSetId: number;
   setQuestionSetId: (id: number) => void;
   setQuestionSetReady: (isReady: boolean) => void;
+  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null;
 }
 
 const Container = styled.div`
@@ -78,28 +79,26 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
   questionSetId,
   setQuestionSetId,
   setQuestionSetReady,
+  questionType,
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!selectedFile) return;
+    if (!selectedFile || !questionType) return;
 
     const createQuestionSet = async () => {
-      // api 호출 전에 이전 생성 요청 무시하기 위한 초기화
       setQuestionSetId(0);
       setQuestionSetReady(false);
-
       setStatus('requesting');
       setError(null);
 
       try {
-        console.log(selectedFile);
         await api.post('/question-set', {
           title: selectedFile.name,
           difficulty: 'EASY',
           questionCount: 10,
-          type: 'MULTIPLE_CHOICE',
+          type: questionType,
           sourceIds: [parseInt(selectedFile.id)],
         });
       } catch (err: unknown) {
@@ -113,7 +112,8 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     };
 
     createQuestionSet();
-  }, [selectedFile, setQuestionSetId, setQuestionSetReady]);
+  }, [selectedFile, questionType, setQuestionSetId, setQuestionSetReady]);
+
   if (questionSetReady) {
     return (
       <NextComponent
@@ -123,6 +123,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       />
     );
   }
+
   if (status === 'error') {
     return (
       <Container>
@@ -133,6 +134,20 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       </Container>
     );
   }
+
+  const renderQuestionTypeText = () => {
+    switch (questionType) {
+      case 'MULTIPLE_CHOICE':
+        return '객관식';
+      case 'TRUE_FALSE':
+        return '참/거짓';
+      case 'SHORT':
+        return '단답형';
+      default:
+        return '알 수 없음';
+    }
+  };
+
   return (
     <Container>
       <Spinner />
@@ -140,7 +155,8 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
       <NoticeContent>
         선택하신 PDF에서 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
-        <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
+        <NoticeContentHighlight>{renderQuestionTypeText()}</NoticeContentHighlight> 문제를 생성하고
+        있어요
       </NoticeContent>
     </Container>
   );

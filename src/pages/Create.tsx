@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import CreateRequest from '@/features/create/innerPages/CreateRequest';
 import Spacer from '@/shared/components/Spacer';
 import { useOutletContext } from 'react-router-dom';
+import ChooseType from '@/features/create/innerPages/ChooseType';
 
 const CreateWrapper = styled.div`
   display: flex;
@@ -21,50 +22,66 @@ const Container = styled.div`
   width: 100%;
   min-height: 400px;
 `;
+
 type CreateProps = {
   questionSetId: number;
   questionSetReady: boolean;
   setQuestionSetId: React.Dispatch<React.SetStateAction<number>>;
   setQuestionSetReady: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 const Create = () => {
-  const stepLabels = ['PDF 선택', '설정', '생성하기'];
+  const stepLabels = ['PDF 선택', '문제유형', '생성요약', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
-  const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
-    useOutletContext<CreateProps>(); // outlet context
 
-  // 각 스텝별 유효성 상태 (초기값은 false, 필요에 따라 조정)
+  const [questionType, setQuestionType] = useState<
+    'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null
+  >(null);
+
+  const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
+    useOutletContext<CreateProps>();
+
   const [stepValidity, setStepValidity] = useState<{ [key: number]: boolean }>({
     1: false,
     2: false,
-    3: false,
+    3: true,
+    4: false,
   });
 
-  // 다음 버튼 활성/비활성 결정: 현재 스텝이 유효하지 않으면 비활성
   const isNextDisabled = !stepValidity[currentStep];
 
-  // 각 Step 컴포넌트에 onValidChange 콜백 넘겨서 유효성 상태를 갱신
   const renderStepComponent = () => {
     switch (currentStep) {
       case 1:
         return (
           <SelectPdf
+            selectedFileId={selectedFile?.id ?? null}
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
             onSelectFile={(fileInfo) => setSelectedFile(fileInfo)}
           />
         );
       case 2:
         return (
-          <CreateSummary
-            selectedFile={selectedFile}
+          <ChooseType
+            selectedType={questionType}
             onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
+            onSelectType={(type) => setQuestionType(type)}
           />
         );
       case 3:
         return (
+          <CreateSummary
+            selectedFile={selectedFile}
+            questionType={questionType}
+            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 3: isValid }))}
+          />
+        );
+      case 4:
+        return (
           <CreateRequest
             selectedFile={selectedFile}
+            questionType={questionType}
             onReset={handleReset}
             questionSetReady={questionSetReady}
             questionSetId={questionSetId}
@@ -88,10 +105,12 @@ const Create = () => {
       setCurrentStep((prev) => prev - 1);
     }
   };
+
   const handleReset = () => {
     setCurrentStep(1);
     setSelectedFile(null);
-    setStepValidity({ 1: false, 2: false, 3: false });
+    setQuestionType(null);
+    setStepValidity({ 1: false, 2: false, 3: true, 4: false });
     setQuestionSetId(0);
     setQuestionSetReady(false);
   };
@@ -104,7 +123,7 @@ const Create = () => {
         <Spacer height="20px" />
         <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
         <Container>{renderStepComponent()}</Container>
-        {currentStep !== 3 && (
+        {currentStep !== 4 && (
           <NavigationButtons
             onNext={handleNext}
             onPrev={handlePrev}
