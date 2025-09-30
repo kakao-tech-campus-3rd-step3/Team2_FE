@@ -31,7 +31,7 @@ type CreateProps = {
 };
 
 const Create = () => {
-  const stepLabels = ['PDF 선택', '문제유형', '생성요약', '생성하기'];
+  const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
 
