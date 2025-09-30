@@ -9,6 +9,7 @@ import CreateRequest from '@/features/create/innerPages/CreateRequest';
 import Spacer from '@/shared/components/Spacer';
 import { useOutletContext } from 'react-router-dom';
 import ChooseType from '@/features/create/innerPages/ChooseType';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
 const CreateWrapper = styled.div`
   display: flex;
@@ -34,10 +35,7 @@ const Create = () => {
   const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
-
-  const [questionType, setQuestionType] = useState<
-    'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER' | null
-  >(null);
+  const [questionType, setQuestionType] = useState<QuestionType | null>(null);
 
   const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
     useOutletContext<CreateProps>();
@@ -49,7 +47,7 @@ const Create = () => {
     4: false,
   });
 
-  // useCallback을 사용해 불필요한 재생성 방지(의존성 배열 수칙 위배 경고에 따른 대처)
+  // 의존성 규칙에 위배사항 발생으로 useCallback으로 안정화 처리
   const handleStep1ValidChange = useCallback((isValid: boolean) => {
     setStepValidity((prev) => ({ ...prev, 1: isValid }));
   }, []);
@@ -66,12 +64,9 @@ const Create = () => {
     setSelectedFile(fileInfo);
   }, []);
 
-  const handleSelectType = useCallback(
-    (type: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER') => {
-      setQuestionType(type);
-    },
-    [],
-  );
+  const handleSelectType = useCallback((type: QuestionType) => {
+    setQuestionType(type);
+  }, []);
 
   const isNextDisabled = !stepValidity[currentStep];
 

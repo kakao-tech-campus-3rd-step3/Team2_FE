@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PdfFileList from '@/features/create/components/PdfFileList';
 import type { FileData } from '@/features/create/types/types';
@@ -36,30 +36,40 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
     },
   });
 
+  const handleSelectFile = useCallback(
+    (fileId: string | null) => {
+      onValidChange(!!fileId);
+
+      if (fileId) {
+        const selected = fileList.find((file) => file.id === fileId);
+        if (selected) {
+          onSelectFile({ id: selected.id, name: selected.name });
+        }
+      } else {
+        onSelectFile(null);
+      }
+    },
+    [fileList, onSelectFile, onValidChange],
+  );
+
+  const handleUpload = useCallback(
+    (file: File) => {
+      onSelectFile(null);
+      onValidChange(false);
+      upload(file);
+    },
+    [onSelectFile, onValidChange, upload],
+  );
+
   useEffect(() => {
     if (isError) {
       alert('PDF 목록을 불러오는 데 실패했습니다.');
     }
   }, [isError]);
 
-  const handleSelectFile = (fileId: string | null) => {
-    onValidChange(!!fileId);
-
-    if (fileId) {
-      const selected = fileList.find((file) => file.id === fileId);
-      if (selected) {
-        onSelectFile({ id: selected.id, name: selected.name });
-      }
-    } else {
-      onSelectFile(null);
-    }
-  };
-
-  const handleUpload = (file: File) => {
-    onSelectFile(null);
-    onValidChange(false);
-    upload(file);
-  };
+  useEffect(() => {
+    onValidChange(!!selectedFileId);
+  }, [selectedFileId, onValidChange]);
 
   return (
     <>
