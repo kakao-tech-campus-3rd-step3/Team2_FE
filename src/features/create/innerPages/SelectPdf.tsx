@@ -24,6 +24,7 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
   } = useQuery<FileData[]>({
     queryKey: ['pdfFiles'],
     queryFn: getPdfFileList,
+    refetchOnMount: true,
   });
 
   const { mutate: upload, isPending: isUploading } = useMutation({
