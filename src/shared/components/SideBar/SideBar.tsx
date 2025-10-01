@@ -25,6 +25,7 @@ import { administratorApi } from '@/shared/api/axiosClient';
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   width: ${({ isOpen }) => (isOpen ? '240px' : '0px')};
+  min-width: 240px;
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
 
