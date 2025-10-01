@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { clearToken, getToken, setToken } from '../utils/tokenManager';
 
 const baseURL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api`;
@@ -14,18 +14,19 @@ export const administratorApi = axios.create({
   withCredentials: true,
 });
 
-// 요청 인터셉터: 토큰 자동 첨부
-api.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    console.log(`[API Request] to ${config.url}:`, token ? 'Token attached' : 'No token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
+// 토큰 자동 첨부 인터셉터 (공통 로직)
+const attachTokenInterceptor = (config: InternalAxiosRequestConfig) => {
+  const token = getToken();
+  console.log(`[API Request] to ${config.url}:`, token ? 'Token attached' : 'No token');
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+};
+
+// 요청 인터셉터 적용
+api.interceptors.request.use(attachTokenInterceptor, (error) => Promise.reject(error));
+administratorApi.interceptors.request.use(attachTokenInterceptor, (error) => Promise.reject(error));
 
 // --- 토큰 재발급 로직 중앙화 ---
 
