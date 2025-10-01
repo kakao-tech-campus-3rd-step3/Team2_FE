@@ -3,10 +3,13 @@ import Title from '@/features/create/components/Title';
 import StyledSubTitle from '@/features/create/components/Subtitle';
 import styled from '@emotion/styled';
 import Spacer from '@/shared/components/Spacer';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
+import { QUESTION_TYPE_MAP } from '@/features/create/constants/questionTypeConstants';
 
-interface Step2Props {
+interface CreateSummaryProps {
   onValidChange: (isValid: boolean) => void;
   selectedFile: { id: string; name: string | null } | null;
+  questionType: QuestionType | null;
 }
 
 const InfoContainer = styled.div`
@@ -20,12 +23,11 @@ const SettingInfoBox = styled.div`
   background-color: ${({ theme }) => theme.colors.background.foreground};
   border-radius: ${({ theme }) => theme.radius.radius2};
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
-  padding: 10px 15px;
+  padding: 15px;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 15px;
 `;
 
 const InfoTitle = styled.h3`
@@ -48,10 +50,18 @@ const InfoSpan = styled.span`
   text-overflow: ellipsis;
 `;
 
-const CreateSummary: React.FC<Step2Props> = ({ onValidChange, selectedFile }) => {
+const CreateSummary: React.FC<CreateSummaryProps> = ({
+  onValidChange,
+  selectedFile,
+  questionType,
+}) => {
   useEffect(() => {
     onValidChange(true);
-  }, []);
+  }, [onValidChange]);
+
+  const selectedTypeDetails = questionType
+    ? QUESTION_TYPE_MAP.get(questionType)
+    : { title: '미선택', description: '문제 유형을 선택해주세요.' };
 
   const infoData = [
     {
@@ -59,15 +69,11 @@ const CreateSummary: React.FC<Step2Props> = ({ onValidChange, selectedFile }) =>
       content: '1개',
       description: selectedFile?.name ?? '선택된 파일이 없습니다.',
     },
-    {
-      title: '문제 개수',
-      content: '10문제',
-      description: 'PDF 내용으로만',
-    },
+    { title: '문제 개수', content: '10문제', description: 'PDF 내용으로만' },
     {
       title: '문제 유형',
-      content: '객관식',
-      description: '4지 선다형',
+      content: selectedTypeDetails?.title ?? '미선택',
+      description: selectedTypeDetails?.description ?? '문제 유형을 선택해주세요.',
     },
   ];
 
