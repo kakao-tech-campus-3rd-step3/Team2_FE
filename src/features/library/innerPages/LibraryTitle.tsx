@@ -1,7 +1,7 @@
 import StyledSubTitle from '@/features/library/components/Subtitle';
 import Title from '@/features/library/components/Title';
 
-const Lists = () => {
+const LibraryTitle = () => {
   return (
     <div>
       <Title>나의 문제집</Title>
@@ -10,4 +10,4 @@ const Lists = () => {
   );
 };
 
-export default Lists;
+export default LibraryTitle;

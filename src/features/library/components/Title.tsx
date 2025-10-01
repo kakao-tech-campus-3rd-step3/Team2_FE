@@ -4,7 +4,7 @@ const StyledTitle = styled.h2`
   width: 100%;
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   text-align: left;
-  padding: 10px;
+  padding: 5px 10px;
 `;
 
 interface TitleProps {
