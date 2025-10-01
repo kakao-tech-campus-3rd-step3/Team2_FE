@@ -15,7 +15,6 @@ const CreateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 700px;
-  box-sizing: border-box;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 
