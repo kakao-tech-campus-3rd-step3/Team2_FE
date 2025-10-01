@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 import PageLayout from '@/shared/components/Layout/PageLayout';
 import SelectPdf from '@/features/create/innerPages/SelectPdf';
@@ -9,6 +9,7 @@ import CreateRequest from '@/features/create/innerPages/CreateRequest';
 import Spacer from '@/shared/components/Spacer';
 import { useOutletContext } from 'react-router-dom';
 import ChooseType from '@/features/create/innerPages/ChooseType';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
 const CreateWrapper = styled.div`
   display: flex;
@@ -34,10 +35,7 @@ const Create = () => {
   const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
-
-  const [questionType, setQuestionType] = useState<
-    'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null
-  >(null);
+  const [questionType, setQuestionType] = useState<QuestionType | null>(null);
 
   const { questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady } =
     useOutletContext<CreateProps>();
@@ -49,6 +47,27 @@ const Create = () => {
     4: false,
   });
 
+  // 의존성 규칙에 위배사항 발생으로 useCallback으로 안정화 처리
+  const handleStep1ValidChange = useCallback((isValid: boolean) => {
+    setStepValidity((prev) => ({ ...prev, 1: isValid }));
+  }, []);
+
+  const handleStep2ValidChange = useCallback((isValid: boolean) => {
+    setStepValidity((prev) => ({ ...prev, 2: isValid }));
+  }, []);
+
+  const handleStep3ValidChange = useCallback((isValid: boolean) => {
+    setStepValidity((prev) => ({ ...prev, 3: isValid }));
+  }, []);
+
+  const handleSelectFile = useCallback((fileInfo: { id: string; name: string } | null) => {
+    setSelectedFile(fileInfo);
+  }, []);
+
+  const handleSelectType = useCallback((type: QuestionType) => {
+    setQuestionType(type);
+  }, []);
+
   const isNextDisabled = !stepValidity[currentStep];
 
   const renderStepComponent = () => {
@@ -57,16 +76,16 @@ const Create = () => {
         return (
           <SelectPdf
             selectedFileId={selectedFile?.id ?? null}
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 1: isValid }))}
-            onSelectFile={(fileInfo) => setSelectedFile(fileInfo)}
+            onValidChange={handleStep1ValidChange}
+            onSelectFile={handleSelectFile}
           />
         );
       case 2:
         return (
           <ChooseType
             selectedType={questionType}
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 2: isValid }))}
-            onSelectType={(type) => setQuestionType(type)}
+            onValidChange={handleStep2ValidChange}
+            onSelectType={handleSelectType}
           />
         );
       case 3:
@@ -74,7 +93,7 @@ const Create = () => {
           <CreateSummary
             selectedFile={selectedFile}
             questionType={questionType}
-            onValidChange={(isValid) => setStepValidity((prev) => ({ ...prev, 3: isValid }))}
+            onValidChange={handleStep3ValidChange}
           />
         );
       case 4:
@@ -115,7 +134,7 @@ const Create = () => {
     setQuestionSetReady(false);
   };
 
-  const progress = ((currentStep - 1) / (stepLabels.length - 1)) * 100;
+  const progress = (currentStep / stepLabels.length) * 100;
 
   return (
     <PageLayout>

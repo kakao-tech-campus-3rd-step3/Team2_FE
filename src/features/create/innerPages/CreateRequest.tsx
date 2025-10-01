@@ -4,6 +4,8 @@ import Spacer from '@/shared/components/Spacer';
 import { useEffect, useState } from 'react';
 import Complete from '@/features/create/components/Complete';
 import api from '@/shared/api/axiosClient';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
+import { QUESTION_TYPE_MAP } from '@/features/create/constants/questionTypeConstants';
 
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
@@ -12,7 +14,7 @@ interface CreateRequestProps {
   questionSetId: number;
   setQuestionSetId: (id: number) => void;
   setQuestionSetReady: (isReady: boolean) => void;
-  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null;
+  questionType: QuestionType | null;
 }
 
 const Container = styled.div`
@@ -135,19 +137,6 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     );
   }
 
-  const renderQuestionTypeText = () => {
-    switch (questionType) {
-      case 'MULTIPLE_CHOICE':
-        return '객관식';
-      case 'TRUE_FALSE':
-        return '참/거짓';
-      case 'SHORT':
-        return '단답형';
-      default:
-        return '알 수 없음';
-    }
-  };
-
   return (
     <Container>
       <Spinner />
@@ -155,8 +144,10 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
       <NoticeContent>
         선택하신 PDF에서 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
-        <NoticeContentHighlight>{renderQuestionTypeText()}</NoticeContentHighlight> 문제를 생성하고
-        있어요
+        <NoticeContentHighlight>
+          {questionType ? QUESTION_TYPE_MAP.get(questionType)?.title : '알 수 없음'}
+        </NoticeContentHighlight>{' '}
+        문제를 생성하고 있어요
       </NoticeContent>
     </Container>
   );

@@ -3,11 +3,13 @@ import Title from '@/features/create/components/Title';
 import StyledSubTitle from '@/features/create/components/Subtitle';
 import styled from '@emotion/styled';
 import Spacer from '@/shared/components/Spacer';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
+import { QUESTION_TYPE_MAP } from '@/features/create/constants/questionTypeConstants';
 
 interface CreateSummaryProps {
   onValidChange: (isValid: boolean) => void;
   selectedFile: { id: string; name: string | null } | null;
-  questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT' | null;
+  questionType: QuestionType | null;
 }
 
 const InfoContainer = styled.div`
@@ -55,17 +57,11 @@ const CreateSummary: React.FC<CreateSummaryProps> = ({
 }) => {
   useEffect(() => {
     onValidChange(true);
-  }, []);
-
-  const questionTypeDetails = {
-    MULTIPLE_CHOICE: { content: '객관식', description: '4지 선다형' },
-    TRUE_FALSE: { content: '참/거짓', description: '참 또는 거짓 중 선택' },
-    SHORT: { content: '단답형', description: '짧은 답변 직접 작성' },
-  };
+  }, [onValidChange]);
 
   const selectedTypeDetails = questionType
-    ? questionTypeDetails[questionType]
-    : { content: '미선택', description: '문제 유형을 선택해주세요.' };
+    ? QUESTION_TYPE_MAP.get(questionType)
+    : { title: '미선택', description: '문제 유형을 선택해주세요.' };
 
   const infoData = [
     {
@@ -76,8 +72,8 @@ const CreateSummary: React.FC<CreateSummaryProps> = ({
     { title: '문제 개수', content: '10문제', description: 'PDF 내용으로만' },
     {
       title: '문제 유형',
-      content: selectedTypeDetails.content,
-      description: selectedTypeDetails.description,
+      content: selectedTypeDetails?.title ?? '미선택',
+      description: selectedTypeDetails?.description ?? '문제 유형을 선택해주세요.',
     },
   ];
 
