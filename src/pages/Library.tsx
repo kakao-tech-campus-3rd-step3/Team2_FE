@@ -7,7 +7,7 @@ const LibraryWrapper = styled.div`
   flex-direction: column;
   border: 1px solid black;
   width: 900px;
-  height: calc(100dvh - 76px);
+  height: calc(100dvh - 100px);
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 const Library = () => {
