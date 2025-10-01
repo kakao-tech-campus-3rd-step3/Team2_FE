@@ -58,7 +58,7 @@ function AppLayout() {
       console.error('[SSE] 에러 발생:', e);
       // EventSource는 자동으로 재연결을 시도합니다 (기본 동작)
     });
-    
+
     es.onQuestionCreationComplete((payload) => {
       if (payload.success) {
         console.log('[SSE] 문제집 생성 완료:', payload.questionSetId);
