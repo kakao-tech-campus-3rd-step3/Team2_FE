@@ -20,11 +20,12 @@ import { useParams } from 'react-router-dom';
 
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
-
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 760px;
   max-width: 960px;
+  padding: 0px 20px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 
@@ -37,6 +38,7 @@ const RightSidebar = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 180px;
 `;
 
 function Solve() {
