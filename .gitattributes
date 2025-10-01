@@ -1,0 +1,2 @@
+# 모든 텍스트 파일은 LF로 강제
+* text=auto eol=lf
