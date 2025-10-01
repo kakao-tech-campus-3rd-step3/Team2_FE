@@ -26,6 +26,7 @@ const AppLayoutVertical = styled.div`
 
 const Main = styled.div`
   width: 100%;
+  background-color: ${({ theme }) => theme.colors.gray.gray2};
   flex: 1;
 `;
 
