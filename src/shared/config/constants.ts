@@ -11,5 +11,5 @@ export const MENUS = {
 export type Menu = (typeof MENUS)[keyof typeof MENUS];
 
 // 레이아웃 상수
-export const MIN_WIDTH = '1024px';
+export const MIN_WIDTH = '1260px';
 export const MIN_HEIGHT = '640px';
