@@ -5,8 +5,7 @@ import styled from '@emotion/styled';
 const LibraryWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 900px;
-  border: 1px solid black;
+  min-width: 800px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 `;
 const Library = () => {

@@ -4,7 +4,6 @@ import { Sidebar } from 'lucide-react';
 const PageHeaderWrapper = styled.header`
   width: 100%;
   height: 76px;
-  min-height: 76px;
   padding: ${({ theme }) => theme.spacing.spacing5};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   background-color: ${({ theme }) => theme.colors.gray.gray1};
