@@ -44,7 +44,8 @@ export const issueNewToken = async (): Promise<string> => {
     console.log('[Token Logic] 액세스 토큰 발급 성공.');
     return newToken;
   } catch (error) {
-    console.error('[Token Logic] 액세스 토큰 발급 실패:', error);
+    // 토큰 발급 실패는 비로그인 상태에서 정상적인 상황일 수 있으므로 조용히 처리
+    console.log('[Token Logic] 액세스 토큰 발급 실패 (정상적인 동작)');
     clearToken();
     throw error;
   }
