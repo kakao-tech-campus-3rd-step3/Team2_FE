@@ -15,13 +15,13 @@ const BackBtn = styled.div`
   color: ${({ theme }) => theme.colors.gray.gray3};
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius4};
-`
+`;
 
 function NotFound() {
   return (
     <NotFoundWrapper>
-      <div >
-        <DotLottieReact style={{ width: 700, height: 500}} src={SampleLottie} loop autoplay />
+      <div>
+        <DotLottieReact style={{ width: 700, height: 500 }} src={SampleLottie} loop autoplay />
       </div>
       <Link to="/dashboard">
         <BackBtn>대시보드로 돌아가기</BackBtn>
