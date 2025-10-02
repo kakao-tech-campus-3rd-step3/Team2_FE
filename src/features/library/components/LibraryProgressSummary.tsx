@@ -7,10 +7,11 @@ import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 const SummaryInfoBox = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray5};
   padding: 20px;
-  border-radius: 16px;
+  border-radius: ${({ theme }) => theme.radius.radius4};
   gap: 16px;
+  background-color: white;
 `;
 
 const TopRow = styled.div`
