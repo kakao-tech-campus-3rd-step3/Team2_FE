@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
@@ -47,6 +47,12 @@ function AppLayout() {
   const changeMenu = (menu: string) => {
     setSelectedMenu(menu); // 현재 페이지 text를 바꾸는 함수
   };
+  const handleNavigate = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate],
+  );
 
   // SSE 연결 설정 (토큰이 있을 때만, 마운트 시 한 번만 실행)
   useEffect(() => {
@@ -75,7 +81,7 @@ function AppLayout() {
         setQuestionSetId(payload.questionSetId);
         toast(payload.message, {
           onClick: () => {
-            navigate(`/solve/${payload.questionSetId}`);
+            handleNavigate(`/solve/${payload.questionSetId}`);
           },
         });
       } else {
@@ -84,11 +90,12 @@ function AppLayout() {
     });
 
     // 컴포넌트 언마운트 시 SSE 연결 정리
-    return () => {
-      console.log('[SSE] 연결 종료 (cleanup)');
-      es.close();
-    };
-  }, [navigate]); // navigate는 안정적인 참조이므로 의존성에 포함해도 재실행되지 않음
+    // return () => {
+    //   console.log("컼포넌트 언마운트 되엇음");
+    //   console.log('[SSE] 연결 종료 (cleanup)');
+    //   es.close();
+    // };
+  }, [handleNavigate]); // navigate는 안정적인 참조이므로 의존성에 포함해도 재실행되지 않음
 
   const esClose = () => {
     if (esRef.current) {
