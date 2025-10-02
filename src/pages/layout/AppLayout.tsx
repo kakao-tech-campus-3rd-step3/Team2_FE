@@ -84,11 +84,12 @@ function AppLayout() {
     });
 
     // 컴포넌트 언마운트 시 SSE 연결 정리
-    return () => {
-      console.log('[SSE] 연결 종료 (cleanup)');
-      es.close();
-    };
-  }, [navigate]); // navigate는 안정적인 참조이므로 의존성에 포함해도 재실행되지 않음
+    // return () => {
+    //   console.log("컼포넌트 언마운트 되엇음");
+    //   console.log('[SSE] 연결 종료 (cleanup)');
+    //   es.close();
+    // };
+  }, []); // navigate는 안정적인 참조이므로 의존성에 포함해도 재실행되지 않음
 
   const esClose = () => {
     if (esRef.current) {
