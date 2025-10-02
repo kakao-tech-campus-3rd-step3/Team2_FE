@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import SideBar from '@/shared/components/SideBar/SideBar';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 import { MIN_HEIGHT } from '@/shared/config/constants';
+import { getToken } from '@/shared/utils/tokenManager';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
@@ -47,8 +48,15 @@ function AppLayout() {
     setSelectedMenu(menu); // 현재 페이지 text를 바꾸는 함수
   };
 
-  // SSE 연결 설정 (컴포넌트 마운트 시 한 번만 실행)
+  // SSE 연결 설정 (토큰이 있을 때만, 마운트 시 한 번만 실행)
   useEffect(() => {
+    // 토큰이 없으면 SSE 연결을 시도하지 않음
+    const token = getToken();
+    if (!token) {
+      console.log('[SSE] 토큰이 없어 SSE 연결을 건너뜁니다.');
+      return;
+    }
+
     console.log('[SSE] 연결 시작...');
     const es = new NotificationSse();
     esRef.current = es;
