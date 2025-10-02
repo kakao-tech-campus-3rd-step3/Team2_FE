@@ -47,9 +47,12 @@ function AppLayout() {
   const changeMenu = (menu: string) => {
     setSelectedMenu(menu); // 현재 페이지 text를 바꾸는 함수
   };
-  const handleNavigate = useCallback((path: string) => {
-    navigate(path);
-  }, [navigate]);
+  const handleNavigate = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate],
+  );
 
   // SSE 연결 설정 (토큰이 있을 때만, 마운트 시 한 번만 실행)
   useEffect(() => {
