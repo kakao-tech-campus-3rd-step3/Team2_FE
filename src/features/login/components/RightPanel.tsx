@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
 import BenefitList from '@/features/login/components/BenefitList';
 import SampleLottie from '@/shared/assets/lotties/sample.lottie';
 import { getKakaoLoginUrl } from '@/shared/api/apiService';
@@ -104,7 +104,7 @@ const RightPanel = () => {
           <CardHeader>
             <CardTitle>시작하기</CardTitle>
             <div style={{ width: 200, height: 200, margin: '0 auto' }}>
-              <DotLottieReact src={SampleLottie} loop autoplay />
+              <DotLottiePlayer src={SampleLottie} loop autoplay subframe={true} />
             </div>
             <CardDescription>카카오계정으로 3초 만에 시작하세요</CardDescription>
           </CardHeader>

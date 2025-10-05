@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import SampleLottie from '@/shared/assets/lotties/404 error.lottie';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
 import { Link } from 'react-router-dom';
 
 const NotFoundWrapper = styled.div`
@@ -21,7 +21,13 @@ function NotFound() {
   return (
     <NotFoundWrapper>
       <div>
-        <DotLottieReact style={{ width: 700, height: 500 }} src={SampleLottie} loop autoplay />
+        <DotLottiePlayer
+          style={{ width: 700, height: 500 }}
+          src={SampleLottie}
+          loop
+          autoplay
+          subframe={true}
+        />
       </div>
       <Link to="/dashboard">
         <BackBtn>대시보드로 돌아가기</BackBtn>
