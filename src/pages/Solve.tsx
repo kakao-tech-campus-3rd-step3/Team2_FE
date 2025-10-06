@@ -17,6 +17,7 @@ import type { QuestionSet } from '@/features/solve/types/question';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import { useParams } from 'react-router-dom';
+import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
 
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
@@ -43,7 +44,7 @@ const RightSidebar = styled.div`
 
 function Solve() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
-  const [solvedCheck, setSolvedCheck] = useState<Map<number, string>>(new Map());
+  const [solvedCheck, setSolvedCheck] = useState<MarkingRequest[]>([]);
   const [isAllSolved, setIsAllSolved] = useState<boolean>(false); // 전체 문제가 다 풀렸는지 감지는 solvedCheck state가 다찼는지르 확인 할 수 있음 제거헤도 될듯
   const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택 얜 신경쓰지마 아직 무시해
   const { questionSetId } = useParams<{ questionSetId: string }>();
@@ -74,7 +75,7 @@ function Solve() {
     );
 
   const percentageOfProblemSolved =
-    data.questionLength > 0 ? Math.round((solvedCheck.size / data.questionLength) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
+    data.questionLength > 0 ? Math.round((solvedCheck.length / data.questionLength) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
   // 2. 조회해온 문제집을 하위 컴포넌트로 내려줘서 문제집을 출력해야함
   return (
     <PageLayout>

@@ -1,7 +1,12 @@
 import styled from '@emotion/styled';
+import api from '@/shared/api/axiosClient';
 import type { QuestionSet } from '@/features/solve/types/question';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
+import LoadingDots from '@/shared/assets/lotties/loading_dots.lottie';
+import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
 
 const SolveResultTitle = styled.h1`
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
@@ -108,73 +113,86 @@ const GoToDashboardButton = styled.button`
 
 type SolveResultProps = {
   questionLength: number;
-  solvedCheck: Map<number, string>;
+  solvedCheck: MarkingRequest[];
   questions: QuestionSet;
 };
 
-function SolveResult({ questionLength, solvedCheck, questions }: SolveResultProps) {
+function SolveResult({ questionLength, solvedCheck }: SolveResultProps) {
   const [correctCount, setCorrectCount] = useState(0);
   const [score, setScore] = useState(0);
+  const submitMarking = (data: MarkingRequest[]) => {
+    return api.post('/marking', data);
+  };
+  const mutation = useMutation({
+    mutationFn: submitMarking,
+    onSuccess: (data) => {
+      const res: { correctQuestions: number } = data.data;
+      const correctCount = questionLength - res.correctQuestions; // TODO: backend에서 correctQuestions에 맞은 문제가 아닌 틀린문제의 수를 반환함
+      setCorrectCount(correctCount);
+      setScore(Math.round((correctCount / questionLength) * 100));
+    },
+  });
 
   useEffect(() => {
-    let correct = 0;
-
-    questions.questions.forEach((q, idx) => {
-      const qNo = idx + 1;
-      const userAnswer = solvedCheck.get(qNo);
-
-      if (userAnswer && userAnswer.trim() === q.answer.trim()) {
-        correct++;
-      }
-    });
-
-    setCorrectCount(correct);
-    setScore(Math.round((correct / questionLength) * 100));
-  }, [questions, solvedCheck, questionLength]);
+    mutation.mutate(solvedCheck);
+  }, []);
 
   return (
+    // TODO: 디자인 해주세요
     <>
-      <SolveResultTitle>문제 풀이 완료!</SolveResultTitle>
-      <SolveResultDescription>수고하셨습니다. 결과를 확인해보세요.</SolveResultDescription>
-      <ResultCardsWrapper>
-        <ResultCard>
-          <ResultCardTitle>결과 요약</ResultCardTitle>
-          <ResultStats>
-            <ResultStatItem>
-              <ResultStatLabel>전체 문제</ResultStatLabel>
-              <ResultStatValue>{questionLength}문제</ResultStatValue>
-            </ResultStatItem>
-            <ResultStatItem>
-              <ResultStatLabel>답변한 문제</ResultStatLabel>
-              <ResultStatValue>{solvedCheck.size}문제</ResultStatValue>
-            </ResultStatItem>
-            <ResultStatItem>
-              <ResultStatLabel>정답 수</ResultStatLabel>
-              <ResultStatValue>{correctCount}문제</ResultStatValue>
-            </ResultStatItem>
-          </ResultStats>
-        </ResultCard>
-        <ResultCard>
-          <ResultCardTitle>점수</ResultCardTitle>
-          <ResultScoreWrapper>
-            <ResultScore>{score}점</ResultScore>
-            <ResultScoreDescription>
-              {score === 100 ? '완벽합니다!' : score >= 70 ? '잘하셨어요!' : '다시 공부해보세요!'}
-            </ResultScoreDescription>
-          </ResultScoreWrapper>
-        </ResultCard>
-      </ResultCardsWrapper>
-      <ResultActions>
-        <Link to="/wrong">
-          <ReviewWrongAnswersButton>오답노트 확인</ReviewWrongAnswersButton>
-        </Link>
-        <Link to="/create">
-          <RetryButton>다시 생성하기</RetryButton>
-        </Link>
-        <Link to="/dashboard">
-          <GoToDashboardButton>대시보드로 이동</GoToDashboardButton>
-        </Link>
-      </ResultActions>
+      {mutation.isPending ? (
+        <DotLottiePlayer src={LoadingDots} loop autoplay subframe={true} />
+      ) : mutation.isError ? (
+        <p>점수 계산에 실패했습니다.</p>
+      ) : (
+        <>
+          <SolveResultTitle>문제 풀이 완료!</SolveResultTitle>
+          <SolveResultDescription>수고하셨습니다. 결과를 확인해보세요.</SolveResultDescription>
+          <ResultCardsWrapper>
+            <ResultCard>
+              <ResultCardTitle>결과 요약</ResultCardTitle>
+              <ResultStats>
+                <ResultStatItem>
+                  <ResultStatLabel>전체 문제</ResultStatLabel>
+                  <ResultStatValue>{questionLength}문제</ResultStatValue>
+                </ResultStatItem>
+                <ResultStatItem>
+                  <ResultStatLabel>답변한 문제</ResultStatLabel>
+                  <ResultStatValue>{solvedCheck.length}문제</ResultStatValue>
+                </ResultStatItem>
+                <ResultStatItem>
+                  <ResultStatLabel>정답 수</ResultStatLabel>
+                  <ResultStatValue>{correctCount}문제</ResultStatValue>
+                </ResultStatItem>
+              </ResultStats>
+            </ResultCard>
+            <ResultCard>
+              <ResultCardTitle>점수</ResultCardTitle>
+              <ResultScoreWrapper>
+                <ResultScore>{score}점</ResultScore>
+                <ResultScoreDescription>
+                  {score === 100
+                    ? '완벽합니다!'
+                    : score >= 70
+                      ? '잘하셨어요!'
+                      : '다시 공부해보세요!'}
+                </ResultScoreDescription>
+              </ResultScoreWrapper>
+            </ResultCard>
+          </ResultCardsWrapper>
+          <ResultActions>
+            <Link to="/wrong">
+              <ReviewWrongAnswersButton>오답노트 확인</ReviewWrongAnswersButton>
+            </Link>
+            <Link to="/create">
+              <RetryButton>다시 생성하기</RetryButton>
+            </Link>
+            <Link to="/dashboard">
+              <GoToDashboardButton>대시보드로 이동</GoToDashboardButton>
+            </Link>
+          </ResultActions>
+        </>
+      )}
     </>
   );
 }

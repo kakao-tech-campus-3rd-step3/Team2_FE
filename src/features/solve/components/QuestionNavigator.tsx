@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import type { MarkingRequest } from '../types/MarkingRequest';
 
 const QuestionNavigatorWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
@@ -45,7 +46,7 @@ const QuestionNumberItem = styled.div<{ active?: boolean; solved?: boolean }>`
 
 type QuestionNavigatorProps = {
   currentQuestionIndex: number;
-  solvedCheck: Map<number, string>;
+  solvedCheck: MarkingRequest[];
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
   questionLength: number;
 };
@@ -63,7 +64,7 @@ function QuestionNavigator({
           <QuestionNumberItem
             key={i + 1}
             active={i + 1 === currentQuestionIndex}
-            solved={solvedCheck.has(i + 1)}
+            solved={!!solvedCheck.find((v) => v.questionId == i + 1)}
             onClick={() => setCurrentQuestionIndex(i + 1)}
           >
             {i + 1}
