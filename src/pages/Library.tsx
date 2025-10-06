@@ -177,26 +177,28 @@ const Library = () => {
             <HeaderCell>작업</HeaderCell>
           </ListRow>
 
-          {filteredQuestionSets.map((item) => (
-            <ListRow key={item.id}>
-              <ListCell align="left" title={item.title}>
-                {item.title}
-              </ListCell>
-              <ListCell>{item.questionCount}</ListCell>
-              <ListCell>
-                {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
-              </ListCell>
-              <ListCell>
-                <PrimaryButton>풀기</PrimaryButton>
-              </ListCell>
-              <ListCell>
-                <ActionsContainer>
-                  <ActionButton>수정</ActionButton>
-                  <ActionButton>삭제</ActionButton>
-                </ActionsContainer>
-              </ListCell>
-            </ListRow>
-          ))}
+          {[...filteredQuestionSets]
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 시간 내림차순
+            .map((item) => (
+              <ListRow key={item.id}>
+                <ListCell align="left" title={item.title}>
+                  {item.title}
+                </ListCell>
+                <ListCell>{item.questionCount}</ListCell>
+                <ListCell>
+                  {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
+                </ListCell>
+                <ListCell>
+                  <PrimaryButton>풀기</PrimaryButton>
+                </ListCell>
+                <ListCell>
+                  <ActionsContainer>
+                    <ActionButton>수정</ActionButton>
+                    <ActionButton>삭제</ActionButton>
+                  </ActionsContainer>
+                </ListCell>
+              </ListRow>
+            ))}
         </ListBox>
       </LibraryWrapper>
     </Container>
