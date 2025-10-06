@@ -111,16 +111,16 @@ function QuestionArea({
   };
 
   const goNext = () => {
-    if (currentQuestionIndex < questions.questionLength) {
+    if (currentQuestionIndex < questions.questionCount) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if (
-      currentQuestionIndex === questions.questionLength &&
-      solvedCheck.size === questions.questionLength
+      currentQuestionIndex === questions.questionCount &&
+      solvedCheck.size === questions.questionCount
     ) {
       setIsAllSolved(true);
     } else if (
-      currentQuestionIndex === questions.questionLength &&
-      solvedCheck.size !== questions.questionLength
+      currentQuestionIndex === questions.questionCount &&
+      solvedCheck.size !== questions.questionCount
     ) {
       toast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }

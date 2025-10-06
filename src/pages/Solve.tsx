@@ -74,14 +74,14 @@ function Solve() {
     );
 
   const percentageOfProblemSolved =
-    data.questionLength > 0 ? Math.round((solvedCheck.size / data.questionLength) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
+    data.questionCount > 0 ? Math.round((solvedCheck.size / data.questionCount) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
   // 2. 조회해온 문제집을 하위 컴포넌트로 내려줘서 문제집을 출력해야함
   return (
     <PageLayout>
       <SolveWrapper>
         {isAllSolved ? (
           <SolveResult
-            questionLength={data.questionLength}
+            questionLength={data.questionCount}
             solvedCheck={solvedCheck}
             questions={data} // TODO: 이건 나중에 정답만 내려주는 방식으로 리팩토링하자
           />
@@ -90,7 +90,7 @@ function Solve() {
             <SolveHeader
               currentQuestionIndex={currentQuestionIndex}
               title={data.title}
-              questionLength={data.questionLength}
+              questionLength={data.questionCount}
             />
             {/* 프로그레스바 부분은 solvedCheck를 내려보내서 size 계산해서 쓸까?*/}
             <ProgressDescription percentageOfProblemSolved={percentageOfProblemSolved} />
@@ -98,7 +98,7 @@ function Solve() {
               currentQuestionIndex={currentQuestionIndex}
               solvedCheck={solvedCheck}
               setCurrentQuestionIndex={setCurrentQuestionIndex}
-              questionLength={data.questionLength}
+              questionLength={data.questionCount}
             />
             <SolveContentWrapper>
               <QuestionArea
@@ -111,7 +111,7 @@ function Solve() {
               />
               <RightSidebar>
                 <ModeCard selectedMode={selectedMode} setSelectedMode={setSelectedMode} />
-                <ProgressCard questionLength={data.questionLength} solvedCheck={solvedCheck} />
+                <ProgressCard questionLength={data.questionCount} solvedCheck={solvedCheck} />
               </RightSidebar>
             </SolveContentWrapper>
           </>
