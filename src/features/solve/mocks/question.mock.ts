@@ -155,7 +155,7 @@ export const mockQuestionSet: QuestionSet = {
   ],
   difficulty: 'EASY',
   type: 'MULTIPLE_CHOICE',
-  questionLength: 20,
-  createTime: '2025-09-18T12:00:00.000000',
+  questionCount: 20,
+  createdAt: '2025-09-18T12:00:00.000000',
   updateTime: '2025-09-18T12:00:00.000000',
 };
