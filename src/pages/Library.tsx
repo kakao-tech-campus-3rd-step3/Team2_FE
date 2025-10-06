@@ -2,7 +2,10 @@ import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
+import { type QuestionSet } from '@/features/solve/types/question';
 
 const Container = styled.div`
   display: flex;
@@ -120,14 +123,6 @@ const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
-  const questionSets = [
-    { id: 1, title: '네트워크 기초 개념 문제집', count: 25, date: '2025-10-01' },
-    { id: 2, title: '자료구조 핵심 요약', count: 15, date: '2025-09-28' },
-    { id: 3, title: '리액트 상태관리 심화', count: 30, date: '2025-09-25' },
-    { id: 4, title: '운영체제(OS) 101', count: 20, date: '2025-09-22' },
-    { id: 5, title: '데이터베이스 정규화 과정', count: 10, date: '2025-09-20' },
-  ];
-
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -138,7 +133,23 @@ const Library = () => {
     };
   }, [searchTerm]);
 
-  const filteredQuestionSets = questionSets.filter((item) =>
+  const { isPending, error, data } = useQuery({
+    queryKey: ['questionSets'],
+    queryFn: async () => {
+      const res = await api.get<QuestionSet[]>(`/question-set`);
+      return res.data;
+    },
+  });
+
+  if (isPending) {
+    return <span>로딩 중입니다...</span>;
+  }
+
+  if (error) {
+    return <span>에러가 발생했습니다: {error.message}</span>;
+  }
+
+  const filteredQuestionSets = data.filter((item) =>
     item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
@@ -171,8 +182,10 @@ const Library = () => {
               <ListCell align="left" title={item.title}>
                 {item.title}
               </ListCell>
-              <ListCell>{item.count}</ListCell>
-              <ListCell>{item.date}</ListCell>
+              <ListCell>{item.questionCount}</ListCell>
+              <ListCell>
+                {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
+              </ListCell>
               <ListCell>
                 <PrimaryButton>풀기</PrimaryButton>
               </ListCell>
