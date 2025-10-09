@@ -192,6 +192,18 @@ const Library = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => {
+      return api.delete(`/question-set/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+    },
+    onError: (error) => {
+      alert(`삭제 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
   const submitTitleEdit = (item: QuestionSet) => {
     updateTitleMutation.mutate({
       id: item.questionSetId,
@@ -303,7 +315,15 @@ const Library = () => {
                   </ListCell>
                   <ListCell>
                     <ActionsContainer>
-                      <ActionButton>삭제</ActionButton>
+                      <ActionButton
+                        onClick={() => {
+                          if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
+                            deleteMutation.mutate(item.questionSetId);
+                          }
+                        }}
+                      >
+                        삭제
+                      </ActionButton>
                     </ActionsContainer>
                   </ListCell>
                 </ListRow>
