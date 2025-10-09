@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
-import { type QuestionSet } from '@/features/solve/types/question';
+import { type MyQuestionSetsResponse } from '@/features/solve/types/question';
 import EditIcon from '@/shared/assets/EditIcon.svg?react';
 
 const Container = styled.div`
@@ -204,7 +204,7 @@ const Library = () => {
     },
   });
 
-  const submitTitleEdit = (item: QuestionSet) => {
+  const submitTitleEdit = (item: MyQuestionSetsResponse) => {
     updateTitleMutation.mutate({
       id: item.questionSetId,
       title: editingTitle,
@@ -224,7 +224,7 @@ const Library = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ['questionSets'],
     queryFn: async () => {
-      const res = await api.get<QuestionSet[]>(`/question-set`);
+      const res = await api.get<MyQuestionSetsResponse[]>(`/question-set`);
       return res.data;
     },
   });
