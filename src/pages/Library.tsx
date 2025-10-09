@@ -2,10 +2,11 @@ import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
 import { type QuestionSet } from '@/features/solve/types/question';
+import EditIcon from '@/shared/assets/EditIcon.svg?react';
 
 const Container = styled.div`
   display: flex;
@@ -116,12 +117,82 @@ const PrimaryButton = styled(ActionButton)`
   }
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+`;
+
+const TitleText = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+`;
+
+const TitleEditInput = styled.input`
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
+  padding: 4px 8px;
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
+  width: 100%;
+  flex-grow: 1;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+`;
+
+const EditIconButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.text.default};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+`;
+
 const Library = () => {
   const totalCount = 5;
   const completedCount = 1;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingTitle, setEditingTitle] = useState('');
+
+  const queryClient = useQueryClient();
+
+  const updateTitleMutation = useMutation({
+    mutationFn: ({ id, title }: { id: number | undefined; title: string }) => {
+      if (id === undefined || id === null) {
+        throw new Error('문제집 ID가 없어 제목을 수정할 수 없습니다.');
+      }
+      if (!title.trim()) {
+        throw new Error('제목은 비워둘 수 없습니다.');
+      }
+      return api.patch(`/question-set/${id}`, { title });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      setEditingItemId(null);
+      setEditingTitle('');
+    },
+    onError: (error) => {
+      alert(error.message);
+    },
+  });
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -167,7 +238,6 @@ const Library = () => {
         />
         <Spacer height="12px" />
         {/* 여기에서 부터 리스트 박스입니다.*/}
-        {/* 일단 작업하다 보니, mock 데이터로 구성해 두었습니다.*/}
         <ListBox>
           <ListRow>
             <HeaderCell align="left">문제집</HeaderCell>
@@ -179,26 +249,72 @@ const Library = () => {
 
           {[...filteredQuestionSets]
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 시간 내림차순
-            .map((item) => (
-              <ListRow key={item.id}>
-                <ListCell align="left" title={item.title}>
-                  {item.title}
-                </ListCell>
-                <ListCell>{item.questionCount}</ListCell>
-                <ListCell>
-                  {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
-                </ListCell>
-                <ListCell>
-                  <PrimaryButton>풀기</PrimaryButton>
-                </ListCell>
-                <ListCell>
-                  <ActionsContainer>
-                    <ActionButton>수정</ActionButton>
-                    <ActionButton>삭제</ActionButton>
-                  </ActionsContainer>
-                </ListCell>
-              </ListRow>
-            ))}
+            .map((item) => {
+              const isEditing = editingItemId === item.questionSetId;
+              return (
+                <ListRow key={item.questionSetId}>
+                  <ListCell align="left">
+                    {isEditing ? (
+                      <TitleContainer>
+                        <TitleEditInput
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              updateTitleMutation.mutate({
+                                id: item.questionSetId,
+                                title: editingTitle,
+                              });
+                            }
+                            if (e.key === 'Escape') {
+                              setEditingItemId(null);
+                            }
+                          }}
+                          autoFocus
+                        />
+                        <div>
+                          <EditIconButton
+                            onClick={() =>
+                              updateTitleMutation.mutate({
+                                id: item.questionSetId,
+                                title: editingTitle,
+                              })
+                            }
+                          >
+                            ✔️
+                          </EditIconButton>
+                          <EditIconButton onClick={() => setEditingItemId(null)}>❌</EditIconButton>
+                        </div>
+                      </TitleContainer>
+                    ) : (
+                      <TitleContainer>
+                        <TitleText title={item.title}>{item.title}</TitleText>
+                        <EditIconButton
+                          onClick={() => {
+                            setEditingItemId(item.questionSetId);
+                            setEditingTitle(item.title);
+                          }}
+                        >
+                          <EditIcon />
+                        </EditIconButton>
+                      </TitleContainer>
+                    )}
+                  </ListCell>
+                  <ListCell>{item.questionCount}</ListCell>
+                  <ListCell>
+                    {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
+                  </ListCell>
+                  <ListCell>
+                    <PrimaryButton>풀기</PrimaryButton>
+                  </ListCell>
+                  <ListCell>
+                    <ActionsContainer>
+                      <ActionButton>삭제</ActionButton>
+                    </ActionsContainer>
+                  </ListCell>
+                </ListRow>
+              );
+            })}
         </ListBox>
       </LibraryWrapper>
     </Container>

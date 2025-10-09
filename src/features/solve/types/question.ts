@@ -10,7 +10,7 @@ export interface Question {
 }
 
 export interface QuestionSet {
-  id: number;
+  questionSetId: number;
   sourceIds: number[];
   ownerID: number;
   title: string; // pdf 이름

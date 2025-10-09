@@ -1,7 +1,7 @@
 import type { QuestionSet } from '../types/question';
 
 export const mockQuestionSet: QuestionSet = {
-  id: 1,
+  questionSetId: 1,
   sourceIds: [101],
   ownerID: 1,
   title: '데이터 분석 기초.pdf',
