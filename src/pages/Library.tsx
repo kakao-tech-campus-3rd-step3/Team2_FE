@@ -192,6 +192,13 @@ const Library = () => {
     },
   });
 
+  const submitTitleEdit = (item: QuestionSet) => {
+    updateTitleMutation.mutate({
+      id: item.questionSetId,
+      title: editingTitle,
+    });
+  };
+
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -254,15 +261,13 @@ const Library = () => {
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>
+                        {/* TODO: callback 따로 빼기*/}
                         <TitleEditInput
                           value={editingTitle}
                           onChange={(e) => setEditingTitle(e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                              updateTitleMutation.mutate({
-                                id: item.questionSetId,
-                                title: editingTitle,
-                              });
+                              submitTitleEdit(item);
                             }
                             if (e.key === 'Escape') {
                               setEditingItemId(null);
@@ -271,16 +276,7 @@ const Library = () => {
                           autoFocus
                         />
                         <div>
-                          <EditIconButton
-                            onClick={() =>
-                              updateTitleMutation.mutate({
-                                id: item.questionSetId,
-                                title: editingTitle,
-                              })
-                            }
-                          >
-                            ✔️
-                          </EditIconButton>
+                          <EditIconButton onClick={() => submitTitleEdit(item)}>✔️</EditIconButton>
                           <EditIconButton onClick={() => setEditingItemId(null)}>❌</EditIconButton>
                         </div>
                       </TitleContainer>
