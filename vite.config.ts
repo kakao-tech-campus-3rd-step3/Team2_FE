@@ -1,11 +1,12 @@
 import path from 'path';
 import { defineConfig, type UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const config: UserConfig = {
-    plugins: [react()],
+    plugins: [react(), svgr()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
