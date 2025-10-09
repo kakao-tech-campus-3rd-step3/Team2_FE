@@ -16,7 +16,8 @@ import type { QuestionSet } from '@/features/solve/types/question';
 
 import { useQuery } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
 
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
@@ -43,16 +44,22 @@ const RightSidebar = styled.div`
 
 function Solve() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
-  const [solvedCheck, setSolvedCheck] = useState<Map<number, string>>(new Map());
+  const [solvedCheck, setSolvedCheck] = useState<MarkingRequest[]>([]);
   const [isAllSolved, setIsAllSolved] = useState<boolean>(false); // 전체 문제가 다 풀렸는지 감지는 solvedCheck state가 다찼는지르 확인 할 수 있음 제거헤도 될듯
   const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택 얜 신경쓰지마 아직 무시해
   const { questionSetId } = useParams<{ questionSetId: string }>();
+  const [searchParams] = useSearchParams();
+
+  const isReviewing = searchParams.get('isReviewing') === 'true';
 
   // 1. 서버로부터 문제조회를 하는 부분 questionSetId로 문제집 조회
   const { isPending, error, data } = useQuery({
-    queryKey: ['questionSet', questionSetId],
+    queryKey: ['questionSet', questionSetId, isReviewing],
     queryFn: async () => {
-      const res = await api.get<QuestionSet>(`/question-set/${questionSetId}`);
+      const url = isReviewing
+        ? `/question-set/${questionSetId}?isReviewing=true`
+        : `/question-set/${questionSetId}`;
+      const res = await api.get<QuestionSet>(url);
       return res.data;
     },
   });
