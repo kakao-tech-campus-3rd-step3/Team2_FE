@@ -7,6 +7,7 @@ import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
 import { type MyQuestionSetsResponse } from '@/features/solve/types/question';
 import EditIcon from '@/shared/assets/EditIcon.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -171,6 +172,7 @@ const Library = () => {
   const [editingTitle, setEditingTitle] = useState('');
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const updateTitleMutation = useMutation({
     mutationFn: ({ id, title }: { id: number | undefined; title: string }) => {
@@ -311,7 +313,9 @@ const Library = () => {
                     {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
                   </ListCell>
                   <ListCell>
-                    <PrimaryButton>풀기</PrimaryButton>
+                    <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
+                      풀기
+                    </PrimaryButton>
                   </ListCell>
                   <ListCell>
                     <ActionsContainer>
