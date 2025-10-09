@@ -120,16 +120,14 @@ const PrimaryButton = styled(ActionButton)`
 const TitleContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
   gap: 8px;
+  max-width: 100%;
 `;
 
 const TitleText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex-grow: 1;
 `;
 
 const TitleEditInput = styled.input`
