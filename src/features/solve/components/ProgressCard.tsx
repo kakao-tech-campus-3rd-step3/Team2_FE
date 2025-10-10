@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import type { MarkingRequest } from '../types/MarkingRequest';
 
 const ProgressCardWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
@@ -43,7 +44,7 @@ const ProgressStatValue = styled.span`
 
 type ProgressCardProps = {
   questionLength: number;
-  solvedCheck: Map<number, string>;
+  solvedCheck: MarkingRequest[];
 };
 function ProgressCard({ questionLength, solvedCheck }: ProgressCardProps) {
   return (
@@ -56,11 +57,11 @@ function ProgressCard({ questionLength, solvedCheck }: ProgressCardProps) {
         </ProgressStatItem>
         <ProgressStatItem>
           <ProgressStatLabel>답변 완료</ProgressStatLabel>
-          <ProgressStatValue>{solvedCheck.size}</ProgressStatValue>
+          <ProgressStatValue>{solvedCheck.length}</ProgressStatValue>
         </ProgressStatItem>
         <ProgressStatItem>
           <ProgressStatLabel>남은 문제</ProgressStatLabel>
-          <ProgressStatValue>{questionLength - solvedCheck.size}</ProgressStatValue>
+          <ProgressStatValue>{questionLength - solvedCheck.length}</ProgressStatValue>
         </ProgressStatItem>
       </ProgressStats>
     </ProgressCardWrapper>

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import type { QuestionSet } from '@/features/solve/types/question';
+import type { MarkingRequest } from '../types/MarkingRequest';
 
 const QuestionAreaWrapper = styled.div`
   margin-right: ${({ theme }) => theme.spacing.spacing3};
@@ -80,8 +81,8 @@ const NextButton = styled.button`
 type QuestionAreaProps = {
   currentQuestionIndex: number;
   questions: QuestionSet;
-  solvedCheck: Map<number, string>;
-  setSolvedCheck: React.Dispatch<React.SetStateAction<Map<number, string>>>;
+  solvedCheck: MarkingRequest[];
+  setSolvedCheck: React.Dispatch<React.SetStateAction<MarkingRequest[]>>;
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -96,11 +97,18 @@ function QuestionArea({
 }: QuestionAreaProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null); // 어떤 선지가 선택되어있는지
 
-  const markSolved = (qNo: number, optionText: string) => {
+  const markSolved = (optionText: string) => {
+    const question = questions.questions.at(currentQuestionIndex - 1);
+    if (!question) {
+      toast('문제 id를 찾을 수 없습니다.');
+      return;
+    }
+
     setSolvedCheck((prev) => {
-      const next = new Map(prev);
-      next.set(qNo, optionText);
-      return next;
+      return [
+        ...prev.filter((v) => v.questionId !== question.id),
+        { questionId: question.id, answer: optionText },
+      ];
     });
   };
 
@@ -115,12 +123,12 @@ function QuestionArea({
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if (
       currentQuestionIndex === questions.questionLength &&
-      solvedCheck.size === questions.questionLength
+      solvedCheck.length === questions.questionLength
     ) {
       setIsAllSolved(true);
     } else if (
       currentQuestionIndex === questions.questionLength &&
-      solvedCheck.size !== questions.questionLength
+      solvedCheck.length !== questions.questionLength
     ) {
       toast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }
@@ -143,7 +151,7 @@ function QuestionArea({
               key={i}
               active={selectedOption === i}
               onClick={() => {
-                markSolved(currentQuestionIndex, opt);
+                markSolved(opt);
                 setSelectedOption(i);
               }}
             >{`${i + 1}. ${opt}`}</OptionItem>

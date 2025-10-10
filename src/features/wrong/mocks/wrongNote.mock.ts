@@ -1,0 +1,42 @@
+export const workbookMocks = [
+  {
+    id: 1,
+    title: '미적분 기본정리 문제집',
+    pdfFile: '미적분학1_교재.pdf',
+    wrongCount: 2,
+    difficulty: '중급',
+    category: '수학',
+  },
+  {
+    id: 2,
+    title: '시제 완성 문제집',
+    pdfFile: '영문법_완전정복.pdf',
+    wrongCount: 3,
+    difficulty: '초급',
+    category: '영어',
+  },
+  {
+    id: 3,
+    title: '세계대전사 문제집',
+    pdfFile: '한국근현대사.pdf',
+    wrongCount: 1,
+    difficulty: '고급',
+    category: '인문사회',
+  },
+  {
+    id: 4,
+    title: '산과 연기 문제집',
+    pdfFile: '일반화학.pdf',
+    wrongCount: 4,
+    difficulty: '중급',
+    category: '자연과학',
+  },
+  {
+    id: 5,
+    title: '자료구조 기본 문제집',
+    pdfFile: '자료구조와알고리즘.pdf',
+    wrongCount: 2,
+    difficulty: '초급',
+    category: '공학',
+  },
+];

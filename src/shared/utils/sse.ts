@@ -1,7 +1,7 @@
 import { EventSourcePolyfill, type Event } from 'event-source-polyfill';
 import { getToken } from './tokenManager';
 
-const SSE_SUB_URL = '/api/notifications/subscribe';
+const SSE_SUB_URL = `${import.meta.env.VITE_API_BASE_URL}/api/notifications/subscribe`;
 
 interface onQuestionSetCreationCompletePayload {
   success: boolean;
@@ -21,9 +21,7 @@ export class NotificationSse {
   constructor() {
     const token = getToken();
     if (!token) {
-      console.error('SSE 연결 실패: 인증 토큰이 없습니다.');
-      // 필요하다면 여기서 연결을 시도하지 않고 바로 반환할 수 있습니다.
-      // return null;
+      throw new Error('[SSE] 인증 토큰이 없어 SSE 연결을 생성할 수 없습니다.');
     }
 
     this.eventSource = new EventSourcePolyfill(SSE_SUB_URL, {

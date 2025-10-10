@@ -4,6 +4,8 @@ import Spacer from '@/shared/components/Spacer';
 import { useEffect, useState } from 'react';
 import Complete from '@/features/create/components/Complete';
 import api from '@/shared/api/axiosClient';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
+import { QUESTION_TYPE_MAP } from '@/features/create/constants/questionTypeConstants';
 
 interface CreateRequestProps {
   selectedFile: { id: string; name: string | null } | null;
@@ -12,6 +14,7 @@ interface CreateRequestProps {
   questionSetId: number;
   setQuestionSetId: (id: number) => void;
   setQuestionSetReady: (isReady: boolean) => void;
+  questionType: QuestionType | null;
 }
 
 const Container = styled.div`
@@ -78,28 +81,26 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
   questionSetId,
   setQuestionSetId,
   setQuestionSetReady,
+  questionType,
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!selectedFile) return;
+    if (!selectedFile || !questionType) return;
 
     const createQuestionSet = async () => {
-      // api 호출 전에 이전 생성 요청 무시하기 위한 초기화
       setQuestionSetId(0);
       setQuestionSetReady(false);
-
       setStatus('requesting');
       setError(null);
 
       try {
-        console.log(selectedFile);
         await api.post('/question-set', {
           title: selectedFile.name,
           difficulty: 'EASY',
           questionCount: 10,
-          type: 'MULTIPLE_CHOICE',
+          type: questionType,
           sourceIds: [parseInt(selectedFile.id)],
         });
       } catch (err: unknown) {
@@ -113,7 +114,8 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     };
 
     createQuestionSet();
-  }, [selectedFile, setQuestionSetId, setQuestionSetReady]);
+  }, [selectedFile, questionType, setQuestionSetId, setQuestionSetReady]);
+
   if (questionSetReady) {
     return (
       <NextComponent
@@ -123,6 +125,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       />
     );
   }
+
   if (status === 'error') {
     return (
       <Container>
@@ -133,6 +136,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       </Container>
     );
   }
+
   return (
     <Container>
       <Spinner />
@@ -140,7 +144,10 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
       <NoticeContent>
         선택하신 PDF에서 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
-        <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 생성하고 있어요
+        <NoticeContentHighlight>
+          {questionType ? QUESTION_TYPE_MAP.get(questionType)?.title : '알 수 없음'}
+        </NoticeContentHighlight>{' '}
+        문제를 생성하고 있어요
       </NoticeContent>
     </Container>
   );

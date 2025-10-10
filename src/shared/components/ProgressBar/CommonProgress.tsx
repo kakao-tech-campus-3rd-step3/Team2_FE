@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Progress } from '@/shared/components/ProgressBar/ProgressBarSettings';
 import { useTheme } from '@emotion/react';
 
@@ -5,28 +6,50 @@ interface CommonProgressProps {
   progress: number; // 현재 진행률
   stepLabels: string[]; // 라벨 리스트
   width?: number | string; // 너비 (optional, 기본값 지정 가능)
+  animate?: boolean; // 애니메이션 여부
 }
 
-// 진행률은 10, 40, 65, 100 등으로 설정한다고 가정 (4단계로)
-const CommonProgress = ({ progress, stepLabels, width = '100%' }: CommonProgressProps) => {
+const CommonProgress = ({
+  progress,
+  stepLabels,
+  width = '100%',
+  animate = false,
+}: CommonProgressProps) => {
   const theme = useTheme();
+  const [animatedProgress, setAnimatedProgress] = useState(animate ? 0 : progress);
+
+  useEffect(() => {
+    if (!animate) {
+      setAnimatedProgress(progress);
+      return;
+    }
+
+    // 애니메이션 활성화시 천천히 올라가는 효과
+    const timeout = setTimeout(() => {
+      setAnimatedProgress(progress);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [progress, animate]);
 
   return (
     <div style={{ width }}>
-      <Progress value={progress} height="8px" borderRadius="12px" />
+      <Progress value={animatedProgress} height="8px" borderRadius="12px" />
 
-      {/* 라벨 영역 */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           marginTop: 8,
           fontSize: 14,
+          visibility: stepLabels.length === 0 ? 'hidden' : 'visible',
+          height: stepLabels.length === 0 ? 0 : 'auto',
+          overflow: 'hidden',
         }}
       >
         {stepLabels.map((label, index) => {
           const labelProgressThreshold = (100 / (stepLabels.length - 1)) * index;
-          const isPassed = progress >= labelProgressThreshold;
+          const isPassed = animatedProgress >= labelProgressThreshold;
 
           return (
             <div

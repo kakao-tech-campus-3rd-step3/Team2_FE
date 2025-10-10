@@ -17,7 +17,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // 이 과정은 메모리에 토큰이 없을 때만 실행됩니다.
         if (!getToken()) {
           console.log("[인증 공급자] '조용한 재인증(Silent Refresh)'을 시도합니다...");
-          await refreshAccessToken();
+          try {
+            await refreshAccessToken();
+          } catch {
+            console.log(
+              '[인증 공급자] 리프레시 토큰이 없거나 만료되었습니다. 비로그인 상태로 처리합니다.',
+            );
+          }
         }
 
         // 토큰이 존재하면(원래 있었거나, 재인증에 성공했거나) 사용자 정보를 조회합니다.
@@ -31,7 +37,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           console.log('[인증 공급자] 유효한 토큰이 없어 비로그인 상태로 처리합니다.');
         }
       } catch (error) {
-        console.error('[인증 공급자] 인증 초기화 과정에서 오류 발생:', error);
+        // 사용자 정보 조회 실패 시에만 에러 로그 출력
+        console.error('[인증 공급자] 사용자 정보 조회 실패:', error);
         setUser(null);
       } finally {
         console.log('[인증 공급자] 인증 상태 초기화가 완료되었습니다.');

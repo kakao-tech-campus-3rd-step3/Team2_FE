@@ -13,7 +13,7 @@ const Hr = styled.hr`
   height: 1px;
   background-color: ${({ theme }) => theme.colors.border.border0};
   border: none;
-  margin: ${({ theme }) => theme.spacing.spacing4};
+  margin: ${({ theme }) => `${theme.spacing.spacing4} 0`};
 `;
 
 const ButtonBox = styled.div`
