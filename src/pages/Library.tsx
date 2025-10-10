@@ -2,7 +2,12 @@ import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
 import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
+import { type MyQuestionSetsResponse } from '@/features/solve/types/question';
+import EditIcon from '@/shared/assets/EditIcon.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -113,20 +118,100 @@ const PrimaryButton = styled(ActionButton)`
   }
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+`;
+
+const TitleText = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const TitleEditInput = styled.input`
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
+  padding: 4px 8px;
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
+  width: 100%;
+  flex-grow: 1;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+`;
+
+const EditIconButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.text.default};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+`;
+
 const Library = () => {
   const totalCount = 5;
   const completedCount = 1;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingTitle, setEditingTitle] = useState('');
 
-  const questionSets = [
-    { id: 1, title: '네트워크 기초 개념 문제집', count: 25, date: '2025-10-01' },
-    { id: 2, title: '자료구조 핵심 요약', count: 15, date: '2025-09-28' },
-    { id: 3, title: '리액트 상태관리 심화', count: 30, date: '2025-09-25' },
-    { id: 4, title: '운영체제(OS) 101', count: 20, date: '2025-09-22' },
-    { id: 5, title: '데이터베이스 정규화 과정', count: 10, date: '2025-09-20' },
-  ];
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const updateTitleMutation = useMutation({
+    mutationFn: ({ id, title }: { id: number | undefined; title: string }) => {
+      if (id === undefined || id === null) {
+        throw new Error('문제집 ID가 없어 제목을 수정할 수 없습니다.');
+      }
+      if (!title.trim()) {
+        throw new Error('제목은 비워둘 수 없습니다.');
+      }
+      return api.patch(`/question-set/${id}`, { title });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      setEditingItemId(null);
+      setEditingTitle('');
+    },
+    onError: (error) => {
+      alert(error.message);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => {
+      return api.delete(`/question-set/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+    },
+    onError: (error) => {
+      alert(`삭제 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
+  const submitTitleEdit = (item: MyQuestionSetsResponse) => {
+    updateTitleMutation.mutate({
+      id: item.questionSetId,
+      title: editingTitle,
+    });
+  };
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -138,7 +223,23 @@ const Library = () => {
     };
   }, [searchTerm]);
 
-  const filteredQuestionSets = questionSets.filter((item) =>
+  const { isPending, error, data } = useQuery({
+    queryKey: ['questionSets'],
+    queryFn: async () => {
+      const res = await api.get<MyQuestionSetsResponse[]>(`/question-set`);
+      return res.data;
+    },
+  });
+
+  if (isPending) {
+    return <span>로딩 중입니다...</span>;
+  }
+
+  if (error) {
+    return <span>에러가 발생했습니다: {error.message}</span>;
+  }
+
+  const filteredQuestionSets = data.filter((item) =>
     item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
@@ -156,7 +257,6 @@ const Library = () => {
         />
         <Spacer height="12px" />
         {/* 여기에서 부터 리스트 박스입니다.*/}
-        {/* 일단 작업하다 보니, mock 데이터로 구성해 두었습니다.*/}
         <ListBox>
           <ListRow>
             <HeaderCell align="left">문제집</HeaderCell>
@@ -166,24 +266,73 @@ const Library = () => {
             <HeaderCell>작업</HeaderCell>
           </ListRow>
 
-          {filteredQuestionSets.map((item) => (
-            <ListRow key={item.id}>
-              <ListCell align="left" title={item.title}>
-                {item.title}
-              </ListCell>
-              <ListCell>{item.count}</ListCell>
-              <ListCell>{item.date}</ListCell>
-              <ListCell>
-                <PrimaryButton>풀기</PrimaryButton>
-              </ListCell>
-              <ListCell>
-                <ActionsContainer>
-                  <ActionButton>수정</ActionButton>
-                  <ActionButton>삭제</ActionButton>
-                </ActionsContainer>
-              </ListCell>
-            </ListRow>
-          ))}
+          {[...filteredQuestionSets]
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 시간 내림차순
+            .map((item) => {
+              const isEditing = editingItemId === item.questionSetId;
+              return (
+                <ListRow key={item.questionSetId}>
+                  <ListCell align="left">
+                    {isEditing ? (
+                      <TitleContainer>
+                        {/* TODO: callback 따로 빼기*/}
+                        <TitleEditInput
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              submitTitleEdit(item);
+                            }
+                            if (e.key === 'Escape') {
+                              setEditingItemId(null);
+                            }
+                          }}
+                          autoFocus
+                        />
+                        <div>
+                          <EditIconButton onClick={() => submitTitleEdit(item)}>✔️</EditIconButton>
+                          <EditIconButton onClick={() => setEditingItemId(null)}>❌</EditIconButton>
+                        </div>
+                      </TitleContainer>
+                    ) : (
+                      <TitleContainer>
+                        <TitleText title={item.title}>{item.title}</TitleText>
+                        <EditIconButton
+                          onClick={() => {
+                            setEditingItemId(item.questionSetId);
+                            setEditingTitle(item.title);
+                          }}
+                        >
+                          <EditIcon />
+                        </EditIconButton>
+                      </TitleContainer>
+                    )}
+                  </ListCell>
+                  <ListCell>{item.questionCount}</ListCell>
+                  <ListCell>
+                    {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
+                  </ListCell>
+                  <ListCell>
+                    <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
+                      풀기
+                    </PrimaryButton>
+                  </ListCell>
+                  <ListCell>
+                    <ActionsContainer>
+                      <ActionButton
+                        onClick={() => {
+                          if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
+                            deleteMutation.mutate(item.questionSetId);
+                          }
+                        }}
+                      >
+                        삭제
+                      </ActionButton>
+                    </ActionsContainer>
+                  </ListCell>
+                </ListRow>
+              );
+            })}
         </ListBox>
       </LibraryWrapper>
     </Container>
