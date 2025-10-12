@@ -5,15 +5,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { ROUTES } from '@/app/routePaths';
 import { useAuth } from '@/app/auth/useAuth';
 
-import {
-  Sidebar,
-  LayoutDashboard,
-  Plus,
-  BookOpen,
-  CircleX,
-  Settings,
-  LogOut,
-} from 'lucide-react';
+import { Sidebar, LayoutDashboard, Plus, BookOpen, CircleX, Settings, LogOut } from 'lucide-react';
 
 import { MENUS } from '@/shared/config/constants';
 import { useState } from 'react';
