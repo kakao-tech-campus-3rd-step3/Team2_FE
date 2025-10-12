@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import AppLayout from '@/pages/layout/AppLayout';
 import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
-import Source from '@/pages/Source';
+// import Source from '@/pages/Source';
 import Create from '@/pages/Create';
 import Solve from '@/pages/Solve';
 import Library from '@/pages/Library';
@@ -25,7 +25,7 @@ function AppRoutes() {
         <Route element={<AppLayout />}>
           <Route path={ROUTES.ROOT} element={<Create />} />
           <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-          <Route path={ROUTES.SOURCE} element={<Source />} />
+          {/* <Route path={ROUTES.SOURCE} element={<Source />} /> */}
           <Route path={ROUTES.CREATE} element={<Create />} />
           <Route path={ROUTES.SOLVE} element={<Solve />} />
           <Route path={ROUTES.LIBRARY} element={<Library />} />
