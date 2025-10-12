@@ -286,7 +286,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
           <NavLink to={ROUTES.WRONG}>
             <SideBarNavItem
               active={MENUS.WRONG === selectedMenu}
-              onClick={() => changeMenu(MENUS.LIBRARY)}
+              onClick={() => changeMenu(MENUS.WRONG)}
             >
               <CircleX size={14} />
               <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
