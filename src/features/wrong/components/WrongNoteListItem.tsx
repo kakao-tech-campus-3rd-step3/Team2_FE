@@ -101,7 +101,7 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
         </IconWrapper>
         <WrongNoteInfoTitleWrapper>
           <WrongNoteTitle>{item.questionSetTitle}</WrongNoteTitle>
-          <WrongNoteFileName>{item.questionSetTitle}</WrongNoteFileName>
+          <WrongNoteFileName>{item.sourceNames[0]}</WrongNoteFileName>
         </WrongNoteInfoTitleWrapper>
       </WrongNoteInfoWrapper>
       <WrongCount>{item.incorrectCount}개</WrongCount>
