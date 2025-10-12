@@ -168,6 +168,12 @@ const SideBarUserInfoName = styled.p`
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
 `;
 
+const SideBarUserInfoEmail = styled.p`
+  font-size: 10px;
+  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray7};
+`
 const DropdownWrapper = styled.div`
   position: absolute;
   bottom: 100%;
@@ -305,6 +311,8 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
+              {/* 이 부분 api에 이메일까지 오면 교체만 하면됨 */}
+              <SideBarUserInfoEmail>{userInfo?.name + "@kakao.com" || '로그인 필요'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
           <Settings
