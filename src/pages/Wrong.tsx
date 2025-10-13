@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 // 제목 설명
 const WrongWrapper = styled.div`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.spacing5};
+  padding: ${({ theme }) => theme.spacing.spacing5} ${({ theme }) => theme.spacing.spacing50};
 `;
 
 const WrongPageTitleWrapper = styled.div`
