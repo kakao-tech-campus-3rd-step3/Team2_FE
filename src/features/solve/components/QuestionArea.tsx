@@ -104,7 +104,7 @@ function QuestionArea({
       return;
     }
 
-    // TDDO: 여기에 문제 타입별로 meberAnswerType을 다르게 줘야함 지금은 테스트용으로 string 넣어둠
+    // TDDO: 여기에 문제 타입별로 memberAnswerType을 다르게 줘야함 지금은 테스트용으로 string 넣어둠
     setSolvedCheck((prev) => {
       return [
         ...prev.filter((v) => v.questionId !== question.id),
