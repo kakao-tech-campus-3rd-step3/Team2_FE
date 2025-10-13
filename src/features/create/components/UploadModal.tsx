@@ -93,7 +93,7 @@ const DropZone = styled.div<{ isActive: boolean }>`
   align-items: center;
   gap: 8px;
   padding: 16px;
-  min-height: 180px;
+  min-height: 170px;
   border: 2px dashed
     ${({ theme, isActive }) =>
       isActive ? theme.colors.semantic.primary : theme.colors.border.border1};
