@@ -39,6 +39,10 @@ const OptionList = styled.div``;
 
 const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
+  &:hover {
+    background-color: ${({ active, theme }) =>
+      active ? theme.colors.gray.gray3 : theme.colors.gray.gray1};
+  }
   color: ${({ active, theme }) =>
     active ? theme.colors.semantic.primary : theme.colors.gray.gray7};
 `;
