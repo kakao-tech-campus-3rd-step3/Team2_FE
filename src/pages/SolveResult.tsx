@@ -122,7 +122,7 @@ function SolveResult({ questionLength, solvedCheck, isReviewing }: SolveResultPr
   const [correctCount, setCorrectCount] = useState(0);
   const [score, setScore] = useState(0);
   const submitMarking = (data: MarkingRequest[]) => {
-    const url = isReviewing ? `'/marking?isReviewing=true` : '/marking';
+    const url = isReviewing ? '/marking?isReviewing=true' : '/marking';
     return api.post(url, data);
   };
   const mutation = useMutation({
