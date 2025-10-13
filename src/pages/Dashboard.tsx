@@ -89,7 +89,7 @@ const DashboardCardDescription = styled.p`
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray7};
-`
+`;
 
 function Dashboard() {
   return (
