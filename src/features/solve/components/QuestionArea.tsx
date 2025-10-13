@@ -104,10 +104,11 @@ function QuestionArea({
       return;
     }
 
+    // TDDO: 여기에 문제 타입별로 memberAnswerType을 다르게 줘야함 지금은 테스트용으로 string 넣어둠
     setSolvedCheck((prev) => {
       return [
         ...prev.filter((v) => v.questionId !== question.id),
-        { questionId: question.id, answer: optionText },
+        { questionId: question.id, memberAnswer: optionText, memberAnswerType: 'string' },
       ];
     });
   };
@@ -119,16 +120,16 @@ function QuestionArea({
   };
 
   const goNext = () => {
-    if (currentQuestionIndex < questions.questionLength) {
+    if (currentQuestionIndex < questions.questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if (
-      currentQuestionIndex === questions.questionLength &&
-      solvedCheck.length === questions.questionLength
+      currentQuestionIndex === questions.questions.length &&
+      solvedCheck.length === questions.questions.length
     ) {
       setIsAllSolved(true);
     } else if (
-      currentQuestionIndex === questions.questionLength &&
-      solvedCheck.length !== questions.questionLength
+      currentQuestionIndex === questions.questions.length &&
+      solvedCheck.length !== questions.questions.length
     ) {
       toast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }

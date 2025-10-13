@@ -19,6 +19,7 @@ import api from '@/shared/api/axiosClient';
 import { useParams, useSearchParams } from 'react-router-dom';
 import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
 
+import Spinner from '@/shared/components/Spinner';
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
   display: flex;
@@ -68,7 +69,7 @@ function Solve() {
   if (isPending)
     return (
       <PageLayout>
-        <h1>Loading...</h1>
+        <Spinner />
       </PageLayout>
     );
 
@@ -81,23 +82,25 @@ function Solve() {
     );
 
   const percentageOfProblemSolved =
-    data.questionLength > 0 ? Math.round((solvedCheck.length / data.questionLength) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
+    data.questionLength > 0 ? Math.round((solvedCheck.length / data.questions.length) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
   // 2. 조회해온 문제집을 하위 컴포넌트로 내려줘서 문제집을 출력해야함
+
   return (
     <PageLayout>
       <SolveWrapper>
         {isAllSolved ? (
           <SolveResult
-            questionLength={data.questionLength}
+            questionLength={data.questions.length}
             solvedCheck={solvedCheck}
             questions={data} // TODO: 이건 나중에 정답만 내려주는 방식으로 리팩토링하자
+            isReviewing={isReviewing} // 이게 지금 일반 문제풀이인지 오답노트중인지 체크
           />
         ) : (
           <>
             <SolveHeader
               currentQuestionIndex={currentQuestionIndex}
               title={data.title}
-              questionLength={data.questionLength}
+              questionLength={data.questions.length}
             />
             {/* 프로그레스바 부분은 solvedCheck를 내려보내서 size 계산해서 쓸까?*/}
             <ProgressDescription percentageOfProblemSolved={percentageOfProblemSolved} />
@@ -105,7 +108,7 @@ function Solve() {
               currentQuestionIndex={currentQuestionIndex}
               solvedCheck={solvedCheck}
               setCurrentQuestionIndex={setCurrentQuestionIndex}
-              questionLength={data.questionLength}
+              questionLength={data.questions.length}
             />
             <SolveContentWrapper>
               <QuestionArea
@@ -118,7 +121,7 @@ function Solve() {
               />
               <RightSidebar>
                 <ModeCard selectedMode={selectedMode} setSelectedMode={setSelectedMode} />
-                <ProgressCard questionLength={data.questionLength} solvedCheck={solvedCheck} />
+                <ProgressCard questionLength={data.questions.length} solvedCheck={solvedCheck} />
               </RightSidebar>
             </SolveContentWrapper>
           </>
