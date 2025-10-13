@@ -15,6 +15,12 @@ const BackBtn = styled.div`
   color: ${({ theme }) => theme.colors.gray.gray3};
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius4};
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
+  &:hover {
+    background-color: #007e15;
+  }
 `;
 
 function NotFound() {
