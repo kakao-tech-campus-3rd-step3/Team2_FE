@@ -5,7 +5,7 @@ import LeftPanel from '@/features/login/components/LeftPanel';
 import RightPanel from '@/features/login/components/RightPanel';
 import { useAuth } from '@/app/auth/useAuth';
 import { ROUTES } from '@/app/routePaths';
-import Spinner from '@/features/create/components/Spinner';
+import Spinner from '@/shared/components/Spinner';
 
 const Container = styled.div`
   display: flex;

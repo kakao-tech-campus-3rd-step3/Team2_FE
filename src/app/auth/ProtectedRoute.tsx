@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import { ROUTES } from '@/app/routePaths';
-import Spinner from '@/features/create/components/Spinner'; // 전역 스피너로 대체 가능
+import Spinner from '@/shared/components/Spinner';
+// 브라우저 정가운데에 있는 스피너나 애니메이션으로 로딩 중 표현
 
 const ProtectedRoute = () => {
   const { isAuthenticated, isAuthLoading } = useAuth(); // isLoading -> isAuthLoading
