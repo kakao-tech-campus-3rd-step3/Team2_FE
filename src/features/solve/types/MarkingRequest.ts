@@ -1,4 +1,5 @@
 export type MarkingRequest = {
   questionId: number;
-  answer: string;
+  memberAnswer: string;
+  memberAnswerType: string;
 };

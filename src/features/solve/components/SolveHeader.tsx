@@ -79,7 +79,7 @@ function SolveHeader({ currentQuestionIndex, title, questionLength }: SolveHeade
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
-          <SolveDescription>객관식 20문제</SolveDescription>
+          <SolveDescription>객관식 {questionLength}문제</SolveDescription>
         </TitleDescriptionWrapper>
       </BackBtnTitleWrapper>
       <QuestionIndexViewWrapper>
