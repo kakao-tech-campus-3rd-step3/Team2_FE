@@ -122,15 +122,13 @@ function SolveResult({ questionLength, solvedCheck, isReviewing }: SolveResultPr
   const [correctCount, setCorrectCount] = useState(0);
   const [score, setScore] = useState(0);
   const submitMarking = (data: MarkingRequest[]) => {
-    const url = isReviewing
-        ? `'/marking?isReviewing=true`
-        : '/marking';
+    const url = isReviewing ? `'/marking?isReviewing=true` : '/marking';
     return api.post(url, data);
   };
   const mutation = useMutation({
     mutationFn: submitMarking,
     onSuccess: (data) => {
-      const res: { correctCount : number } = data.data;
+      const res: { correctCount: number } = data.data;
       const correctCount = res.correctCount; // TODO: backend에서 correctQuestions에 맞은 문제가 아닌 틀린문제의 수를 반환함
       setCorrectCount(correctCount);
       setScore(Math.round((correctCount / questionLength) * 100));
