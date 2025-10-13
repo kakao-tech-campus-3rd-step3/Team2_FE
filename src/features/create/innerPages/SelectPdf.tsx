@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PdfFileList from '@/features/create/components/PdfFileList';
 import type { FileData } from '@/features/create/types/types';
@@ -7,6 +7,7 @@ import StyledSubTitle from '@/features/create/components/Subtitle';
 import Spacer from '@/shared/components/Spacer';
 import { uploadPdfFile } from '@/features/create/utils/upload/uploadPdfFile';
 import { getPdfFileList } from '@/features/create/utils/getPdfFileList';
+import UploadModal from '@/features/create/components/UploadModal';
 
 interface Step1Props {
   selectedFileId: string | null;
@@ -16,6 +17,7 @@ interface Step1Props {
 
 const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) => {
   const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     data: fileList = [],
@@ -82,9 +84,12 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
         fileList={fileList}
         selectedFileId={selectedFileId}
         onSelect={handleSelectFile}
-        onAddFile={handleUpload}
+        onUploadClick={() => setIsModalOpen(true)}
         isLoading={isLoadingList || isUploading}
       />
+      {isModalOpen && (
+        <UploadModal onClose={() => setIsModalOpen(false)} onFileUpload={handleUpload} />
+      )}
     </>
   );
 };
