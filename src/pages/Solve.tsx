@@ -84,7 +84,7 @@ function Solve() {
   const percentageOfProblemSolved =
     data.questionLength > 0 ? Math.round((solvedCheck.length / data.questions.length) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
   // 2. 조회해온 문제집을 하위 컴포넌트로 내려줘서 문제집을 출력해야함
-  
+
   return (
     <PageLayout>
       <SolveWrapper>
