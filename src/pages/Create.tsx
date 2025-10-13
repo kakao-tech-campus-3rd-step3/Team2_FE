@@ -11,6 +11,8 @@ import { useOutletContext } from 'react-router-dom';
 import ChooseType from '@/features/create/innerPages/ChooseType';
 import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
+const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
+
 const CreateWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -30,7 +32,6 @@ type CreateProps = {
 };
 
 const Create = () => {
-  const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFile, setSelectedFile] = useState<{ id: string; name: string } | null>(null);
   const [questionType, setQuestionType] = useState<QuestionType | null>(null);
