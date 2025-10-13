@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Spinner from '@/features/create/components/Spinner';
 import Spacer from '@/shared/components/Spacer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Complete from '@/features/create/components/Complete';
 import api from '@/shared/api/axiosClient';
 import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
@@ -64,6 +64,15 @@ const RetryButton = styled.button`
   }
 `;
 
+const ResetButton = styled(RetryButton)`
+  background-color: ${({ theme }) => theme.colors.gray.gray5};
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
 const NextComponent: React.FC<{
   fileName: string | null;
   onReset: () => void;
@@ -85,36 +94,35 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
+  const createQuestionSet = useCallback(async () => {
     if (!selectedFile || !questionType) return;
 
-    const createQuestionSet = async () => {
-      setQuestionSetId(0);
-      setQuestionSetReady(false);
-      setStatus('requesting');
-      setError(null);
+    setQuestionSetId(0);
+    setQuestionSetReady(false);
+    setStatus('requesting');
+    setError(null);
 
-      try {
-        await api.post('/question-set', {
-          title: selectedFile.name,
-          difficulty: 'EASY',
-          questionCount: 10,
-          type: questionType,
-          sourceIds: [parseInt(selectedFile.id)],
-        });
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(`문제집 생성 중 오류: ${err.message}`);
-        } else {
-          setError('문제집 생성 중 알 수 없는 오류가 발생했습니다.');
-        }
-        setStatus('error');
+    try {
+      await api.post('/question-set', {
+        title: selectedFile.name,
+        difficulty: 'EASY',
+        questionCount: 10,
+        type: questionType,
+        sourceIds: [parseInt(selectedFile.id)],
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(`문제집 생성 중 오류: ${err.message}`);
+      } else {
+        setError('문제집 생성 중 알 수 없는 오류가 발생했습니다.');
       }
-    };
-
-    createQuestionSet();
+      setStatus('error');
+    }
   }, [selectedFile, questionType, setQuestionSetId, setQuestionSetReady]);
+
+  useEffect(() => {
+    createQuestionSet();
+  }, [createQuestionSet]);
 
   if (questionSetReady) {
     return (
@@ -132,7 +140,10 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
         <NoticeTitle>문제 생성 중 오류가 발생했습니다.</NoticeTitle>
         <ErrorMessage>{error}</ErrorMessage>
         <Spacer height="20px" />
-        <RetryButton onClick={onReset}>문제 다시 생성하기</RetryButton>
+        <ButtonWrapper>
+          <RetryButton onClick={createQuestionSet}>재시도</RetryButton>
+          <ResetButton onClick={onReset}>처음으로 돌아가기</ResetButton>
+        </ButtonWrapper>
       </Container>
     );
   }
@@ -141,7 +152,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     <Container>
       <Spinner />
       <Spacer height="25px" />
-      <NoticeTitle>AI가 문제를 생성하고 있습니다.</NoticeTitle>
+      <NoticeTitle>AI가 문제를 생성하고 있습니다</NoticeTitle>
       <NoticeContent>
         선택하신 PDF에서 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
         <NoticeContentHighlight>
