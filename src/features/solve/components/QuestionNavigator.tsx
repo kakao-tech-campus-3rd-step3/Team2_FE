@@ -67,7 +67,7 @@ function QuestionNavigator({
           <QuestionNumberItem
             key={i + 1}
             active={i + 1 === currentQuestionIndex}
-            solved={!!solvedCheck.find((v) => v.questionId == questions.questions[i].id)} // TODO: 이부분 수정해야할듯
+            solved={!!solvedCheck.find((v) => v.questionId === questions.questions[i].id)}
             onClick={() => setCurrentQuestionIndex(i + 1)}
           >
             {i + 1}
