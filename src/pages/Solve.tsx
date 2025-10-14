@@ -44,15 +44,16 @@ const RightSidebar = styled.div`
 `;
 
 function Solve() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
-  const [solvedCheck, setSolvedCheck] = useState<MarkingRequest[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1); // 현재 풀고있는 문항 위치
+  const [solvedCheck, setSolvedCheck] = useState<MarkingRequest[]>([]); // 문항에 대한 배열이고 각 문항의 필드는 문항 id, 선택한 답, 선택한 답에 대한 타입으로 구성됨
   const [isAllSolved, setIsAllSolved] = useState<boolean>(false); // 전체 문제가 다 풀렸는지 감지는 solvedCheck state가 다찼는지르 확인 할 수 있음 제거헤도 될듯
   const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택 얜 신경쓰지마 아직 무시해
-  const { questionSetId } = useParams<{ questionSetId: string }>();
+  const { questionSetId } = useParams<{ questionSetId: string }>(); // 문제집 id를 받아와서 문제집을 출력함
   const [searchParams] = useSearchParams();
 
   const isReviewing = searchParams.get('isReviewing') === 'true';
 
+  console.log("풀고있는 문제 state",solvedCheck);
   // 1. 서버로부터 문제조회를 하는 부분 questionSetId로 문제집 조회
   const { isPending, error, data } = useQuery({
     queryKey: ['questionSet', questionSetId, isReviewing],
@@ -109,6 +110,7 @@ function Solve() {
               solvedCheck={solvedCheck}
               setCurrentQuestionIndex={setCurrentQuestionIndex}
               questionLength={data.questions.length}
+              questions={data}
             />
             <SolveContentWrapper>
               <QuestionArea

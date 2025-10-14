@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import type { MarkingRequest } from '../types/MarkingRequest';
+import type { QuestionSet } from '@/features/solve/types/question';
 
 const QuestionNavigatorWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
@@ -49,13 +50,16 @@ type QuestionNavigatorProps = {
   solvedCheck: MarkingRequest[];
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
   questionLength: number;
+  questions: QuestionSet;
 };
 function QuestionNavigator({
   currentQuestionIndex,
   solvedCheck,
   setCurrentQuestionIndex,
   questionLength,
+  questions
 }: QuestionNavigatorProps) {
+  console.log()
   return (
     <QuestionNavigatorWrapper>
       <QuestionNavigatorTitle>문제 바로가기</QuestionNavigatorTitle>
@@ -64,7 +68,7 @@ function QuestionNavigator({
           <QuestionNumberItem
             key={i + 1}
             active={i + 1 === currentQuestionIndex}
-            solved={!!solvedCheck.find((v) => v.questionId == i + 1)}
+            solved={!!solvedCheck.find((v) => v.questionId == questions.questions[i].id)} // TODO: 이부분 수정해야할듯
             onClick={() => setCurrentQuestionIndex(i + 1)}
           >
             {i + 1}
@@ -74,5 +78,4 @@ function QuestionNavigator({
     </QuestionNavigatorWrapper>
   );
 }
-
 export default QuestionNavigator;
