@@ -1,4 +1,5 @@
 # 풀잇 FrontEnd
+
 ![PullIt Banner](./public/pullit_banner.png)
 
 <p align="center">
@@ -7,6 +8,7 @@
 </p>
 
 ## 목차
+
 [프로젝트 소개](#프로젝트-소개) <br/>
 [기술 스택](#기술-스택) <br/>
 [Git 규칙](#git-규칙) <br/>
@@ -15,6 +17,7 @@
 [팀원](#팀원) <br/>
 
 ## 프로젝트 소개
+
 **Pull It**은 대학생 및 학습자를 위한 AI 기반 학습 보조 플랫폼입니다.  
 단순히 공부 자료를 모으는 것을 넘어, **AI가 직접 문제를 만들어주고**,  
 **오답 관리·학습 진도 추적**까지 도와주는 통합 학습 환경을 제공합니다.
@@ -161,6 +164,7 @@ PR 설명
 ```
 
 ## 코드 컨벤션
+
 Air bnb Style</br>
 출처: https://github.com/airbnb/javascript<br/>
 
