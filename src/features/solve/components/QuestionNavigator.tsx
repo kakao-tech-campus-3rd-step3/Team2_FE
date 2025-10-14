@@ -59,7 +59,7 @@ function QuestionNavigator({
   questionLength,
   questions,
 }: QuestionNavigatorProps) {
-  console.log();
+  
   return (
     <QuestionNavigatorWrapper>
       <QuestionNavigatorTitle>문제 바로가기</QuestionNavigatorTitle>
