@@ -9,9 +9,9 @@
 ## 목차
 [프로젝트 소개](#프로젝트-소개) <br/>
 [기술 스택](#기술-스택) <br/>
-[Git Convention](#git-convention) <br/>
-[Code Convention](#code-convention) <br/>
-[Folder Structure](#folder-structures) <br/>
+[Git 규칙](#git-규칙) <br/>
+[코드 컨벤션](#코드-컨벤션) <br/>
+[디렉터리 구조](#디렉터리구조) <br/>
 [팀원](#팀원) <br/>
 
 ## 프로젝트 소개
@@ -54,7 +54,7 @@
   <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
 </p>
 
-## Git Convention
+## Git 규칙
 
 [Commit](#commit) <br/>
 [Branch](#branch) <br/>
@@ -160,11 +160,11 @@ PR 설명
 - LGTM 해주세용 😀😀😀😀
 ```
 
-## Code Convention(Air bnb Style)
-
+## 코드 컨벤션
+Air bnb Style</br>
 출처: https://github.com/airbnb/javascript<br/>
 
-## Folder Structures
+## 디렉터리 구조
 
 ### Feature-based 구조
 
@@ -219,13 +219,37 @@ src/
 
 <table align="center">
   <tr>
-    <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/62938167?v=4" width="100px;" alt="안성현"/><br/>
-      <sub><b><a href="https://github.com/anseonghyeon">안성현</a></b></sub>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/anseonghyeon" target="_blank">
+        <img 
+          src="https://avatars.githubusercontent.com/u/62938167?v=4" 
+          width="100px" 
+          style="border-radius: 8px; border: 1.5px solid #ddd;" 
+          alt="안성현"
+        />
+      </a>
+      <br/>
+      <sub>
+        <b>
+          <a href="https://github.com/anseonghyeon" style="text-decoration: none; color: #58a6ff;">안성현</a>
+        </b>
+      </sub>
     </td>
-    <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/74707152?v=4" width="100px;" alt="조창희"/><br/>
-      <sub><b><a href="https://github.com/Changhee-Cho">조창희</a></b></sub>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/Changhee-Cho" target="_blank">
+        <img 
+          src="https://avatars.githubusercontent.com/u/74707152?v=4" 
+          width="100px" 
+          style="border-radius: 8px; border: 1.5px solid #ddd;" 
+          alt="조창희"
+        />
+      </a>
+      <br/>
+      <sub>
+        <b>
+          <a href="https://github.com/Changhee-Cho" style="text-decoration: none; color: #58a6ff;">조창희</a>
+        </b>
+      </sub>
     </td>
   </tr>
 </table>
