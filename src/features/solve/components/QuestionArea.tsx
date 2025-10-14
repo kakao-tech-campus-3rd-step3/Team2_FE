@@ -141,17 +141,17 @@ function QuestionArea({
 
   useEffect(() => {
     const currentQuestion = questions.questions.at(currentQuestionIndex - 1);
-  if (!currentQuestion) return;
+    if (!currentQuestion) return;
 
-  // solvedCheck 배열에서 현재 문제의 기록 찾기
-  const solved = solvedCheck.find((v) => v.questionId === currentQuestion.id);
-  if (solved) {
-    // options 배열에서 선택된 보기의 인덱스 찾아서 복원
-    const idx = currentQuestion.options.findIndex((opt) => opt === solved.memberAnswer);
-    setSelectedOption(idx);
-  } else {
-    setSelectedOption(null);
-  }
+    // solvedCheck 배열에서 현재 문제의 기록 찾기
+    const solved = solvedCheck.find((v) => v.questionId === currentQuestion.id);
+    if (solved) {
+      // options 배열에서 선택된 보기의 인덱스 찾아서 복원
+      const idx = currentQuestion.options.findIndex((opt) => opt === solved.memberAnswer);
+      setSelectedOption(idx);
+    } else {
+      setSelectedOption(null);
+    }
   }, [currentQuestionIndex, solvedCheck, questions]);
 
   return (

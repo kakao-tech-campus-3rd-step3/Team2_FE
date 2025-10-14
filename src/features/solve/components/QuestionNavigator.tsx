@@ -57,9 +57,9 @@ function QuestionNavigator({
   solvedCheck,
   setCurrentQuestionIndex,
   questionLength,
-  questions
+  questions,
 }: QuestionNavigatorProps) {
-  console.log()
+  console.log();
   return (
     <QuestionNavigatorWrapper>
       <QuestionNavigatorTitle>문제 바로가기</QuestionNavigatorTitle>
