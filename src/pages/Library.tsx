@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
-import { type MyQuestionSetsResponse } from '@/features/solve/types/question';
+import { type MyQuestionSetsResponse } from '@/features/library/types/questionSetResponse';
 import EditIcon from '@/shared/assets/EditIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 
