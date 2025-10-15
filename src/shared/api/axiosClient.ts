@@ -71,7 +71,6 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
