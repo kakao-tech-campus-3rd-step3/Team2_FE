@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import type { QuestionSet } from '@/features/solve/types/question';
 
 const SolveHeaderWrapper = styled.div`
   width: 100%;
@@ -65,9 +66,23 @@ type SolveHeaderProps = {
   currentQuestionIndex: number;
   title: string;
   questionLength: number;
+  questions: QuestionSet;
 };
 
-function SolveHeader({ currentQuestionIndex, title, questionLength }: SolveHeaderProps) {
+function SolveHeader({ currentQuestionIndex, title, questionLength, questions }: SolveHeaderProps) {
+  const getQuestionTypeLabel = (type: string) => {
+    switch (type) {
+      case 'MULTIPLE_CHOICE':
+        return '객관식';
+      case 'TRUE_FALSE':
+        return '참/거짓';
+      case 'SHORT_ANSWER':
+        return '단답형';
+      default:
+        return '기타';
+    }
+  };
+
   return (
     <SolveHeaderWrapper>
       <BackBtnTitleWrapper>
@@ -79,7 +94,9 @@ function SolveHeader({ currentQuestionIndex, title, questionLength }: SolveHeade
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
-          <SolveDescription>객관식 {questionLength}문제</SolveDescription>
+          <SolveDescription>
+            {getQuestionTypeLabel(questions.type)} {questionLength}문제
+          </SolveDescription>
         </TitleDescriptionWrapper>
       </BackBtnTitleWrapper>
       <QuestionIndexViewWrapper>
