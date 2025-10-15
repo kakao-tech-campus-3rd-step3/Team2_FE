@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import type { QuestionSet } from '@/features/solve/types/question';
+import { useNavigate } from 'react-router-dom';
 
 const SolveHeaderWrapper = styled.div`
   width: 100%;
@@ -70,6 +70,8 @@ type SolveHeaderProps = {
 };
 
 function SolveHeader({ currentQuestionIndex, title, questionLength, questions }: SolveHeaderProps) {
+  const navigate = useNavigate();
+
   const getQuestionTypeLabel = (type: string) => {
     switch (type) {
       case 'MULTIPLE_CHOICE':
@@ -88,9 +90,7 @@ function SolveHeader({ currentQuestionIndex, title, questionLength, questions }:
       <BackBtnTitleWrapper>
         <SolveHeaderBackBtn>
           <ArrowLeft size={20} />
-          <Link to="/create">
-            <SolveHeaderBackBtnTxt>돌아가기</SolveHeaderBackBtnTxt>
-          </Link>
+            <SolveHeaderBackBtnTxt onClick={() => navigate(-1)}>돌아가기</SolveHeaderBackBtnTxt>
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
