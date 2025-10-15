@@ -187,7 +187,7 @@ function SolveResult({ questionLength, solvedCheck, isReviewing }: SolveResultPr
             <Link to="/wrong">
               <ReviewWrongAnswersButton>오답노트 확인</ReviewWrongAnswersButton>
             </Link>
-            <Link to="/create">
+            <Link to="/">
               <RetryButton>다시 생성하기</RetryButton>
             </Link>
             <Link to="/dashboard">
