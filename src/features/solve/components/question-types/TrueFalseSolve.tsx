@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import type { QuestionSet } from '@/features/solve/types/question';
-import type { MarkingRequest } from '../types/MarkingRequest';
+import type { MarkingRequest } from '../../types/MarkingRequest';
 
 const QuestionAreaWrapper = styled.div`
   margin-right: ${({ theme }) => theme.spacing.spacing3};
@@ -91,7 +91,7 @@ type QuestionAreaProps = {
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function QuestionArea({
+function TrueFalseSolve({
   currentQuestionIndex,
   questions,
   solvedCheck,
@@ -101,7 +101,7 @@ function QuestionArea({
 }: QuestionAreaProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null); // 어떤 선지가 선택되어있는지
 
-  const markSolved = (optionText: string) => {
+  const markSolved = (optionText: boolean) => {
     const question = questions.questions.at(currentQuestionIndex - 1);
     if (!question) {
       toast('문제 id를 찾을 수 없습니다.');
@@ -112,7 +112,7 @@ function QuestionArea({
     setSolvedCheck((prev) => {
       return [
         ...prev.filter((v) => v.questionId !== question.id),
-        { questionId: question.id, memberAnswer: optionText, memberAnswerType: 'string' },
+        { questionId: question.id, memberAnswer: optionText, memberAnswerType: 'boolean' },
       ];
     });
   };
@@ -146,9 +146,12 @@ function QuestionArea({
     // solvedCheck 배열에서 현재 문제의 기록 찾기
     const solved = solvedCheck.find((v) => v.questionId === currentQuestion.id);
     if (solved) {
-      // options 배열에서 선택된 보기의 인덱스 찾아서 복원
-      const idx = currentQuestion.options.findIndex((opt) => opt === solved.memberAnswer);
-      setSelectedOption(idx);
+      // 참이면 0, 거짓이면 1
+      if (typeof solved.memberAnswer === 'boolean') {
+        setSelectedOption(solved.memberAnswer ? 0 : 1);
+      } else {
+        setSelectedOption(null);
+      }
     } else {
       setSelectedOption(null);
     }
@@ -162,7 +165,25 @@ function QuestionArea({
       <QuestionWrapper>
         <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
         <OptionList>
-          {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
+          <OptionItem
+            onClick={() => {
+              markSolved(true);
+              setSelectedOption(0);
+            }}
+            active={selectedOption === 0}
+          >
+            참
+          </OptionItem>
+          <OptionItem
+            onClick={() => {
+              markSolved(false);
+              setSelectedOption(1);
+            }}
+            active={selectedOption === 1}
+          >
+            거짓
+          </OptionItem>
+          {/* {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
             <OptionItem
               key={i}
               active={selectedOption === i}
@@ -171,7 +192,7 @@ function QuestionArea({
                 setSelectedOption(i);
               }}
             >{`${i + 1}. ${opt}`}</OptionItem>
-          ))}
+          ))} */}
         </OptionList>
 
         <QuestionNavigation>
@@ -189,4 +210,4 @@ function QuestionArea({
   );
 }
 
-export default QuestionArea;
+export default TrueFalseSolve;

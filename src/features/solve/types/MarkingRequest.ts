@@ -24,5 +24,3 @@ type SingleChoice = {
 
 // 통합 타입 (세 가지 중 하나)
 export type MarkingRequest = MultiChoice | ShortAnswer | SingleChoice;
-
-
