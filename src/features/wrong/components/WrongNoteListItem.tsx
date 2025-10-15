@@ -16,7 +16,6 @@ const WrongNoteListItemWrapper = styled.div`
 const WrongNoteInfoWrapper = styled.div`
   display: flex;
   align-items: center;
-  
 `;
 
 const IconWrapper = styled.div`
