@@ -90,7 +90,7 @@ function SolveHeader({ currentQuestionIndex, title, questionLength, questions }:
       <BackBtnTitleWrapper>
         <SolveHeaderBackBtn>
           <ArrowLeft size={20} />
-            <SolveHeaderBackBtnTxt onClick={() => navigate(-1)}>돌아가기</SolveHeaderBackBtnTxt>
+          <SolveHeaderBackBtnTxt onClick={() => navigate(-1)}>돌아가기</SolveHeaderBackBtnTxt>
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
