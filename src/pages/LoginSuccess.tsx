@@ -15,7 +15,7 @@ const LoginSuccess = () => {
       // 2. 토큰이 존재하면, 메모리(클로저)에 저장합니다.
       setToken(accessToken);
       // 3. 사용자가 뒤로 가기로 이 페이지에 다시 돌아오지 않도록 replace 옵션을 사용해 메인 페이지로 이동합니다.
-      navigate(ROUTES.ROOT, { replace: true });
+      navigate(ROUTES.CREATE, { replace: true });
     } else {
       // 토큰이 없는 경우, 에러 처리 후 로그인 페이지로 이동합니다.
       console.error('URL에서 액세스 토큰을 찾을 수 없습니다. 로그인 페이지로 이동합니다.');

@@ -21,7 +21,7 @@ const Login = () => {
   useEffect(() => {
     // 로딩이 완료된 후에만 리다이렉트 여부를 판단합니다.
     if (!isAuthLoading && isAuthenticated) {
-      navigate(ROUTES.ROOT, { replace: true });
+      navigate(ROUTES.CREATE, { replace: true });
     }
   }, [isAuthenticated, isAuthLoading, navigate]);
 
