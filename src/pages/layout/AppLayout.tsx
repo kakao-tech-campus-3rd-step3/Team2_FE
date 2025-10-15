@@ -22,7 +22,6 @@ const AppLayoutVertical = styled.div`
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-  flex: 1;
 `;
 
 const Main = styled.div`

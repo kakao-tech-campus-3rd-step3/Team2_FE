@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import PageLayout from '@/shared/components/Layout/PageLayout';
 import WrongNoteListItem from '@/features/wrong/components/WrongNoteListItem';
 
 import api from '@/shared/api/axiosClient';
@@ -12,15 +11,20 @@ const WrongWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  width: 100%;
+  background-color: ${({ theme }) => theme.colors.background.background};
+  height: calc(100dvh - 76px);
+  overflow-y: auto;
   box-sizing: border-box;
+  justify-content: flex-start;
 `;
+
 const ContentWrapper = styled.div`
-  width: 100%;
-  max-width: 1000px;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
 `;
+
 const WrongPageTitleWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -66,7 +70,15 @@ const SearchBar = styled.input`
   font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
-  padding: ${({ theme }) => theme.spacing.spacing1};
+  padding: ${({ theme }) => theme.spacing.spacing2};
+
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray3};
+  border-radius: ${({ theme }) => theme.radius.radius1};
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.semantic.primary};
+    border-radius: ${({ theme }) => theme.radius.radius2};
+  }
 `;
 
 // 오답노트 리스트 부분
@@ -124,7 +136,7 @@ function Wrong() {
   if (error) return <h1>Error</h1>;
 
   return (
-    <PageLayout>
+    // <PageLayout>
       <WrongWrapper>
         <ContentWrapper>
           <WrongPageTitleWrapper>
@@ -157,7 +169,7 @@ function Wrong() {
           </WrongNoteList>
         </ContentWrapper>
       </WrongWrapper>
-    </PageLayout>
+    // </PageLayout>
   );
 }
 
