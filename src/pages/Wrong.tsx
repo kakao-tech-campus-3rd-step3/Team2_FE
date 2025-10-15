@@ -87,19 +87,23 @@ const WrongNoteList = styled.div`
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.colors.gray.gray5};
   border-radius: ${({ theme }) => theme.radius.radius2};
+  overflow: hidden;
 `;
 
 const WrongNoteListHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  background-color: ${({ theme }) => theme.colors.gray.gray1};
+  /* align-items: center; */
+  padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
+  /* border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4}; */
 `;
 
 const WrongNoteListHeaderColumn = styled.span`
-  padding: ${({ theme }) => theme.spacing.spacing4};
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray9};
 `;
 
 function Wrong() {
