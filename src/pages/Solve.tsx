@@ -59,7 +59,6 @@ function Solve() {
 
   const isReviewing = searchParams.get('isReviewing') === 'true';
 
-  console.log('풀고있는 문제 state', solvedCheck);
   // 1. 서버로부터 문제조회를 하는 부분 questionSetId로 문제집 조회
   const { isPending, error, data } = useQuery({
     queryKey: ['questionSet', questionSetId, isReviewing],
@@ -68,7 +67,6 @@ function Solve() {
         ? `/question-set/${questionSetId}?isReviewing=true`
         : `/question-set/${questionSetId}`;
       const res = await api.get<QuestionSet>(url);
-      console.log('도착한 문제집', res.data);
 
       return res.data;
     },
