@@ -137,38 +137,38 @@ function Wrong() {
 
   return (
     // <PageLayout>
-      <WrongWrapper>
-        <ContentWrapper>
-          <WrongPageTitleWrapper>
-            <WrongPageTitle>오답노트</WrongPageTitle>
-          </WrongPageTitleWrapper>
-          <WrongPageDescription>
-            문제집별로 틀린 문제를 분석하고 완벽히 이해할 때까지 학습하세요
-          </WrongPageDescription>
-          <SearchBarWrapper>
-            <SearchBarDescription>
-              {filteredQuestionSets?.length}개의 오답이 검색되었습니다
-            </SearchBarDescription>
-            <SearchBar
-              placeholder="오답노트 제목으로 검색"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </SearchBarWrapper>
-          <WrongNoteList>
-            <WrongNoteListHeader>
-              <WrongNoteListHeaderColumn>문제집</WrongNoteListHeaderColumn>
-              <WrongNoteListHeaderColumn>오답 수</WrongNoteListHeaderColumn>
-              <WrongNoteListHeaderColumn>난이도</WrongNoteListHeaderColumn>
-              <WrongNoteListHeaderColumn>카테고리</WrongNoteListHeaderColumn>
-              <WrongNoteListHeaderColumn>작업</WrongNoteListHeaderColumn>
-            </WrongNoteListHeader>
-            {filteredQuestionSets?.map((item) => (
-              <WrongNoteListItem key={item.questionSetId} item={item} />
-            ))}
-          </WrongNoteList>
-        </ContentWrapper>
-      </WrongWrapper>
+    <WrongWrapper>
+      <ContentWrapper>
+        <WrongPageTitleWrapper>
+          <WrongPageTitle>오답노트</WrongPageTitle>
+        </WrongPageTitleWrapper>
+        <WrongPageDescription>
+          문제집별로 틀린 문제를 분석하고 완벽히 이해할 때까지 학습하세요
+        </WrongPageDescription>
+        <SearchBarWrapper>
+          <SearchBarDescription>
+            {filteredQuestionSets?.length}개의 오답이 검색되었습니다
+          </SearchBarDescription>
+          <SearchBar
+            placeholder="오답노트 제목으로 검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </SearchBarWrapper>
+        <WrongNoteList>
+          <WrongNoteListHeader>
+            <WrongNoteListHeaderColumn>문제집</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>오답 수</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>난이도</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>카테고리</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>작업</WrongNoteListHeaderColumn>
+          </WrongNoteListHeader>
+          {filteredQuestionSets?.map((item) => (
+            <WrongNoteListItem key={item.questionSetId} item={item} />
+          ))}
+        </WrongNoteList>
+      </ContentWrapper>
+    </WrongWrapper>
     // </PageLayout>
   );
 }
