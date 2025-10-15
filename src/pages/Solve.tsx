@@ -6,7 +6,7 @@ import PageLayout from '@/shared/components/Layout/PageLayout';
 import SolveHeader from '@/features/solve/components/SolveHeader';
 import ProgressDescription from '@/features/solve/components/ProgressDescription';
 import QuestionNavigator from '@/features/solve/components/QuestionNavigator';
-import QuestionArea from '@/features/solve/components/QuestionArea';
+
 import ModeCard from '@/features/solve/components/ModeCard';
 import ProgressCard from '@/features/solve/components/ProgressCard';
 
@@ -20,6 +20,12 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
 
 import Spinner from '@/shared/components/Spinner';
+
+// 문제 타입별 문제 푸는곳 컴포넌트들
+import MultipleChoiceSolve from '@/features/solve/components/question-types/MultipleChoiceSolve';
+import ShortAnswerSolve from '@/features/solve/components/question-types/ShortAnswerSolve';
+import TrueFalseSolve from '@/features/solve/components/question-types/TrueFalseSolve';
+
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
   display: flex;
@@ -62,9 +68,14 @@ function Solve() {
         ? `/question-set/${questionSetId}?isReviewing=true`
         : `/question-set/${questionSetId}`;
       const res = await api.get<QuestionSet>(url);
+      console.log('도착한 문제집', res.data);
+
       return res.data;
     },
   });
+
+  // 문제집이 객관식인지, 참거짓인지, 단답형인지 판별하는 부분
+  // if(data?.questions[0].questionType) {}
 
   // 로딩
   if (isPending)
@@ -86,6 +97,46 @@ function Solve() {
     data.questionLength > 0 ? Math.round((solvedCheck.length / data.questions.length) * 100) : 0; //문제 얼마나 풀었는지 퍼센트
   // 2. 조회해온 문제집을 하위 컴포넌트로 내려줘서 문제집을 출력해야함
 
+  const renderSolveComponent = () => {
+    const questionType = data?.questions?.[0]?.questionType;
+    switch (questionType) {
+      case 'MULTIPLE_CHOICE':
+        return (
+          <MultipleChoiceSolve
+            currentQuestionIndex={currentQuestionIndex}
+            questions={data}
+            setSolvedCheck={setSolvedCheck}
+            solvedCheck={solvedCheck}
+            setCurrentQuestionIndex={setCurrentQuestionIndex}
+            setIsAllSolved={setIsAllSolved}
+          />
+        );
+      case 'TRUE_FALSE':
+        return (
+          <TrueFalseSolve
+            currentQuestionIndex={currentQuestionIndex}
+            questions={data}
+            setSolvedCheck={setSolvedCheck}
+            solvedCheck={solvedCheck}
+            setCurrentQuestionIndex={setCurrentQuestionIndex}
+            setIsAllSolved={setIsAllSolved}
+          />
+        );
+      case 'SHORT_ANSWER':
+        return (
+          <ShortAnswerSolve
+            currentQuestionIndex={currentQuestionIndex}
+            questions={data}
+            setSolvedCheck={setSolvedCheck}
+            solvedCheck={solvedCheck}
+            setCurrentQuestionIndex={setCurrentQuestionIndex}
+            setIsAllSolved={setIsAllSolved}
+          />
+        );
+      default:
+        return <p>문제 유형을 확인할 수 없습니다.</p>;
+    }
+  };
   return (
     <PageLayout>
       <SolveWrapper>
@@ -102,6 +153,7 @@ function Solve() {
               currentQuestionIndex={currentQuestionIndex}
               title={data.title}
               questionLength={data.questions.length}
+              questions={data}
             />
             {/* 프로그레스바 부분은 solvedCheck를 내려보내서 size 계산해서 쓸까?*/}
             <ProgressDescription percentageOfProblemSolved={percentageOfProblemSolved} />
@@ -113,14 +165,8 @@ function Solve() {
               questions={data}
             />
             <SolveContentWrapper>
-              <QuestionArea
-                currentQuestionIndex={currentQuestionIndex}
-                questions={data}
-                setSolvedCheck={setSolvedCheck}
-                solvedCheck={solvedCheck}
-                setCurrentQuestionIndex={setCurrentQuestionIndex}
-                setIsAllSolved={setIsAllSolved}
-              />
+              {/* TODO: 이 부분을 참거짓, 단답형 두개더 만들어야함 컴포넌트로 분리하자 */}
+              {renderSolveComponent()}
               <RightSidebar>
                 <ModeCard selectedMode={selectedMode} setSelectedMode={setSelectedMode} />
                 <ProgressCard questionLength={data.questions.length} solvedCheck={solvedCheck} />
