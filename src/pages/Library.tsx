@@ -5,9 +5,13 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
-import { type MyQuestionSetsResponse } from '@/features/library/types/questionSetResponse';
+import {
+  type MyQuestionSetsResponse,
+  type QuestionType,
+} from '@/features/library/types/questionSetResponse';
 import EditIcon from '@/shared/assets/EditIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '@/shared/components/Spinner';
 
 const Container = styled.div`
   display: flex;
@@ -53,7 +57,7 @@ const ListBox = styled.div`
 
 const ListRow = styled.div`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.5fr 1fr 1.5fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
@@ -81,6 +85,12 @@ const ListCell = styled.div<{ align?: 'left' | 'center' | 'right' }>`
 const HeaderCell = styled(ListCell)`
   font-weight: 600;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+`;
+
+type QuestionSetStatus = 'PENDING' | 'COMPLETE';
+
+const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
+  font-weight: 500;
 `;
 
 const ActionsContainer = styled.div`
@@ -111,11 +121,6 @@ const PrimaryButton = styled(ActionButton)`
   border-color: ${({ theme }) => theme.colors.semantic.primary};
   color: white;
   font-weight: 600;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.semantic.primary};
-    border-color: ${({ theme }) => theme.colors.semantic.primary};
-  }
 `;
 
 const TitleContainer = styled.div`
@@ -161,6 +166,24 @@ const EditIconButton = styled.button`
     color: ${({ theme }) => theme.colors.semantic.primary};
   }
 `;
+
+const TYPE_MAP: Record<QuestionType, string> = {
+  MULTIPLE_CHOICE: '객관식',
+  SHORT_ANSWER: '단답형',
+  TRUE_FALSE: '참/거짓',
+};
+
+const STATUS_MAP: Record<QuestionSetStatus, string> = {
+  PENDING: '생성 중',
+  COMPLETE: '생성완료',
+};
+
+interface QuestionSetApiResponse {
+  content: (MyQuestionSetsResponse & { status: QuestionSetStatus })[];
+  nextCursor: number;
+  hasNext: boolean;
+  size: number;
+}
 
 const Library = () => {
   const totalCount = 5;
@@ -226,13 +249,16 @@ const Library = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ['questionSets'],
     queryFn: async () => {
-      const res = await api.get<MyQuestionSetsResponse[]>(`/question-set`);
-      return res.data;
+      const res = await api.get<QuestionSetApiResponse>(`/question-set`);
+      return res.data.content;
     },
+    // 생성 중('PENDING') 상태인 항목이 있을 경우 5초마다 데이터를 다시 가져옵니다.
+    refetchInterval: (query) =>
+      query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
   });
 
   if (isPending) {
-    return <span>로딩 중입니다...</span>;
+    return <Spinner />;
   }
 
   if (error) {
@@ -262,6 +288,8 @@ const Library = () => {
             <HeaderCell align="left">문제집</HeaderCell>
             <HeaderCell>문제 수</HeaderCell>
             <HeaderCell>생성일</HeaderCell>
+            <HeaderCell>유형</HeaderCell>
+            <HeaderCell>상태</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
             <HeaderCell>작업</HeaderCell>
           </ListRow>
@@ -312,23 +340,31 @@ const Library = () => {
                   <ListCell>
                     {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
                   </ListCell>
+                  <ListCell>{TYPE_MAP[item.questionType] ?? '알 수 없음'}</ListCell>
+                  <StatusCell status={item.status}>
+                    {STATUS_MAP[item.status] ?? '알 수 없음'}
+                  </StatusCell>
                   <ListCell>
-                    <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
-                      풀기
-                    </PrimaryButton>
+                    {item.status === 'COMPLETE' && (
+                      <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
+                        풀기
+                      </PrimaryButton>
+                    )}
                   </ListCell>
                   <ListCell>
-                    <ActionsContainer>
-                      <ActionButton
-                        onClick={() => {
-                          if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
-                            deleteMutation.mutate(item.questionSetId);
-                          }
-                        }}
-                      >
-                        삭제
-                      </ActionButton>
-                    </ActionsContainer>
+                    {item.status === 'COMPLETE' && (
+                      <ActionsContainer>
+                        <ActionButton
+                          onClick={() => {
+                            if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
+                              deleteMutation.mutate(item.questionSetId);
+                            }
+                          }}
+                        >
+                          삭제
+                        </ActionButton>
+                      </ActionsContainer>
+                    )}
                   </ListCell>
                 </ListRow>
               );
