@@ -17,7 +17,6 @@ export const administratorApi = axios.create({
 // 토큰 자동 첨부 인터셉터 (공통 로직)
 const attachTokenInterceptor = (config: InternalAxiosRequestConfig) => {
   const token = getToken();
-  console.log(`[API Request] to ${config.url}:`, token ? 'Token attached' : 'No token');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -36,16 +35,13 @@ administratorApi.interceptors.request.use(attachTokenInterceptor, (error) => Pro
  */
 export const issueNewToken = async (): Promise<string> => {
   try {
-    console.log('[Token Logic] 새로운 액세스 토큰 발급을 요청합니다...');
     // `baseURL`이 `.../api`이므로, 여기서는 `/auth/refresh`를 호출해야 함
     const response = await administratorApi.post('/auth/refresh');
     const newToken = response.data.accessToken as string;
     setToken(newToken);
-    console.log('[Token Logic] 액세스 토큰 발급 성공.');
     return newToken;
   } catch (error) {
     // 토큰 발급 실패는 비로그인 상태에서 정상적인 상황일 수 있으므로 조용히 처리
-    console.log('[Token Logic] 액세스 토큰 발급 실패 (정상적인 동작)');
     clearToken();
     throw error;
   }
@@ -75,10 +71,7 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      console.log('[API Interceptor] 401 Unauthorized. 토큰 재발급을 시도합니다.');
-
       if (isRefreshing) {
-        console.log('[API Interceptor] 이미 토큰 재발급이 진행 중입니다. 잠시 대기합니다.');
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {

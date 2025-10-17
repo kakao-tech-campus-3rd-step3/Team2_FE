@@ -22,7 +22,6 @@ const AppLayoutVertical = styled.div`
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-  flex: 1;
 `;
 
 const Main = styled.div`
@@ -34,7 +33,7 @@ const Main = styled.div`
 function AppLayout() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(true);
-  const [selectedMenu, setSelectedMenu] = useState<string>('대시보드'); // 현재 페이지 저장 state
+  const [selectedMenu, setSelectedMenu] = useState<string>('문제집 생성'); // 현재 페이지 저장 state
   const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state
   const [questionSetId, setQuestionSetId] = useState<number>(0); // 문제 조회할때 보낼 state
 
@@ -59,11 +58,10 @@ function AppLayout() {
     // 토큰이 없으면 SSE 연결을 시도하지 않음
     const token = getToken();
     if (!token) {
-      console.log('[SSE] 토큰이 없어 SSE 연결을 건너뜁니다.');
+      console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
       return;
     }
 
-    console.log('[SSE] 연결 시작...');
     const es = new NotificationSse();
     esRef.current = es;
 
@@ -76,7 +74,6 @@ function AppLayout() {
 
     es.onQuestionCreationComplete((payload) => {
       if (payload.success) {
-        console.log('[SSE] 문제집 생성 완료:', payload.questionSetId);
         setQuestionSetReady(true);
         setQuestionSetId(payload.questionSetId);
         toast(payload.message, {
@@ -91,8 +88,6 @@ function AppLayout() {
 
     // 컴포넌트 언마운트 시 SSE 연결 정리
     return () => {
-      console.log('컼포넌트 언마운트 되엇음');
-      console.log('[SSE] 연결 종료 (cleanup)');
       es.close();
     };
   }, [handleNavigate]); // navigate는 안정적인 참조이므로 의존성에 포함해도 재실행되지 않음

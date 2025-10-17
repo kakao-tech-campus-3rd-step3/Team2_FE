@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import type { QuestionSet } from '@/features/solve/types/question';
-import type { MarkingRequest } from '../types/MarkingRequest';
+import type { MarkingRequest } from '../../types/MarkingRequest';
 
 const QuestionAreaWrapper = styled.div`
   margin-right: ${({ theme }) => theme.spacing.spacing3};
@@ -39,6 +39,10 @@ const OptionList = styled.div``;
 
 const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
+  &:hover {
+    background-color: ${({ active, theme }) =>
+      active ? theme.colors.gray.gray3 : theme.colors.gray.gray1};
+  }
   color: ${({ active, theme }) =>
     active ? theme.colors.semantic.primary : theme.colors.gray.gray7};
 `;
@@ -87,7 +91,7 @@ type QuestionAreaProps = {
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function QuestionArea({
+function TrueFalseSolve({
   currentQuestionIndex,
   questions,
   solvedCheck,
@@ -97,17 +101,18 @@ function QuestionArea({
 }: QuestionAreaProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null); // 어떤 선지가 선택되어있는지
 
-  const markSolved = (optionText: string) => {
+  const markSolved = (optionText: boolean) => {
     const question = questions.questions.at(currentQuestionIndex - 1);
     if (!question) {
       toast('문제 id를 찾을 수 없습니다.');
       return;
     }
 
+    // TDDO: 여기에 문제 타입별로 memberAnswerType을 다르게 줘야함 지금은 테스트용으로 string 넣어둠
     setSolvedCheck((prev) => {
       return [
         ...prev.filter((v) => v.questionId !== question.id),
-        { questionId: question.id, answer: optionText },
+        { questionId: question.id, memberAnswer: optionText, memberAnswerType: 'boolean' },
       ];
     });
   };
@@ -119,24 +124,38 @@ function QuestionArea({
   };
 
   const goNext = () => {
-    if (currentQuestionIndex < questions.questionLength) {
+    if (currentQuestionIndex < questions.questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if (
-      currentQuestionIndex === questions.questionLength &&
-      solvedCheck.length === questions.questionLength
+      currentQuestionIndex === questions.questions.length &&
+      solvedCheck.length === questions.questions.length
     ) {
       setIsAllSolved(true);
     } else if (
-      currentQuestionIndex === questions.questionLength &&
-      solvedCheck.length !== questions.questionLength
+      currentQuestionIndex === questions.questions.length &&
+      solvedCheck.length !== questions.questions.length
     ) {
       toast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }
   };
 
   useEffect(() => {
-    setSelectedOption(null);
-  }, [currentQuestionIndex]);
+    const currentQuestion = questions.questions.at(currentQuestionIndex - 1);
+    if (!currentQuestion) return;
+
+    // solvedCheck 배열에서 현재 문제의 기록 찾기
+    const solved = solvedCheck.find((v) => v.questionId === currentQuestion.id);
+    if (solved) {
+      // 참이면 0, 거짓이면 1
+      if (typeof solved.memberAnswer === 'boolean') {
+        setSelectedOption(solved.memberAnswer ? 0 : 1);
+      } else {
+        setSelectedOption(null);
+      }
+    } else {
+      setSelectedOption(null);
+    }
+  }, [currentQuestionIndex, solvedCheck, questions]);
 
   return (
     <QuestionAreaWrapper>
@@ -146,7 +165,25 @@ function QuestionArea({
       <QuestionWrapper>
         <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
         <OptionList>
-          {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
+          <OptionItem
+            onClick={() => {
+              markSolved(true);
+              setSelectedOption(0);
+            }}
+            active={selectedOption === 0}
+          >
+            참
+          </OptionItem>
+          <OptionItem
+            onClick={() => {
+              markSolved(false);
+              setSelectedOption(1);
+            }}
+            active={selectedOption === 1}
+          >
+            거짓
+          </OptionItem>
+          {/* {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
             <OptionItem
               key={i}
               active={selectedOption === i}
@@ -155,7 +192,7 @@ function QuestionArea({
                 setSelectedOption(i);
               }}
             >{`${i + 1}. ${opt}`}</OptionItem>
-          ))}
+          ))} */}
         </OptionList>
 
         <QuestionNavigation>
@@ -173,4 +210,4 @@ function QuestionArea({
   );
 }
 
-export default QuestionArea;
+export default TrueFalseSolve;

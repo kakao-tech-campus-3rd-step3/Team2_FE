@@ -5,16 +5,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { ROUTES } from '@/app/routePaths';
 import { useAuth } from '@/app/auth/useAuth';
 
-import {
-  FileText,
-  Sidebar,
-  LayoutDashboard,
-  Plus,
-  BookOpen,
-  CircleX,
-  Settings,
-  LogOut,
-} from 'lucide-react';
+import { Sidebar, LayoutDashboard, Plus, BookOpen, CircleX, Settings, LogOut } from 'lucide-react';
 
 import { MENUS } from '@/shared/config/constants';
 import { useState } from 'react';
@@ -168,6 +159,13 @@ const SideBarUserInfoName = styled.p`
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
 `;
 
+const SideBarUserInfoEmail = styled.p`
+  font-size: 10px;
+  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray7};
+`;
+
 const DropdownWrapper = styled.div`
   position: absolute;
   bottom: 100%;
@@ -254,7 +252,8 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
             </SideBarNavItem>
           </NavLink>
 
-          <NavLink to={ROUTES.SOURCE}>
+          {/* TODO: 일단 주석처리만 해둠 나중에 살릴수도 있으니까 */}
+          {/* <NavLink to={ROUTES.SOURCE}>
             <SideBarNavItem
               active={MENUS.SOURCE === selectedMenu}
               onClick={() => changeMenu(MENUS.SOURCE)}
@@ -262,7 +261,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
               <FileText size={14} />
               <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
             </SideBarNavItem>
-          </NavLink>
+          </NavLink> */}
 
           <NavLink to={ROUTES.CREATE}>
             <SideBarNavItem
@@ -287,7 +286,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
           <NavLink to={ROUTES.WRONG}>
             <SideBarNavItem
               active={MENUS.WRONG === selectedMenu}
-              onClick={() => changeMenu(MENUS.LIBRARY)}
+              onClick={() => changeMenu(MENUS.WRONG)}
             >
               <CircleX size={14} />
               <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
@@ -305,6 +304,10 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
+              {/* 이 부분 api에 이메일까지 오면 교체만 하면됨 */}
+              <SideBarUserInfoEmail>
+                {userInfo?.name + '@kakao.com' || '로그인 필요'}
+              </SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
           <Settings

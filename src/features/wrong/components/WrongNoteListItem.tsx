@@ -6,8 +6,10 @@ const WrongNoteListItemWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-top: 1px solid ${({ theme }) => theme.colors.gray.gray5};
   background-color: ${({ theme }) => theme.colors.gray.gray0};
-  display: flex;
   justify-content: space-between;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
   align-items: center;
 `;
 
@@ -54,12 +56,22 @@ const DifficultyLevel = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  background-color: ${({ theme }) => theme.colors.red.red0};
+  color: ${({ theme }) => theme.colors.red.red3};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  width: fit-content;
+  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const CategoryType = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  background-color: ${({ theme }) => theme.colors.blue.blue0};
+  color: ${({ theme }) => theme.colors.blue.blue2};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  width: fit-content;
+  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const RetryBtn = styled.button`
@@ -70,6 +82,7 @@ const RetryBtn = styled.button`
   padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing5};
   color: ${({ theme }) => theme.colors.gray.gray0};
   border-radius: ${({ theme }) => theme.radius.radius2};
+  width: fit-content;
 `;
 
 interface WrongNoteListItemProps {
@@ -101,7 +114,7 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
         </IconWrapper>
         <WrongNoteInfoTitleWrapper>
           <WrongNoteTitle>{item.questionSetTitle}</WrongNoteTitle>
-          <WrongNoteFileName>{item.questionSetTitle}</WrongNoteFileName>
+          <WrongNoteFileName>{item.sourceNames[0]}</WrongNoteFileName>
         </WrongNoteInfoTitleWrapper>
       </WrongNoteInfoWrapper>
       <WrongCount>{item.incorrectCount}개</WrongCount>

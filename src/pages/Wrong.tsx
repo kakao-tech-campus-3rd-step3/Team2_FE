@@ -1,15 +1,28 @@
 import styled from '@emotion/styled';
-import PageLayout from '@/shared/components/Layout/PageLayout';
 import WrongNoteListItem from '@/features/wrong/components/WrongNoteListItem';
 
 import api from '@/shared/api/axiosClient';
 import { useQuery } from '@tanstack/react-query';
 import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useState, useEffect } from 'react';
-// 제목 설명
+
 const WrongWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: ${({ theme }) => theme.colors.background.background};
+  height: calc(100dvh - 76px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  justify-content: flex-start;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.spacing5};
+  max-width: 1000px;
 `;
 
 const WrongPageTitleWrapper = styled.div`
@@ -17,13 +30,6 @@ const WrongPageTitleWrapper = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.spacing2};
   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
-`;
-
-const WrongPageTitleBullet = styled.div`
-  width: 12px;
-  height: 12px;
-  background-color: ${({ theme }) => theme.colors.gray.gray6};
-  border-radius: ${({ theme }) => theme.radius.radiusFull};
 `;
 
 const WrongPageTitle = styled.div`
@@ -64,7 +70,15 @@ const SearchBar = styled.input`
   font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
-  padding: ${({ theme }) => theme.spacing.spacing1};
+  padding: ${({ theme }) => theme.spacing.spacing2};
+
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray3};
+  border-radius: ${({ theme }) => theme.radius.radius1};
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.semantic.primary};
+    border-radius: ${({ theme }) => theme.radius.radius2};
+  }
 `;
 
 // 오답노트 리스트 부분
@@ -73,19 +87,23 @@ const WrongNoteList = styled.div`
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.colors.gray.gray5};
   border-radius: ${({ theme }) => theme.radius.radius2};
+  overflow: hidden;
 `;
 
 const WrongNoteListHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  background-color: ${({ theme }) => theme.colors.gray.gray1};
+  /* align-items: center; */
+  padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
+  /* border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4}; */
 `;
 
 const WrongNoteListHeaderColumn = styled.span`
-  padding: ${({ theme }) => theme.spacing.spacing4};
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray9};
 `;
 
 function Wrong() {
@@ -122,10 +140,10 @@ function Wrong() {
   if (error) return <h1>Error</h1>;
 
   return (
-    <PageLayout>
-      <WrongWrapper>
+    // <PageLayout>
+    <WrongWrapper>
+      <ContentWrapper>
         <WrongPageTitleWrapper>
-          <WrongPageTitleBullet />
           <WrongPageTitle>오답노트</WrongPageTitle>
         </WrongPageTitleWrapper>
         <WrongPageDescription>
@@ -153,8 +171,9 @@ function Wrong() {
             <WrongNoteListItem key={item.questionSetId} item={item} />
           ))}
         </WrongNoteList>
-      </WrongWrapper>
-    </PageLayout>
+      </ContentWrapper>
+    </WrongWrapper>
+    // </PageLayout>
   );
 }
 

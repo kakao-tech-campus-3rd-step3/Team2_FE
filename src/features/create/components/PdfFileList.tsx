@@ -35,10 +35,7 @@ const FileUploadButton = styled.button`
   padding: 5px;
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
   cursor: pointer;
-`;
-
-const HiddenInput = styled.input`
-  display: none;
+  border: none; /* 추가 */
 `;
 
 const FileListSecondBox = styled.div`
@@ -71,43 +68,25 @@ const LoadingDiv = styled.div`
 `;
 
 interface Props extends PdfFileListProps {
-  onAddFile: (file: File) => void;
+  onUploadClick: () => void;
   isLoading: boolean;
 }
 
-const PdfFileList = ({ fileList, selectedFileId, onSelect, onAddFile, isLoading }: Props) => {
+const PdfFileList = ({ fileList, selectedFileId, onSelect, onUploadClick, isLoading }: Props) => {
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
 
-  // 검색어에 맞게 필터링된 파일 리스트
   const filteredFiles = debouncedSearchText
     ? fileList.filter((file) =>
         file.name.toLowerCase().includes(debouncedSearchText.trim().toLowerCase()),
       )
     : fileList;
 
-  const handleButtonClick = () => {
-    document.getElementById('pdf-upload-input')?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    onAddFile(file);
-  };
-
   return (
     <FileListBox>
       <FileListFirstBox>
         <FileListBoxTitle>PDF 파일을 선택해주세요.</FileListBoxTitle>
-        <FileUploadButton onClick={handleButtonClick}>업로드</FileUploadButton>
-        <HiddenInput
-          id="pdf-upload-input"
-          type="file"
-          accept="application/pdf"
-          onChange={handleFileChange}
-        />
+        <FileUploadButton onClick={onUploadClick}>업로드</FileUploadButton>
       </FileListFirstBox>
 
       <Spacer height="12px" />

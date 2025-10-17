@@ -5,7 +5,7 @@ import LeftPanel from '@/features/login/components/LeftPanel';
 import RightPanel from '@/features/login/components/RightPanel';
 import { useAuth } from '@/app/auth/useAuth';
 import { ROUTES } from '@/app/routePaths';
-import Spinner from '@/features/create/components/Spinner';
+import Spinner from '@/shared/components/Spinner';
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ const Login = () => {
   useEffect(() => {
     // 로딩이 완료된 후에만 리다이렉트 여부를 판단합니다.
     if (!isAuthLoading && isAuthenticated) {
-      navigate(ROUTES.ROOT, { replace: true });
+      navigate(ROUTES.CREATE, { replace: true });
     }
   }, [isAuthenticated, isAuthLoading, navigate]);
 

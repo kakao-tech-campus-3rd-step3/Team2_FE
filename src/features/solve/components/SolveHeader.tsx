@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import type { QuestionSet } from '@/features/solve/types/question';
+import { useNavigate } from 'react-router-dom';
 
 const SolveHeaderWrapper = styled.div`
   width: 100%;
@@ -65,21 +66,37 @@ type SolveHeaderProps = {
   currentQuestionIndex: number;
   title: string;
   questionLength: number;
+  questions: QuestionSet;
 };
 
-function SolveHeader({ currentQuestionIndex, title, questionLength }: SolveHeaderProps) {
+function SolveHeader({ currentQuestionIndex, title, questionLength, questions }: SolveHeaderProps) {
+  const navigate = useNavigate();
+
+  const getQuestionTypeLabel = (type: string) => {
+    switch (type) {
+      case 'MULTIPLE_CHOICE':
+        return '객관식';
+      case 'TRUE_FALSE':
+        return '참/거짓';
+      case 'SHORT_ANSWER':
+        return '단답형';
+      default:
+        return '기타';
+    }
+  };
+
   return (
     <SolveHeaderWrapper>
       <BackBtnTitleWrapper>
         <SolveHeaderBackBtn>
           <ArrowLeft size={20} />
-          <Link to="/create">
-            <SolveHeaderBackBtnTxt>돌아가기</SolveHeaderBackBtnTxt>
-          </Link>
+          <SolveHeaderBackBtnTxt onClick={() => navigate(-1)}>돌아가기</SolveHeaderBackBtnTxt>
         </SolveHeaderBackBtn>
         <TitleDescriptionWrapper>
           <SolveTitle>{title}</SolveTitle>
-          <SolveDescription>객관식 20문제</SolveDescription>
+          <SolveDescription>
+            {getQuestionTypeLabel(questions.type)} {questionLength}문제
+          </SolveDescription>
         </TitleDescriptionWrapper>
       </BackBtnTitleWrapper>
       <QuestionIndexViewWrapper>
