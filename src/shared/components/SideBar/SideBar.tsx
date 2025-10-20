@@ -304,9 +304,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
-              <SideBarUserInfoEmail>
-                {userInfo?.email || '로그인 필요'}
-              </SideBarUserInfoEmail>
+              <SideBarUserInfoEmail>{userInfo?.email || '로그인 필요'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
           <Settings
