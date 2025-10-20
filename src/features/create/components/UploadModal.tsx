@@ -47,7 +47,7 @@ const ModalContent = styled.div<{ isVisible: boolean }>`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transform: translateY(${({ isVisible }) => (isVisible ? '0' : '20px')});
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
 const TitleBox = styled.div`
@@ -158,13 +158,9 @@ const UploadModal = ({ onClose, onFileUpload }: UploadModalProps) => {
     [onFileUpload, handleClose],
   );
 
-  const {
-    isDragging,
-    handleDragIn,
-    handleDragOut,
-    handleDragOver,
-    handleDrop,
-  } = useDragAndDrop({ onDropFile: handleFile });
+  const { isDragging, handleDragIn, handleDragOut, handleDragOver, handleDrop } = useDragAndDrop({
+    onDropFile: handleFile,
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
