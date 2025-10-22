@@ -140,7 +140,6 @@ function Wrong() {
   if (error) return <h1>Error</h1>;
 
   return (
-    // <PageLayout>
     <WrongWrapper>
       <ContentWrapper>
         <WrongPageTitleWrapper>
@@ -173,7 +172,6 @@ function Wrong() {
         </WrongNoteList>
       </ContentWrapper>
     </WrongWrapper>
-    // </PageLayout>
   );
 }
 

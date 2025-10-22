@@ -94,12 +94,11 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
 
   background-color: 'transparent';
 
-  &.active {
-    background: ${({ theme }) => theme.colors.gray.gray3};
-  }
+  background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : 'transparent')};
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray.gray1};
+    background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : theme.colors.gray.gray1)};
   }
 `;
 
@@ -251,18 +250,6 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
               <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
-
-          {/* TODO: 일단 주석처리만 해둠 나중에 살릴수도 있으니까 */}
-          {/* <NavLink to={ROUTES.SOURCE}>
-            <SideBarNavItem
-              active={MENUS.SOURCE === selectedMenu}
-              onClick={() => changeMenu(MENUS.SOURCE)}
-            >
-              <FileText size={14} />
-              <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
-            </SideBarNavItem>
-          </NavLink> */}
-
           <NavLink to={ROUTES.CREATE}>
             <SideBarNavItem
               active={MENUS.CREATE === selectedMenu}
