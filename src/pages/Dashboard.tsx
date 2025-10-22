@@ -92,8 +92,6 @@ const DashboardCardDescription = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
-
-
 function Dashboard() {
   return (
     <PageLayout>

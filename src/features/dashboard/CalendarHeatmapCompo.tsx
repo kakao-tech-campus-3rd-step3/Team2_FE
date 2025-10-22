@@ -12,7 +12,7 @@ const CalendarHeatmapWrapper = styled.div`
   align-items: center;
 
   .react-calendar-heatmap .color-empty {
-    fill: ${({ theme }) => theme.colors.gray.gray0}; 
+    fill: ${({ theme }) => theme.colors.gray.gray0};
   }
 
   .react-calendar-heatmap .color-scale-1 {
