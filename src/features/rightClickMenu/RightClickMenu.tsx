@@ -36,23 +36,24 @@ const ContextMenuList = styled.ul`
   padding: 4px 0;
 `;
 
-const ContextMenuItem = styled.li`
+const ContextMenuItem = styled.li<{ disabled?: boolean }>`
   padding: 8px 16px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: #333;
+  color: ${({ disabled }) => (disabled ? '#999' : '#333')};
   transition: background-color 0.1s;
   user-select: none;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: ${({ disabled }) => (disabled ? 'transparent' : '#f0f0f0')};
   }
 
   &:active {
-    background-color: #e0e0e0;
+    background-color: ${({ disabled }) => (disabled ? 'transparent' : '#e0e0e0')};
   }
 `;
 
@@ -171,7 +172,11 @@ function RightClickMenu({
   const MenuItemComponent = (item: MenuItem) => {
     if (isMenuContent(item)) {
       return (
-        <ContextMenuItem onClick={() => handleMenuItemClick(item.onClick)} key={item.key}>
+        <ContextMenuItem
+          onClick={item.disabled ? undefined : () => handleMenuItemClick(item.onClick)}
+          key={item.key}
+          disabled={item.disabled}
+        >
           <MenuIcon>{item.icon}</MenuIcon>
           {item.title}
         </ContextMenuItem>
