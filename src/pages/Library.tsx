@@ -14,6 +14,7 @@ import {
 import EditIcon from '@/shared/assets/EditIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
+import RightClickMenu, { type MenuItem } from '@/features/rightClickMenu/RightClickMenu';
 
 const Container = styled.div`
   display: flex;
@@ -195,12 +196,26 @@ const Library = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
+  const [isVisibleMenu, setIsVisibleMenu] = useState<boolean>(false);
+  const [selectedCell, setSelectedCell] = useState<MyQuestionSetsResponse | null>(null);
+
+  const [mousePoint, setMousePoint] = useState<{
+    x: number;
+    y: number;
+  }>({ x: 0, y: 0 });
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    item: MyQuestionSetsResponse,
+  ) => {
     e.preventDefault();
+
+    setSelectedCell(item);
+    setIsVisibleMenu(true);
+    setMousePoint({ x: e.clientX, y: e.clientY });
   };
 
   const updateTitleMutation = useMutation({
@@ -275,8 +290,30 @@ const Library = () => {
     item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
+  const RightClickMenuList: MenuItem[] = [
+    {
+      type: 'content',
+      key: 'test11',
+      title: 'get questionSetId',
+      icon: '🗑️',
+      onClick: () => {
+        alert(`${selectedCell?.questionSetId} 클릭됨`);
+      },
+    },
+    {
+      type: 'divider',
+      key: 'divider1',
+    },
+  ];
+
   return (
     <Container>
+      <RightClickMenu
+        isVisible={isVisibleMenu}
+        setIsVisible={setIsVisibleMenu}
+        point={mousePoint}
+        menuContents={RightClickMenuList}
+      />
       <LibraryWrapper>
         <LibraryTitle />
         <LibraryProgressSummary totalCount={totalCount} completedCount={completedCount} />
@@ -305,11 +342,10 @@ const Library = () => {
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
               return (
-                <ListRow key={item.questionSetId} onContextMenu={handleContextMenu}>
+                <ListRow key={item.questionSetId} onContextMenu={(e) => handleContextMenu(e, item)}>
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>
-                        {/* TODO: callback 따로 빼기*/}
                         <TitleEditInput
                           value={editingTitle}
                           onChange={(e) => setEditingTitle(e.target.value)}
