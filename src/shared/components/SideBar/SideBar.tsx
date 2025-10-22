@@ -98,7 +98,8 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : theme.colors.gray.gray1)};
+    background-color: ${({ active, theme }) =>
+      active ? theme.colors.gray.gray3 : theme.colors.gray.gray1};
   }
 `;
 

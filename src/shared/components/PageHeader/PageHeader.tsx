@@ -32,7 +32,7 @@ interface PageHeaderProps {
   openSideBar: () => void;
 }
 
-function PageHeader({ isOpen, openSideBar}: PageHeaderProps) {
+function PageHeader({ isOpen, openSideBar }: PageHeaderProps) {
   const location = useLocation();
   const path = location.pathname;
 
@@ -42,8 +42,7 @@ function PageHeader({ isOpen, openSideBar}: PageHeaderProps) {
   else if (path.startsWith('/create')) title = '문제집 생성';
   else if (path.startsWith('/solve')) title = '문제 풀이';
   else if (path.startsWith('/library')) title = '나의 문제집';
-  else if (path.startsWith('/wrong')) title = '오답노트'
-
+  else if (path.startsWith('/wrong')) title = '오답노트';
   else if (path === '/') title = '문제집 생성';
 
   return (
