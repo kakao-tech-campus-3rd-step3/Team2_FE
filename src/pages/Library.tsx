@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
@@ -273,6 +273,27 @@ const Library = () => {
       query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
   });
 
+  const RightClickMenuList: MenuItem[] = useMemo(
+    () => [
+      {
+        type: 'content',
+        key: 'delete',
+        title: '삭제',
+        icon: '❌',
+        onClick: () => {
+          if (
+            selectedCell &&
+            window.confirm(`'${selectedCell.title}' 문제집을 정말 삭제하시겠습니까?`)
+          ) {
+            deleteMutation.mutate(selectedCell.questionSetId);
+          }
+        },
+        disabled: selectedCell?.status !== 'COMPLETE',
+      },
+    ],
+    [selectedCell, deleteMutation],
+  );
+
   if (isPending) {
     return <Spinner />;
   }
@@ -284,24 +305,6 @@ const Library = () => {
   const filteredQuestionSets = data.filter((item) =>
     item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
-
-  const RightClickMenuList: MenuItem[] = [
-    {
-      type: 'content',
-      key: 'delete',
-      title: '삭제',
-      icon: '❌',
-      onClick: () => {
-        if (
-          selectedCell &&
-          window.confirm(`'${selectedCell.title}' 문제집을 정말 삭제하시겠습니까?`)
-        ) {
-          deleteMutation.mutate(selectedCell.questionSetId);
-        }
-      },
-      disabled: selectedCell?.status !== 'COMPLETE',
-    },
-  ];
 
   return (
     <Container>
