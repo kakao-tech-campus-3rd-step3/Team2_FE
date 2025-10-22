@@ -199,6 +199,10 @@ const Library = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+  };
+
   const updateTitleMutation = useMutation({
     mutationFn: ({ id, title }: { id: number | undefined; title: string }) => {
       if (id === undefined || id === null) {
@@ -301,7 +305,7 @@ const Library = () => {
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
               return (
-                <ListRow key={item.questionSetId} onContextMenu={(e) => e.preventDefault()}>
+                <ListRow key={item.questionSetId} onContextMenu={handleContextMenu}>
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>
