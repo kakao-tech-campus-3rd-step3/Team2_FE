@@ -60,7 +60,7 @@ const ListBox = styled.div`
 
 const ListRow = styled.div`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1fr 1.2fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
@@ -94,12 +94,6 @@ type QuestionSetStatus = 'PENDING' | 'COMPLETE';
 
 const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
   font-weight: 500;
-`;
-
-const ActionsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 8px;
 `;
 
 const ActionButton = styled.button`
@@ -181,8 +175,9 @@ const STATUS_MAP: Record<QuestionSetStatus, string> = {
   COMPLETE: '생성완료',
 };
 
+type QuestionSetContentType = MyQuestionSetsResponse & { status: QuestionSetStatus };
 interface QuestionSetApiResponse {
-  content: (MyQuestionSetsResponse & { status: QuestionSetStatus })[];
+  content: QuestionSetContentType[];
   nextCursor: number;
   hasNext: boolean;
   size: number;
@@ -197,7 +192,7 @@ const Library = () => {
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [isVisibleMenu, setIsVisibleMenu] = useState<boolean>(false);
-  const [selectedCell, setSelectedCell] = useState<MyQuestionSetsResponse | null>(null);
+  const [selectedCell, setSelectedCell] = useState<QuestionSetContentType | null>(null);
 
   const [mousePoint, setMousePoint] = useState<{
     x: number;
@@ -209,7 +204,7 @@ const Library = () => {
 
   const handleContextMenu = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    item: MyQuestionSetsResponse,
+    item: QuestionSetContentType,
   ) => {
     e.preventDefault();
 
@@ -250,7 +245,7 @@ const Library = () => {
     },
   });
 
-  const submitTitleEdit = (item: MyQuestionSetsResponse) => {
+  const submitTitleEdit = (item: QuestionSetContentType) => {
     updateTitleMutation.mutate({
       id: item.questionSetId,
       title: editingTitle,
@@ -293,16 +288,18 @@ const Library = () => {
   const RightClickMenuList: MenuItem[] = [
     {
       type: 'content',
-      key: 'test11',
-      title: 'get questionSetId',
-      icon: '🗑️',
+      key: 'delete',
+      title: '삭제',
+      icon: '❌',
       onClick: () => {
-        alert(`${selectedCell?.questionSetId} 클릭됨`);
+        if (
+          selectedCell &&
+          window.confirm(`'${selectedCell.title}' 문제집을 정말 삭제하시겠습니까?`)
+        ) {
+          deleteMutation.mutate(selectedCell.questionSetId);
+        }
       },
-    },
-    {
-      type: 'divider',
-      key: 'divider1',
+      disabled: selectedCell?.status !== 'COMPLETE',
     },
   ];
 
@@ -334,7 +331,6 @@ const Library = () => {
             <HeaderCell>유형</HeaderCell>
             <HeaderCell>상태</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
-            <HeaderCell>작업</HeaderCell>
           </ListRow>
 
           {[...filteredQuestionSets]
@@ -391,21 +387,6 @@ const Library = () => {
                       <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
                         풀기
                       </PrimaryButton>
-                    )}
-                  </ListCell>
-                  <ListCell>
-                    {item.status === 'COMPLETE' && (
-                      <ActionsContainer>
-                        <ActionButton
-                          onClick={() => {
-                            if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
-                              deleteMutation.mutate(item.questionSetId);
-                            }
-                          }}
-                        >
-                          삭제
-                        </ActionButton>
-                      </ActionsContainer>
                     )}
                   </ListCell>
                 </ListRow>
