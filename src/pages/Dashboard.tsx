@@ -1,6 +1,7 @@
 import PageLayout from '@/shared/components/Layout/PageLayout';
 import styled from '@emotion/styled';
 import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
+import CalendarHeatmapCompo from '@/features/dashboard/CalendarHeatmapCompo';
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -91,6 +92,8 @@ const DashboardCardDescription = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
+
+
 function Dashboard() {
   return (
     <PageLayout>
@@ -127,6 +130,8 @@ function Dashboard() {
             <DashboardCardDescription>연속 학습일</DashboardCardDescription>
           </DashboardStatCard>
         </DashboardStatCardWrapper>
+        {/* 깃허브 스타일 잔디 */}
+        <CalendarHeatmapCompo />
       </DashboardWrapper>
     </PageLayout>
   );
