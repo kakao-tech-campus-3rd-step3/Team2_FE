@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
@@ -251,6 +251,30 @@ const Library = () => {
     });
   };
 
+  const handleSolveClick = useCallback(
+    (questionSetId: number) => {
+      navigate(`/solve/${questionSetId}`);
+    },
+    [navigate],
+  );
+
+  const handleDeleteClick = useCallback(
+    (item: QuestionSetContentType) => {
+      if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
+        deleteMutation.mutate(item.questionSetId);
+      }
+    },
+    [deleteMutation],
+  );
+
+  const handleRenameClick = useCallback(
+    (item: QuestionSetContentType) => {
+      setEditingItemId(item.questionSetId);
+      setEditingTitle(item.title);
+    },
+    [setEditingItemId, setEditingTitle],
+  );
+
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -276,32 +300,40 @@ const Library = () => {
     () => [
       {
         type: 'content',
-        key: 'delete',
-        title: '삭제',
-        icon: '❌',
-        onClick: () => {
-          if (
-            selectedCell &&
-            window.confirm(`'${selectedCell.title}' 문제집을 정말 삭제하시겠습니까?`)
-          ) {
-            deleteMutation.mutate(selectedCell.questionSetId);
-          }
-        },
-        disabled: selectedCell?.status !== 'COMPLETE',
-      },
-      {
-        type: 'content',
         key: 'rename',
         title: '문제집 이름 변경',
         icon: '✏️',
         onClick: () => {
           if (!selectedCell) return;
-          setEditingItemId(selectedCell.questionSetId);
-          setEditingTitle(selectedCell.title);
+          handleRenameClick(selectedCell);
         },
+        disabled: selectedCell?.status !== 'COMPLETE',
+      },
+      {
+        type: 'content',
+        key: 'delete',
+        title: '삭제',
+        icon: '❌',
+        onClick: () => {
+          if (!selectedCell) return;
+          handleDeleteClick(selectedCell);
+        },
+        disabled: selectedCell?.status !== 'COMPLETE',
+      },
+      { type: 'divider', key: 'divider1' },
+      {
+        type: 'content',
+        key: 'solve',
+        title: '문제집 풀기',
+        icon: '📝',
+        onClick: () => {
+          if (!selectedCell) return;
+          handleSolveClick(selectedCell.questionSetId);
+        },
+        disabled: selectedCell?.status !== 'COMPLETE',
       },
     ],
-    [selectedCell, deleteMutation],
+    [selectedCell, handleSolveClick, handleDeleteClick, handleRenameClick],
   );
 
   if (isPending) {
@@ -350,6 +382,7 @@ const Library = () => {
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 시간 내림차순
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
+
               return (
                 <ListRow key={item.questionSetId} onContextMenu={(e) => handleContextMenu(e, item)}>
                   <ListCell align="left">
@@ -389,7 +422,7 @@ const Library = () => {
                   </StatusCell>
                   <ListCell>
                     {item.status === 'COMPLETE' && (
-                      <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
+                      <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
                         풀기
                       </PrimaryButton>
                     )}
