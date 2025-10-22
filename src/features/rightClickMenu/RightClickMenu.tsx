@@ -10,8 +10,9 @@ const ContextMenuContainer = styled.div<{ x: number; y: number; width?: number; 
   box-shadow:
     0 2px 10px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(0, 0, 0, 0.1);
-  min-width: ${({ width }) => (width ? `${width}px` : '200px')};
-  ${({ width }) => width && `max-width: ${width}px;`}
+  min-width: fit-content;
+  max-width: 300px;
+  width: auto;
   ${({ height }) => height && `height: ${height}px;`}
   ${({ height }) => height && `max-height: ${height}px;`}
   z-index: 9999;
@@ -47,6 +48,7 @@ const ContextMenuItem = styled.li<{ disabled?: boolean }>`
   transition: background-color 0.1s;
   user-select: none;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  white-space: nowrap;
 
   &:hover {
     background-color: ${({ disabled }) => (disabled ? 'transparent' : '#f0f0f0')};
