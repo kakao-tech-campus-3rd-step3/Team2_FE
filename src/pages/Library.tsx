@@ -13,7 +13,7 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
-import RightClickMenu, { type MenuItem } from '@/features/rightClickMenu/RightClickMenu';
+import RightClickMenu, { type MenuItem } from '@/features/library/components/RightClickMenu';
 
 const Container = styled.div`
   display: flex;
