@@ -71,7 +71,7 @@ const ListRow = styled.div`
   }
 
   &:not(:first-of-type):hover {
-    background-color: ${({ theme }) => theme.colors.semantic.primary};
+    background-color: #f5f5f5;
   }
 `;
 
