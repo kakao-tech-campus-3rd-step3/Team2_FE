@@ -301,7 +301,7 @@ const Library = () => {
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
               return (
-                <ListRow key={item.questionSetId}>
+                <ListRow key={item.questionSetId} onContextMenu={(e) => e.preventDefault()}>
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>
