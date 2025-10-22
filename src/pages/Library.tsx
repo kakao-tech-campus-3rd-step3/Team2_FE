@@ -11,7 +11,6 @@ import {
   type QuestionType,
 } from '@/features/library/types/questionSetResponse';
 
-import EditIcon from '@/shared/assets/EditIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
 import RightClickMenu, { type MenuItem } from '@/features/rightClickMenu/RightClickMenu';
@@ -290,6 +289,17 @@ const Library = () => {
         },
         disabled: selectedCell?.status !== 'COMPLETE',
       },
+      {
+        type: 'content',
+        key: 'rename',
+        title: '문제집 이름 변경',
+        icon: '✏️',
+        onClick: () => {
+          if (!selectedCell) return;
+          setEditingItemId(selectedCell.questionSetId);
+          setEditingTitle(selectedCell.title);
+        },
+      },
     ],
     [selectedCell, deleteMutation],
   );
@@ -366,14 +376,6 @@ const Library = () => {
                     ) : (
                       <TitleContainer>
                         <TitleText title={item.title}>{item.title}</TitleText>
-                        <EditIconButton
-                          onClick={() => {
-                            setEditingItemId(item.questionSetId);
-                            setEditingTitle(item.title);
-                          }}
-                        >
-                          <EditIcon />
-                        </EditIconButton>
                       </TitleContainer>
                     )}
                   </ListCell>
