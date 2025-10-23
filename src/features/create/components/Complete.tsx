@@ -3,11 +3,14 @@ import Celebration from '@/features/create/components/Celebration';
 import { Play, RefreshCw } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
 import { useNavigate } from 'react-router-dom';
+import { QUESTION_TYPE_MAP } from '@/features/create/constants/questionTypeConstants';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
 interface CompleteProps {
   fileName: string | null;
   onReset: () => void;
   questionSetId: number;
+  questionType: QuestionType | null;
 }
 
 const NoticeTitle = styled.h3`
@@ -99,8 +102,9 @@ const RefreshIcon = styled(RefreshCw)`
   transition: transform 0.5s ease;
 `;
 
-const Complete: React.FC<CompleteProps> = ({ fileName, onReset, questionSetId }) => {
+const Complete: React.FC<CompleteProps> = ({ fileName, onReset, questionSetId, questionType }) => {
   const navigate = useNavigate();
+
   return (
     <>
       <Spacer height="70px" />
@@ -109,7 +113,10 @@ const Complete: React.FC<CompleteProps> = ({ fileName, onReset, questionSetId })
       <NoticeTitle>문제집 생성 완료!</NoticeTitle>
       <NoticeContent>
         AI가 <NoticeContentHighlight>10개</NoticeContentHighlight>의{' '}
-        <NoticeContentHighlight>객관식</NoticeContentHighlight> 문제를 완성했어요!
+        <NoticeContentHighlight>
+          {questionType ? QUESTION_TYPE_MAP.get(questionType)?.title : '알 수 없음'}
+        </NoticeContentHighlight>{' '}
+        문제를 완성했어요!
       </NoticeContent>
       <Spacer height="20px" />
       <CompletedInfo>{fileName ?? '선택된 파일 없음'}</CompletedInfo>

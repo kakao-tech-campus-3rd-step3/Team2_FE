@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PdfFileItem from '@/features/create/components/PdfFileItem';
-import type { PdfFileListProps } from '@/features/create/types/types';
+import type { PdfFileListProps, FileData } from '@/features/create/types/types';
 import Spacer from '@/shared/components/Spacer';
 import Loading from './Loading';
 import { useState } from 'react';
@@ -35,7 +35,7 @@ const FileUploadButton = styled.button`
   padding: 5px;
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
   cursor: pointer;
-  border: none; /* 추가 */
+  border: none;
 `;
 
 const FileListSecondBox = styled.div`
@@ -60,19 +60,27 @@ const FileListDivWithScroll = styled.div`
 const LoadingDiv = styled.div`
   width: 100%;
   height: 200px;
-  border: 1px solid lightgray;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: ${({ theme }) => theme.radius.radius2};
+  color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
 interface Props extends PdfFileListProps {
   onUploadClick: () => void;
   isLoading: boolean;
+  onDelete: (fileId: string) => void;
 }
 
-const PdfFileList = ({ fileList, selectedFileId, onSelect, onUploadClick, isLoading }: Props) => {
+const PdfFileList = ({
+  fileList,
+  selectedFileId,
+  onSelect,
+  onUploadClick,
+  isLoading,
+  onDelete,
+}: Props) => {
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
 
@@ -81,6 +89,13 @@ const PdfFileList = ({ fileList, selectedFileId, onSelect, onUploadClick, isLoad
         file.name.toLowerCase().includes(debouncedSearchText.trim().toLowerCase()),
       )
     : fileList;
+
+  const mapFileDataToItemProps = (file: FileData) => ({
+    id: file.id,
+    name: file.name,
+    size: file.size || 'N/A',
+    date: file.date || 'N/A',
+  });
 
   return (
     <FileListBox>
@@ -104,14 +119,17 @@ const PdfFileList = ({ fileList, selectedFileId, onSelect, onUploadClick, isLoad
               <Loading size="25px" />
             </LoadingDiv>
           ) : filteredFiles.length === 0 ? (
-            <LoadingDiv>검색 결과가 없습니다.</LoadingDiv>
+            <LoadingDiv>
+              {debouncedSearchText ? '검색 결과가 없습니다.' : '업로드된 PDF가 없습니다.'}
+            </LoadingDiv>
           ) : (
             filteredFiles.map((file) => (
               <PdfFileItem
                 key={file.id}
-                file={file}
+                file={mapFileDataToItemProps(file)}
                 isSelected={selectedFileId === file.id}
                 onClick={() => onSelect(file.id)}
+                onDelete={() => onDelete(file.id)}
               />
             ))
           )}

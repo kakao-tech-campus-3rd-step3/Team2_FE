@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
@@ -11,9 +11,9 @@ import {
   type QuestionType,
 } from '@/features/library/types/questionSetResponse';
 
-import EditIcon from '@/shared/assets/EditIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
+import RightClickMenu, { type MenuItem } from '@/features/library/components/RightClickMenu';
 
 const Container = styled.div`
   display: flex;
@@ -59,7 +59,7 @@ const ListBox = styled.div`
 
 const ListRow = styled.div`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1fr 1.2fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
@@ -71,7 +71,7 @@ const ListRow = styled.div`
   }
 
   &:not(:first-of-type):hover {
-    background-color: ${({ theme }) => theme.colors.semantic.primary};
+    background-color: #f5f5f5;
   }
 `;
 
@@ -93,12 +93,6 @@ type QuestionSetStatus = 'PENDING' | 'COMPLETE';
 
 const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
   font-weight: 500;
-`;
-
-const ActionsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 8px;
 `;
 
 const ActionButton = styled.button`
@@ -180,8 +174,9 @@ const STATUS_MAP: Record<QuestionSetStatus, string> = {
   COMPLETE: '생성완료',
 };
 
+type QuestionSetContentType = MyQuestionSetsResponse & { status: QuestionSetStatus };
 interface QuestionSetApiResponse {
-  content: (MyQuestionSetsResponse & { status: QuestionSetStatus })[];
+  content: QuestionSetContentType[];
   nextCursor: number;
   hasNext: boolean;
   size: number;
@@ -195,9 +190,27 @@ const Library = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
+  const [isVisibleMenu, setIsVisibleMenu] = useState<boolean>(false);
+  const [selectedCell, setSelectedCell] = useState<QuestionSetContentType | null>(null);
+
+  const [mousePoint, setMousePoint] = useState<{
+    x: number;
+    y: number;
+  }>({ x: 0, y: 0 });
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  const handleContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    item: QuestionSetContentType,
+  ) => {
+    e.preventDefault();
+
+    setSelectedCell(item);
+    setIsVisibleMenu(true);
+    setMousePoint({ x: e.clientX, y: e.clientY });
+  };
 
   const updateTitleMutation = useMutation({
     mutationFn: ({ id, title }: { id: number | undefined; title: string }) => {
@@ -231,12 +244,36 @@ const Library = () => {
     },
   });
 
-  const submitTitleEdit = (item: MyQuestionSetsResponse) => {
+  const submitTitleEdit = (item: QuestionSetContentType) => {
     updateTitleMutation.mutate({
       id: item.questionSetId,
       title: editingTitle,
     });
   };
+
+  const handleSolveClick = useCallback(
+    (questionSetId: number) => {
+      navigate(`/solve/${questionSetId}`);
+    },
+    [navigate],
+  );
+
+  const handleDeleteClick = useCallback(
+    (item: QuestionSetContentType) => {
+      if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
+        deleteMutation.mutate(item.questionSetId);
+      }
+    },
+    [deleteMutation],
+  );
+
+  const handleRenameClick = useCallback(
+    (item: QuestionSetContentType) => {
+      setEditingItemId(item.questionSetId);
+      setEditingTitle(item.title);
+    },
+    [setEditingItemId, setEditingTitle],
+  );
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -259,6 +296,46 @@ const Library = () => {
       query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
   });
 
+  const RightClickMenuList: MenuItem[] = useMemo(
+    () => [
+      {
+        type: 'content',
+        key: 'rename',
+        title: '문제집 이름 변경',
+        icon: '✏️',
+        onClick: () => {
+          if (!selectedCell) return;
+          handleRenameClick(selectedCell);
+        },
+        disabled: selectedCell?.status !== 'COMPLETE',
+      },
+      {
+        type: 'content',
+        key: 'delete',
+        title: '삭제',
+        icon: '❌',
+        onClick: () => {
+          if (!selectedCell) return;
+          handleDeleteClick(selectedCell);
+        },
+        disabled: selectedCell?.status !== 'COMPLETE',
+      },
+      { type: 'divider', key: 'divider1' },
+      {
+        type: 'content',
+        key: 'solve',
+        title: '문제집 풀기',
+        icon: '📝',
+        onClick: () => {
+          if (!selectedCell) return;
+          handleSolveClick(selectedCell.questionSetId);
+        },
+        disabled: selectedCell?.status !== 'COMPLETE',
+      },
+    ],
+    [selectedCell, handleSolveClick, handleDeleteClick, handleRenameClick],
+  );
+
   if (isPending) {
     return <Spinner />;
   }
@@ -273,6 +350,12 @@ const Library = () => {
 
   return (
     <Container>
+      <RightClickMenu
+        isVisible={isVisibleMenu}
+        setIsVisible={setIsVisibleMenu}
+        point={mousePoint}
+        menuContents={RightClickMenuList}
+      />
       <LibraryWrapper>
         <LibraryTitle />
         <LibraryProgressSummary totalCount={totalCount} completedCount={completedCount} />
@@ -293,19 +376,18 @@ const Library = () => {
             <HeaderCell>유형</HeaderCell>
             <HeaderCell>상태</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
-            <HeaderCell>작업</HeaderCell>
           </ListRow>
 
           {[...filteredQuestionSets]
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 시간 내림차순
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
+
               return (
-                <ListRow key={item.questionSetId}>
+                <ListRow key={item.questionSetId} onContextMenu={(e) => handleContextMenu(e, item)}>
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>
-                        {/* TODO: callback 따로 빼기*/}
                         <TitleEditInput
                           value={editingTitle}
                           onChange={(e) => setEditingTitle(e.target.value)}
@@ -327,14 +409,6 @@ const Library = () => {
                     ) : (
                       <TitleContainer>
                         <TitleText title={item.title}>{item.title}</TitleText>
-                        <EditIconButton
-                          onClick={() => {
-                            setEditingItemId(item.questionSetId);
-                            setEditingTitle(item.title);
-                          }}
-                        >
-                          <EditIcon />
-                        </EditIconButton>
                       </TitleContainer>
                     )}
                   </ListCell>
@@ -348,24 +422,9 @@ const Library = () => {
                   </StatusCell>
                   <ListCell>
                     {item.status === 'COMPLETE' && (
-                      <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
+                      <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
                         풀기
                       </PrimaryButton>
-                    )}
-                  </ListCell>
-                  <ListCell>
-                    {item.status === 'COMPLETE' && (
-                      <ActionsContainer>
-                        <ActionButton
-                          onClick={() => {
-                            if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
-                              deleteMutation.mutate(item.questionSetId);
-                            }
-                          }}
-                        >
-                          삭제
-                        </ActionButton>
-                      </ActionsContainer>
                     )}
                   </ListCell>
                 </ListRow>

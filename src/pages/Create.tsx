@@ -46,7 +46,6 @@ const Create = () => {
     4: false,
   });
 
-  // 의존성 규칙에 위배사항 발생으로 useCallback으로 안정화 처리
   const handleStep1ValidChange = useCallback((isValid: boolean) => {
     setStepValidity((prev) => ({ ...prev, 1: isValid }));
   }, []);
