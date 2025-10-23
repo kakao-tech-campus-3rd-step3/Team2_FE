@@ -13,7 +13,7 @@ const AppLayoutWrapper = styled.div`
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
   display: flex;
-  overflow: hidden; /* 가로 스크롤 방지 */
+  overflow: hidden;
 `;
 
 const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
@@ -24,7 +24,9 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 
   transform: ${({ isOpen }) => (isOpen ? 'translateX(240px)' : 'translateX(0)')};
-  transition: transform 0.4s ease, width 0.4s ease;
+  transition:
+    transform 0.4s ease,
+    width 0.4s ease;
 `;
 
 const Main = styled.div`
