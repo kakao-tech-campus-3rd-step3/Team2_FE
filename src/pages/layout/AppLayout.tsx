@@ -30,7 +30,7 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
 
 const Main = styled.div`
   width: 100%;
-  min-width: 800px; 
+  min-width: 800px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
   flex: 1;
 `;
