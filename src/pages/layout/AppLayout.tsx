@@ -17,16 +17,14 @@ const AppLayoutWrapper = styled.div`
 `;
 
 const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
-  width: ${({ isOpen }) => (isOpen ? 'calc(100dvw - 240px)' : '100dvw')};
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 
-  transform: ${({ isOpen }) => (isOpen ? 'translateX(240px)' : 'translateX(0)')};
-  transition:
-    transform 0.4s ease,
-    width 0.4s ease;
+  margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
+  transition: margin-left 0.4s ease;
 `;
 
 const Main = styled.div`
