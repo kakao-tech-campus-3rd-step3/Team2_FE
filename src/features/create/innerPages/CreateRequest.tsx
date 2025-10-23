@@ -89,7 +89,6 @@ const NextComponent: React.FC<{
   </Container>
 );
 
-
 const CreateRequest: React.FC<CreateRequestProps> = ({
   selectedFile,
   onReset,

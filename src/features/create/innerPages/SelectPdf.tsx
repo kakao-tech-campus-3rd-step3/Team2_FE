@@ -7,6 +7,7 @@ import StyledSubTitle from '@/features/create/components/Subtitle';
 import Spacer from '@/shared/components/Spacer';
 import { uploadPdfFile } from '@/features/create/utils/upload/uploadPdfFile';
 import { getPdfFileList } from '@/features/create/utils/getPdfFileList';
+import { deletePdfFile } from '@/features/create/utils/deletePdfFile';
 import UploadModal from '@/features/create/components/UploadModal';
 
 interface Step1Props {
@@ -38,6 +39,16 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
     },
   });
 
+  const { mutate: deleteFile } = useMutation({
+    mutationFn: deletePdfFile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pdfFiles'] });
+    },
+    onError: (error) => {
+      alert(error instanceof Error ? error.message : '파일 삭제 실패');
+    },
+  });
+
   const handleSelectFile = useCallback(
     (fileId: string | null) => {
       onValidChange(!!fileId);
@@ -63,6 +74,20 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
     [onSelectFile, onValidChange, upload],
   );
 
+  const handleDeleteFile = useCallback(
+    (fileId: string) => {
+      const fileToDelete = fileList.find((file) => file.id === fileId);
+      if (fileToDelete && window.confirm(`'${fileToDelete.name}' 파일을 삭제하시겠습니까?`)) {
+        if (selectedFileId === fileId) {
+          onSelectFile(null);
+          onValidChange(false);
+        }
+        deleteFile(fileId);
+      }
+    },
+    [deleteFile, fileList, onSelectFile, onValidChange, selectedFileId],
+  );
+
   useEffect(() => {
     if (isError) {
       alert('PDF 목록을 불러오는 데 실패했습니다.');
@@ -86,6 +111,7 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
         onSelect={handleSelectFile}
         onUploadClick={() => setIsModalOpen(true)}
         isLoading={isLoadingList || isUploading}
+        onDelete={handleDeleteFile}
       />
       {isModalOpen && (
         <UploadModal onClose={() => setIsModalOpen(false)} onFileUpload={handleUpload} />
