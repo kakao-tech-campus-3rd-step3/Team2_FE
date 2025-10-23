@@ -22,6 +22,7 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  overflow-x: auto;
 
   margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
   transition: margin-left 0.4s ease;
@@ -29,6 +30,7 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
 
 const Main = styled.div`
   width: 100%;
+  min-width: 800px; 
   background-color: ${({ theme }) => theme.colors.gray.gray2};
   flex: 1;
 `;
