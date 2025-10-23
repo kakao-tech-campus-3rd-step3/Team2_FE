@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 240px;
