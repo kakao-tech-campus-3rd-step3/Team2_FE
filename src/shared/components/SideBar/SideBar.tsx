@@ -229,12 +229,15 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
 
   let selectedMenu = '페이지';
 
-  if (path.startsWith('/dashboard')) selectedMenu = '대시보드';
-  else if (path.startsWith('/create')) selectedMenu = '문제집 생성';
-  else if (path.startsWith('/solve')) selectedMenu = '문제 풀이';
-  else if (path.startsWith('/library')) selectedMenu = '나의 문제집';
-  else if (path.startsWith('/wrong')) selectedMenu = '오답노트';
-  else if (path === '/') selectedMenu = '문제집 생성';
+  if (path === ROUTES.CREATE) {
+    selectedMenu = MENUS.CREATE;
+  } else if (path.startsWith(ROUTES.DASHBOARD)) {
+    selectedMenu = MENUS.DASHBOARD;
+  } else if (path.startsWith(ROUTES.LIBRARY)) {
+    selectedMenu = MENUS.LIBRARY;
+  } else if (path.startsWith(ROUTES.WRONG)) {
+    selectedMenu = MENUS.WRONG;
+  }
 
   return (
     <SideBarWrapper isOpen={isOpen}>
