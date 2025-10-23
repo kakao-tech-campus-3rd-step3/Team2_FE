@@ -77,11 +77,18 @@ const NextComponent: React.FC<{
   fileName: string | null;
   onReset: () => void;
   questionSetId: number;
-}> = ({ fileName, onReset, questionSetId }) => (
+  questionType: QuestionType | null;
+}> = ({ fileName, onReset, questionSetId, questionType }) => (
   <Container>
-    <Complete fileName={fileName} onReset={onReset} questionSetId={questionSetId} />
+    <Complete
+      fileName={fileName}
+      onReset={onReset}
+      questionSetId={questionSetId}
+      questionType={questionType}
+    />
   </Container>
 );
+
 
 const CreateRequest: React.FC<CreateRequestProps> = ({
   selectedFile,
@@ -130,6 +137,7 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
         fileName={selectedFile?.name ?? null}
         onReset={onReset}
         questionSetId={questionSetId}
+        questionType={questionType}
       />
     );
   }
