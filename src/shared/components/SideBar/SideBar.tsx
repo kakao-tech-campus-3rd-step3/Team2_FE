@@ -257,35 +257,27 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
       <SideBarMain>
         <SideBarNav>
           <NavLink to={ROUTES.DASHBOARD}>
-            <SideBarNavItem
-              active={MENUS.DASHBOARD === selectedMenu}
-            >
+            <SideBarNavItem active={MENUS.DASHBOARD === selectedMenu}>
               <LayoutDashboard size={14} />
               <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
           <NavLink to={ROUTES.CREATE}>
-            <SideBarNavItem
-              active={MENUS.CREATE === selectedMenu}
-            >
+            <SideBarNavItem active={MENUS.CREATE === selectedMenu}>
               <Plus size={14} />
               <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.LIBRARY}>
-            <SideBarNavItem
-              active={MENUS.LIBRARY === selectedMenu}
-            >
+            <SideBarNavItem active={MENUS.LIBRARY === selectedMenu}>
               <BookOpen size={14} />
               <SideBarNavTxt>{MENUS.LIBRARY}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.WRONG}>
-            <SideBarNavItem
-              active={MENUS.WRONG === selectedMenu}
-            >
+            <SideBarNavItem active={MENUS.WRONG === selectedMenu}>
               <CircleX size={14} />
               <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
             </SideBarNavItem>

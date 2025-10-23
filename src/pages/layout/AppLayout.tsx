@@ -101,11 +101,7 @@ function AppLayout() {
 
   return (
     <AppLayoutWrapper>
-      <SideBar
-        isOpen={isOpen}
-        closeSideBar={closeSideBar}
-        esClose={esClose}
-      />
+      <SideBar isOpen={isOpen} closeSideBar={closeSideBar} esClose={esClose} />
       <AppLayoutVertical isOpen={isOpen}>
         <PageHeader isOpen={isOpen} openSideBar={openSideBar} />
         <Main>
