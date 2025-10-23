@@ -15,18 +15,21 @@ import { administratorApi } from '@/shared/api/axiosClient';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
-  width: ${({ isOpen }) => (isOpen ? '240px' : '0px')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
 
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
   flex-direction: column;
 
-  overflow: hidden;
-  transition: width 0.3s ease-in-out;
+  transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
+  z-index: 100;
+  transition: transform 0.4s ease;
 `;
 
 // 사이드바 헤더

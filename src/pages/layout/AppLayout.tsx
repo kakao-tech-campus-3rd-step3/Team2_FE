@@ -13,15 +13,18 @@ const AppLayoutWrapper = styled.div`
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
   display: flex;
-  overflow: auto;
+  overflow: hidden; /* 가로 스크롤 방지 */
 `;
 
-const AppLayoutVertical = styled.div`
-  width: 100%;
+const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
+  width: ${({ isOpen }) => (isOpen ? 'calc(100dvw - 240px)' : '100dvw')};
   display: flex;
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+
+  transform: ${({ isOpen }) => (isOpen ? 'translateX(240px)' : 'translateX(0)')};
+  transition: transform 0.4s ease, width 0.4s ease;
 `;
 
 const Main = styled.div`
@@ -107,7 +110,7 @@ function AppLayout() {
         changeMenu={changeMenu}
         esClose={esClose}
       />
-      <AppLayoutVertical>
+      <AppLayoutVertical isOpen={isOpen}>
         <PageHeader isOpen={isOpen} openSideBar={openSideBar} />
         <Main>
           <Outlet
