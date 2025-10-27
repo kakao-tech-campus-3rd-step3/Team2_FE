@@ -155,12 +155,16 @@ const SideBarUserInfoTextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: ${({ theme }) => theme.spacing.spacing2};
+  width: 145px;
 `;
 
 const SideBarUserInfoName = styled.p`
   font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const SideBarUserInfoEmail = styled.p`
@@ -168,6 +172,10 @@ const SideBarUserInfoEmail = styled.p`
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray7};
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const DropdownWrapper = styled.div`
