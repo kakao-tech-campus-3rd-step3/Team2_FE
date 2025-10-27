@@ -21,7 +21,7 @@ const Container = styled.div`
   align-items: center;
   padding: 20px;
   background-color: ${({ theme }) => theme.colors.background.background};
-  height: calc(100dvh - 76px);
+  height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
   justify-content: flex-start;

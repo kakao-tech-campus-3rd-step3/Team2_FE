@@ -6,7 +6,7 @@ import CalendarHeatmapCompo from '@/features/dashboard/CalendarHeatmapCompo';
 const DashboardWrapper = styled.div`
   width: 100%;
   padding: ${({ theme }) => theme.spacing.spacing5};
-  height: calc(100dvh - 76px);
+  height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
   justify-content: flex-start;

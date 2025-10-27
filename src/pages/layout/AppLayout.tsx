@@ -12,6 +12,7 @@ const AppLayoutWrapper = styled.div`
   width: 100%;
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
+  min-width: 1050px;
   display: flex;
   overflow: hidden;
 `;
@@ -33,6 +34,7 @@ const Main = styled.div`
   min-width: 800px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
   flex: 1;
+  height: calc(100% - 76px);
 `;
 
 function AppLayout() {
