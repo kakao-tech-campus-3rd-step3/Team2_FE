@@ -5,6 +5,7 @@ import api from '@/shared/api/axiosClient';
 import { useQuery } from '@tanstack/react-query';
 import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useState, useEffect } from 'react';
+import Spinner from '@/shared/components/Spinner';
 
 const WrongWrapper = styled.div`
   display: flex;
@@ -135,7 +136,7 @@ function Wrong() {
   );
 
   // 로딩
-  if (isPending) return <h1>Loading...</h1>;
+  if (isPending) return <Spinner/>;
   // 에러
   if (error) return <h1>Error</h1>;
 
