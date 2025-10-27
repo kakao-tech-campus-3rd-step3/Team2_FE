@@ -136,7 +136,7 @@ function Wrong() {
   );
 
   // 로딩
-  if (isPending) return <Spinner/>;
+  if (isPending) return <Spinner />;
   // 에러
   if (error) return <h1>Error</h1>;
 
