@@ -177,11 +177,15 @@ const STATUS_MAP: Record<QuestionSetStatus, string> = {
 };
 
 type QuestionSetContentType = MyQuestionSetsResponse & { status: QuestionSetStatus };
-interface QuestionSetApiResponse {
+interface QuestionSets {
   content: QuestionSetContentType[];
   nextCursor: number;
   hasNext: boolean;
   size: number;
+}
+interface QuestionSetApiResponse {
+  learningProgress: number;
+  questionSets: QuestionSets;
 }
 
 const Library = () => {
@@ -291,9 +295,8 @@ const Library = () => {
     queryKey: ['questionSets'],
     queryFn: async () => {
       const res = await api.get<QuestionSetApiResponse>(`/question-set`);
-      return res.data.content;
+      return res.data.questionSets.content;
     },
-    // 생성 중('PENDING') 상태인 항목이 있을 경우 5초마다 데이터를 다시 가져옵니다.
     refetchInterval: (query) =>
       query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
   });
