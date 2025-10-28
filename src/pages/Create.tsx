@@ -33,7 +33,9 @@ const CreateWrapper = styled.div`
 
 const CreateContainer = styled.div`
   width: 100%;
-  min-height: 400px;
+  min-height: 380px;
+  max-height: 880px;
+  height: calc(30dvh + 180px);
 `;
 
 type CreateProps = {
