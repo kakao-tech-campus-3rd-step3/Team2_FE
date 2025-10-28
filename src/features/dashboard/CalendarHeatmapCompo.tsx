@@ -29,12 +29,11 @@ const CalendarHeatmapWrapper = styled.div`
 
 interface Props {
   values: DailyStatItem[];
-  startDate: string; 
+  startDate: string;
   endDate: string;
 }
 
 function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
-
   return (
     <CalendarHeatmapWrapper>
       <CalendarHeatmap
@@ -42,7 +41,7 @@ function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
         endDate={new Date(endDate)}
         values={values}
         classForValue={(value) => {
-          if (!value) return 'color-empty'; 
+          if (!value) return 'color-empty';
           if (value.count === 0) return 'color-empty';
           if (value.count < 20) return 'color-scale-1';
           if (value.count < 40) return 'color-scale-2';
