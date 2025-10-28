@@ -1,7 +1,12 @@
 import PageLayout from '@/shared/components/Layout/PageLayout';
 import styled from '@emotion/styled';
 import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
+import api from '@/shared/api/axiosClient';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/app/auth/useAuth';
 import CalendarHeatmapCompo from '@/features/dashboard/CalendarHeatmapCompo';
+import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
+import type { DailyStatsResponse } from '@/features/dashboard/types/dailyStats';
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -97,6 +102,35 @@ const DashboardCardDescription = styled.p`
 `;
 
 function Dashboard() {
+  const { userInfo, isAuthLoading } = useAuth();
+  const memberId = userInfo?.id;
+
+  const { data } = useQuery<LearnStatsResponse>({
+    queryKey: ['learnStats', memberId],
+    queryFn: async () => {
+      const res = await api.get<LearnStatsResponse>(`/members/${memberId}/learn-stats`);
+      return res.data;
+    },
+    enabled: !!memberId && !isAuthLoading,
+  });
+
+  // TODO: 이 부분 나라별로 알맞은 값이 나오도록 하기
+  const year = new Date().getFullYear();
+  const from = `${year}-01-01`;
+  const to = new Date().toISOString().slice(0, 10);
+
+  const { data: dailyValues } = useQuery<DailyStatsResponse>({
+    queryKey: ['dailyStatsValues', memberId, from, to],
+    queryFn: async () => {
+      if (!memberId) return [] as DailyStatsResponse;
+      const res = await api.get<DailyStatsResponse>(
+        `/members/${memberId}/daily-stats?from=${from}&to=${to}`,
+      );
+      return res.data;
+    },
+    enabled: !!memberId && !isAuthLoading,
+  });
+
   return (
     <PageLayout>
       <DashboardWrapper>
@@ -107,33 +141,33 @@ function Dashboard() {
             <BookOpenWrapper>
               <BookOpen size={20} />
             </BookOpenWrapper>
-            <DashboardCardCount>24</DashboardCardCount>
+            <DashboardCardCount>{data?.totalQuestionSetCount ?? 0}</DashboardCardCount>
             <DashboardCardDescription>총 문제집 수</DashboardCardDescription>
           </DashboardStatCard>
           <DashboardStatCard>
             <CheckCircleWrapper>
               <CheckCircle size={20} />
             </CheckCircleWrapper>
-            <DashboardCardCount>142</DashboardCardCount>
+            <DashboardCardCount>{data?.weeklySolvedQuestionCount ?? 0}</DashboardCardCount>
             <DashboardCardDescription>이번 주 푼 문제</DashboardCardDescription>
           </DashboardStatCard>
           <DashboardStatCard>
             <TargetWrapper>
               <Target size={20} />
             </TargetWrapper>
-            <DashboardCardCount>1556</DashboardCardCount>
+            <DashboardCardCount>{data?.totalSolvedQuestionCount ?? 0}</DashboardCardCount>
             <DashboardCardDescription>총 푼 문제수</DashboardCardDescription>
           </DashboardStatCard>
           <DashboardStatCard>
             <FlameWrapper>
               <Flame size={20} />
             </FlameWrapper>
-            <DashboardCardCount>12</DashboardCardCount>
+            <DashboardCardCount>{data?.consecutiveLearningDays ?? 0}</DashboardCardCount>
             <DashboardCardDescription>연속 학습일</DashboardCardDescription>
           </DashboardStatCard>
         </DashboardStatCardWrapper>
         {/* 깃허브 스타일 잔디 */}
-        <CalendarHeatmapCompo />
+        <CalendarHeatmapCompo values={dailyValues ?? []} startDate={from} endDate={to} />
       </DashboardWrapper>
     </PageLayout>
   );

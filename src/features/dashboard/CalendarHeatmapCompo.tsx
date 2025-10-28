@@ -1,8 +1,7 @@
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import styled from '@emotion/styled';
-import { mockHeatmapData } from '@/features/dashboard/mock/mockHeatmapData';
-
+import type { DailyStatItem } from '@/features/dashboard/types/dailyStats';
 const CalendarHeatmapWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing50};
   height: 300px;
@@ -28,18 +27,24 @@ const CalendarHeatmapWrapper = styled.div`
   }
 `;
 
-function CalendarHeatmapCompo() {
+interface Props {
+  values: DailyStatItem[];
+  startDate: string;
+  endDate: string;
+}
+
+function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
   return (
     <CalendarHeatmapWrapper>
       <CalendarHeatmap
-        startDate={new Date('2025-01-01')}
-        endDate={new Date('2025-10-22')}
-        values={mockHeatmapData}
+        startDate={new Date(startDate)}
+        endDate={new Date(endDate)}
+        values={values}
         classForValue={(value) => {
-          if (!value) return 'color-empty'; // 학습 안 한 날
+          if (!value) return 'color-empty';
           if (value.count === 0) return 'color-empty';
-          if (value.count < 2) return 'color-scale-1';
-          if (value.count < 4) return 'color-scale-2';
+          if (value.count < 20) return 'color-scale-1';
+          if (value.count < 40) return 'color-scale-2';
           return 'color-scale-3';
         }}
       />
