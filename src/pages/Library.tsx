@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
@@ -13,7 +13,9 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
-import RightClickMenu, { type MenuItem } from '@/features/library/components/RightClickMenu';
+import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
+import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
+import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 
 const Container = styled.div`
   display: flex;
@@ -296,45 +298,23 @@ const Library = () => {
       query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
   });
 
-  const RightClickMenuList: MenuItem[] = useMemo(
-    () => [
-      {
-        type: 'content',
-        key: 'rename',
-        title: '문제집 이름 변경',
-        icon: '✏️',
-        onClick: () => {
-          if (!selectedCell) return;
-          handleRenameClick(selectedCell);
-        },
-        disabled: selectedCell?.status !== 'COMPLETE',
-      },
-      {
-        type: 'content',
-        key: 'delete',
-        title: '삭제',
-        icon: '❌',
-        onClick: () => {
-          if (!selectedCell) return;
-          handleDeleteClick(selectedCell);
-        },
-        disabled: selectedCell?.status !== 'COMPLETE',
-      },
-      { type: 'divider', key: 'divider1' },
-      {
-        type: 'content',
-        key: 'solve',
-        title: '문제집 풀기',
-        icon: '📝',
-        onClick: () => {
-          if (!selectedCell) return;
-          handleSolveClick(selectedCell.questionSetId);
-        },
-        disabled: selectedCell?.status !== 'COMPLETE',
-      },
-    ],
-    [selectedCell, handleSolveClick, handleDeleteClick, handleRenameClick],
-  );
+  const handleMenuRename = useCallback(() => {
+    if (!selectedCell) return;
+    handleRenameClick(selectedCell);
+    setIsVisibleMenu(false);
+  }, [selectedCell, handleRenameClick]);
+
+  const handleMenuDelete = useCallback(() => {
+    if (!selectedCell) return;
+    handleDeleteClick(selectedCell);
+    setIsVisibleMenu(false);
+  }, [selectedCell, handleDeleteClick]);
+
+  const handleMenuSolve = useCallback(() => {
+    if (!selectedCell) return;
+    handleSolveClick(selectedCell.questionSetId);
+    setIsVisibleMenu(false);
+  }, [selectedCell, handleSolveClick]);
 
   if (isPending) {
     return <Spinner />;
@@ -350,12 +330,27 @@ const Library = () => {
 
   return (
     <Container>
-      <RightClickMenu
-        isVisible={isVisibleMenu}
-        setIsVisible={setIsVisibleMenu}
-        point={mousePoint}
-        menuContents={RightClickMenuList}
-      />
+      <RightClickMenu isVisible={isVisibleMenu} setIsVisible={setIsVisibleMenu} point={mousePoint}>
+        <RightClickMenuItem
+          icon="✏️"
+          title="문제집 이름 변경"
+          onClick={handleMenuRename}
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        />
+        <RightClickMenuItem
+          icon="❌"
+          title="삭제"
+          onClick={handleMenuDelete}
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        />
+        <RightClickMenuDivider />
+        <RightClickMenuItem
+          icon="📝"
+          title="문제집 풀기"
+          onClick={handleMenuSolve}
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        />
+      </RightClickMenu>
       <LibraryWrapper>
         <LibraryTitle />
         <LibraryProgressSummary totalCount={totalCount} completedCount={completedCount} />
