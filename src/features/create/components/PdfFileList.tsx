@@ -54,16 +54,16 @@ const FileListDivWithScroll = styled.div`
   overflow: auto;
   width: 100%;
   height: 30dvh;
-  min-height:200px;
-  max-height:700px;
+  min-height: 200px;
+  max-height: 700px;
   border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
 const LoadingDiv = styled.div`
   width: 100%;
   height: 30dvh;
-  min-height:200px;
-  max-height:700px;
+  min-height: 200px;
+  max-height: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
