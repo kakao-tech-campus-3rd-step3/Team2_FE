@@ -189,9 +189,6 @@ interface QuestionSetApiResponse {
 }
 
 const Library = () => {
-  const totalCount = 5;
-  const completedCount = 1;
-
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
@@ -295,10 +292,12 @@ const Library = () => {
     queryKey: ['questionSets'],
     queryFn: async () => {
       const res = await api.get<QuestionSetApiResponse>(`/question-set`);
-      return res.data.questionSets.content;
+      return res.data;
     },
     refetchInterval: (query) =>
-      query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
+      query.state.data?.questionSets.content.some((item) => item.status === 'PENDING')
+        ? 5000
+        : false,
   });
 
   const handleMenuRename = useCallback(() => {
@@ -327,7 +326,7 @@ const Library = () => {
     return <span>에러가 발생했습니다: {error.message}</span>;
   }
 
-  const filteredQuestionSets = data.filter((item) =>
+  const filteredQuestionSets = data.questionSets.content.filter((item) =>
     item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
@@ -356,7 +355,7 @@ const Library = () => {
       </RightClickMenu>
       <LibraryWrapper>
         <LibraryTitle />
-        <LibraryProgressSummary totalCount={totalCount} completedCount={completedCount} />
+        <LibraryProgressSummary percent={data.learningProgress} />
         <Spacer height="12px" />
         {/* 검색 input창 -> 디바운싱 구현되어 있습니다. */}
         <FileListSearchInput
