@@ -885,7 +885,7 @@ const Library = () => {
               <FolderActionButton onClick={handleCancelAddFolder}>❌</FolderActionButton>
             </FolderInputContainer>
           ) : (
-            <AddFolderButton onClick={handleAddFolder}>➕ 폴더 추가</AddFolderButton>
+            <AddFolderButton onClick={handleAddFolder}>➕</AddFolderButton>
           )}
         </FolderContainer>
         <Spacer height="12px" />
