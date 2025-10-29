@@ -339,8 +339,17 @@ const Library = () => {
   const [isAddingFolder, setIsAddingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+  const [isVisibleFolderMenu, setIsVisibleFolderMenu] = useState<boolean>(false);
+  const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+  const [editingFolderId, setEditingFolderId] = useState<number | null>(null);
+  const [editingFolderName, setEditingFolderName] = useState('');
 
   const [mousePoint, setMousePoint] = useState<{
+    x: number;
+    y: number;
+  }>({ x: 0, y: 0 });
+
+  const [folderMousePoint, setFolderMousePoint] = useState<{
     x: number;
     y: number;
   }>({ x: 0, y: 0 });
@@ -357,6 +366,18 @@ const Library = () => {
     setSelectedCell(item);
     setIsVisibleMenu(true);
     setMousePoint({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleFolderContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    folder: Folder,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setSelectedFolder(folder);
+    setIsVisibleFolderMenu(true);
+    setFolderMousePoint({ x: e.clientX, y: e.clientY });
   };
 
   const updateTitleMutation = useMutation({
@@ -420,6 +441,39 @@ const Library = () => {
     },
     onError: (error) => {
       alert(`폴더 생성 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
+  const deleteFolderMutation = useMutation({
+    mutationFn: (id: number) => {
+      return api.delete(`/common-folders/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['folders'] });
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      if (selectedFolderId === selectedFolder?.id) {
+        setSelectedFolderId(null);
+      }
+    },
+    onError: (error) => {
+      alert(`폴더 삭제 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
+  const updateFolderNameMutation = useMutation({
+    mutationFn: ({ id, name }: { id: number; name: string }) => {
+      if (!name.trim()) {
+        throw new Error('폴더 이름은 비워둘 수 없습니다.');
+      }
+      return api.patch(`/common-folders/${id}`, { name, type: QUESTION_SET_TYPE });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['folders'] });
+      setEditingFolderId(null);
+      setEditingFolderName('');
+    },
+    onError: (error) => {
+      alert(error.message);
     },
   });
 
@@ -573,6 +627,44 @@ const Library = () => {
     setIsVisibleMenu(false);
   }, [selectedCell, handleSolveClick]);
 
+  const handleFolderMenuRename = useCallback(() => {
+    if (!selectedFolder) return;
+    setEditingFolderId(selectedFolder.id);
+    setEditingFolderName(selectedFolder.name);
+    setIsVisibleFolderMenu(false);
+  }, [selectedFolder]);
+
+  const handleFolderMenuDelete = useCallback(async () => {
+    if (!selectedFolder) return;
+    setIsVisibleFolderMenu(false);
+
+    try {
+      const response = await api.get<{ questionSetCount: number }>(
+        `/common-folders/${selectedFolder.id}/delete-warning`,
+      );
+
+      const questionSetCount = response.data.questionSetCount;
+      const confirmMessage =
+        questionSetCount > 0
+          ? `'${selectedFolder.name}' 폴더에 ${questionSetCount}개의 문제집이 있습니다.\n정말로 삭제하시겠습니까?`
+          : `'${selectedFolder.name}' 폴더를 정말 삭제하시겠습니까?`;
+
+      if (window.confirm(confirmMessage)) {
+        deleteFolderMutation.mutate(selectedFolder.id);
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
+      alert(`폴더 삭제 경고 정보를 가져오는데 실패했습니다: ${errorMessage}`);
+    }
+  }, [selectedFolder, deleteFolderMutation]);
+
+  const submitFolderNameEdit = (folder: Folder) => {
+    updateFolderNameMutation.mutate({
+      id: folder.id,
+      name: editingFolderName,
+    });
+  };
+
   if (isPending || isFoldersPending) {
     return <Spinner />;
   }
@@ -609,6 +701,14 @@ const Library = () => {
           disabled={selectedCell?.status !== 'COMPLETE'}
         />
       </RightClickMenu>
+      <RightClickMenu
+        isVisible={isVisibleFolderMenu}
+        setIsVisible={setIsVisibleFolderMenu}
+        point={folderMousePoint}
+      >
+        <RightClickMenuItem icon="✏️" title="폴더 이름 변경" onClick={handleFolderMenuRename} />
+        <RightClickMenuItem icon="❌" title="폴더 삭제" onClick={handleFolderMenuDelete} />
+      </RightClickMenu>
       <LibraryWrapper>
         <LibraryTitle />
         <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
@@ -624,6 +724,7 @@ const Library = () => {
           {folders &&
             folders.map((folder) => {
               const colors = getFolderColor(folder.id);
+              const isEditingThisFolder = editingFolderId === folder.id;
               return (
                 <FolderTag
                   key={folder.id}
@@ -632,11 +733,48 @@ const Library = () => {
                   folderColor={colors.bg}
                   folderHoverColor={colors.hover}
                   onClick={() => handleFolderClick(folder.id)}
+                  onContextMenu={(e) => handleFolderContextMenu(e, folder)}
                   onDragOver={(e) => handleDragOver(e, folder.id)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, folder)}
                 >
-                  📁 {folder.name}
+                  {isEditingThisFolder ? (
+                    <>
+                      📁{' '}
+                      <FolderInput
+                        value={editingFolderName}
+                        onChange={(e) => setEditingFolderName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            submitFolderNameEdit(folder);
+                          }
+                          if (e.key === 'Escape') {
+                            setEditingFolderId(null);
+                          }
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                      />
+                      <FolderActionButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          submitFolderNameEdit(folder);
+                        }}
+                      >
+                        ✔️
+                      </FolderActionButton>
+                      <FolderActionButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingFolderId(null);
+                        }}
+                      >
+                        ❌
+                      </FolderActionButton>
+                    </>
+                  ) : (
+                    <>📁 {folder.name}</>
+                  )}
                 </FolderTag>
               );
             })}
