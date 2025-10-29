@@ -25,6 +25,7 @@ interface Folder {
 }
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
+const ALL_FOLDER_ID = 1;
 
 const Container = styled.div`
   display: flex;
@@ -781,8 +782,18 @@ const Library = () => {
         setIsVisible={setIsVisibleFolderMenu}
         point={folderMousePoint}
       >
-        <RightClickMenuItem icon="✏️" title="폴더 이름 변경" onClick={handleFolderMenuRename} />
-        <RightClickMenuItem icon="❌" title="폴더 삭제" onClick={handleFolderMenuDelete} />
+        <RightClickMenuItem
+          icon="✏️"
+          title="폴더 이름 변경"
+          onClick={handleFolderMenuRename}
+          disabled={selectedFolder?.id === ALL_FOLDER_ID}
+        />
+        <RightClickMenuItem
+          icon="❌"
+          title="폴더 삭제"
+          onClick={handleFolderMenuDelete}
+          disabled={selectedFolder?.id === ALL_FOLDER_ID}
+        />
       </RightClickMenu>
       <LibraryWrapper>
         <LibraryTitle />
