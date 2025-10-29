@@ -61,7 +61,7 @@ function AppLayout() {
     // 토큰이 없으면 SSE 연결을 시도하지 않음
     const token = getToken();
     if (!token) {
-      console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
+      // console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
       return;
     }
 
@@ -85,7 +85,7 @@ function AppLayout() {
           },
         });
       } else {
-        console.log('[SSE] 문제집 생성 실패');
+        // console.log('[SSE] 문제집 생성 실패');
       }
     });
 

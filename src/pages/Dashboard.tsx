@@ -1,12 +1,23 @@
-import PageLayout from '@/shared/components/Layout/PageLayout';
 import styled from '@emotion/styled';
 import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
 import api from '@/shared/api/axiosClient';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/app/auth/useAuth';
-import CalendarHeatmapCompo from '@/features/dashboard/CalendarHeatmapCompo';
+import CalendarHeatmapCompo from '@/features/dashboard/components/CalendarHeatmapCompo';
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 import type { DailyStatsResponse } from '@/features/dashboard/types/dailyStats';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: ${({ theme }) => theme.colors.background.background};
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  justify-content: flex-start;
+`;
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -114,10 +125,11 @@ function Dashboard() {
     enabled: !!memberId && !isAuthLoading,
   });
 
-  // TODO: 이 부분 나라별로 알맞은 값이 나오도록 하기
-  const year = new Date().getFullYear();
-  const from = `${year}-01-01`;
-  const to = new Date().toISOString().slice(0, 10);
+  const today = new Date();
+  const to = today.toISOString().slice(0, 10);
+  const fromDate = new Date(today);
+  fromDate.setFullYear(fromDate.getFullYear() - 1);
+  const from = fromDate.toISOString().slice(0, 10);
 
   const { data: dailyValues } = useQuery<DailyStatsResponse>({
     queryKey: ['dailyStatsValues', memberId, from, to],
@@ -132,7 +144,7 @@ function Dashboard() {
   });
 
   return (
-    <PageLayout>
+    <Container>
       <DashboardWrapper>
         <DashboardTitle>학습 현황</DashboardTitle>
         <DashboardDescription>오늘도 열심히 공부하고 계시네요! 📚</DashboardDescription>
@@ -166,10 +178,9 @@ function Dashboard() {
             <DashboardCardDescription>연속 학습일</DashboardCardDescription>
           </DashboardStatCard>
         </DashboardStatCardWrapper>
-        {/* 깃허브 스타일 잔디 */}
         <CalendarHeatmapCompo values={dailyValues ?? []} startDate={from} endDate={to} />
       </DashboardWrapper>
-    </PageLayout>
+    </Container>
   );
 }
 
