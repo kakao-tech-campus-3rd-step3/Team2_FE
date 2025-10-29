@@ -70,21 +70,24 @@ const FolderTag = styled.div<{
   isDragOver?: boolean;
   folderColor: string;
   folderHoverColor: string;
+  isActive?: boolean;
 }>`
   display: inline-flex;
   align-items: center;
   padding: 6px 12px;
   border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ isDragOver, folderColor, folderHoverColor }) =>
-    isDragOver ? folderHoverColor : folderColor};
+  background-color: ${({ isDragOver, folderColor, folderHoverColor, isActive }) =>
+    isDragOver || isActive ? folderHoverColor : folderColor};
   border: 1px solid
-    ${({ isDragOver, folderHoverColor }) => (isDragOver ? folderHoverColor : 'transparent')};
+    ${({ isDragOver, folderHoverColor, isActive }) =>
+      isDragOver || isActive ? folderHoverColor : 'transparent'};
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
   color: white;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   user-select: none;
-  font-weight: 500;
+  font-weight: ${({ isActive }) => (isActive ? '700' : '500')};
+  box-shadow: ${({ isActive }) => (isActive ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none')};
 
   &:hover {
     background-color: ${({ folderHoverColor }) => folderHoverColor};
@@ -335,6 +338,7 @@ const Library = () => {
   const [dragOverFolderId, setDragOverFolderId] = useState<number | null>(null);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
 
   const [mousePoint, setMousePoint] = useState<{
     x: number;
@@ -366,7 +370,7 @@ const Library = () => {
       return api.patch(`/question-set/${id}`, { title });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      queryClient.invalidateQueries({ queryKey: ['questionSets', selectedFolderId] });
       setEditingItemId(null);
       setEditingTitle('');
     },
@@ -380,7 +384,7 @@ const Library = () => {
       return api.delete(`/question-set/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      queryClient.invalidateQueries({ queryKey: ['questionSets', selectedFolderId] });
     },
     onError: (error) => {
       alert(`삭제 중 에러가 발생했습니다: ${error.message}`);
@@ -460,24 +464,40 @@ const Library = () => {
     };
   }, [searchTerm]);
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ['questionSets'],
-    queryFn: async () => {
-      const res = await api.get<QuestionSetApiResponse>(`/question-set`);
-      return res.data;
-    },
-    refetchInterval: (query) =>
-      query.state.data?.questionSets.content.some((item) => item.status === 'PENDING')
-        ? 5000
-        : false,
-  });
-
   const { data: folders, isPending: isFoldersPending } = useQuery({
     queryKey: ['folders'],
     queryFn: async () => {
       const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
       return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
     },
+  });
+
+  // 폴더가 로드되면 첫 번째 폴더를 자동 선택
+  useEffect(() => {
+    if (folders && folders.length > 0 && selectedFolderId === null) {
+      setSelectedFolderId(folders[0].id);
+    }
+  }, [folders, selectedFolderId]);
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ['questionSets', selectedFolderId],
+    queryFn: async () => {
+      if (selectedFolderId === null) {
+        return {
+          learningProgress: 0,
+          questionSets: { content: [], nextCursor: 0, hasNext: false, size: 0 },
+        };
+      }
+      const res = await api.get<QuestionSetApiResponse>(
+        `/question-set?size=9999&folderId=${selectedFolderId}`,
+      );
+      return res.data;
+    },
+    enabled: selectedFolderId !== null,
+    refetchInterval: (query) =>
+      query.state.data?.questionSets.content.some((item) => item.status === 'PENDING')
+        ? 5000
+        : false,
   });
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: QuestionSetContentType) => {
@@ -531,6 +551,10 @@ const Library = () => {
     createFolderMutation.mutate(newFolderName.trim());
   };
 
+  const handleFolderClick = (folderId: number) => {
+    setSelectedFolderId(folderId);
+  };
+
   const handleMenuRename = useCallback(() => {
     if (!selectedCell) return;
     handleRenameClick(selectedCell);
@@ -557,9 +581,10 @@ const Library = () => {
     return <span>에러가 발생했습니다: {error.message}</span>;
   }
 
-  const filteredQuestionSets = data.questionSets.content.filter((item) =>
-    item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-  );
+  const filteredQuestionSets =
+    data?.questionSets.content.filter((item) =>
+      item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    ) ?? [];
 
   return (
     <Container>
@@ -586,7 +611,7 @@ const Library = () => {
       </RightClickMenu>
       <LibraryWrapper>
         <LibraryTitle />
-        <LibraryProgressSummary percent={data.learningProgress} />
+        <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
         <Spacer height="12px" />
         {/* 검색 input창 -> 디바운싱 구현되어 있습니다. */}
         <FileListSearchInput
@@ -603,8 +628,10 @@ const Library = () => {
                 <FolderTag
                   key={folder.id}
                   isDragOver={dragOverFolderId === folder.id}
+                  isActive={selectedFolderId === folder.id}
                   folderColor={colors.bg}
                   folderHoverColor={colors.hover}
+                  onClick={() => handleFolderClick(folder.id)}
                   onDragOver={(e) => handleDragOver(e, folder.id)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, folder)}
