@@ -17,6 +17,15 @@ import RightClickMenu from '@/features/library/components/RightClickMenu/RightCl
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 
+interface Folder {
+  id: number;
+  name: string;
+  type: 'QUESTION_SET';
+  sortOrder: number;
+}
+
+const QUESTION_SET_TYPE = 'QUESTION_SET';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,6 +59,106 @@ const FileListSearchInput = styled.input`
   }
 `;
 
+const FolderContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+`;
+
+const FolderTag = styled.div<{
+  isDragOver?: boolean;
+  folderColor: string;
+  folderHoverColor: string;
+}>`
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  background-color: ${({ isDragOver, folderColor, folderHoverColor }) =>
+    isDragOver ? folderHoverColor : folderColor};
+  border: 1px solid
+    ${({ isDragOver, folderHoverColor }) => (isDragOver ? folderHoverColor : 'transparent')};
+  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+  font-weight: 500;
+
+  &:hover {
+    background-color: ${({ folderHoverColor }) => folderHoverColor};
+    border-color: ${({ folderHoverColor }) => folderHoverColor};
+    color: white;
+  }
+`;
+
+const AddFolderButton = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
+  border: 1px dashed ${({ theme }) => theme.colors.border.border1};
+  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+  color: ${({ theme }) => theme.colors.text.default};
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.semantic.primary};
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+    border-style: solid;
+    color: white;
+  }
+`;
+
+const FolderInputContainer = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  background-color: ${({ theme }) => theme.colors.background.foreground};
+  border: 1px solid ${({ theme }) => theme.colors.semantic.primary};
+`;
+
+const FolderInput = styled.input`
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+  color: ${({ theme }) => theme.colors.text.default};
+  width: 120px;
+  padding: 0;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.subtitle};
+  }
+`;
+
+const FolderActionButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: transform 0.1s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+`;
+
 const ListBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,7 +168,7 @@ const ListBox = styled.div`
   overflow: hidden;
 `;
 
-const ListRow = styled.div`
+const ListRow = styled.div<{ isDragging?: boolean }>`
   display: grid;
   grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
   align-items: center;
@@ -67,6 +176,7 @@ const ListRow = styled.div`
   padding: 16px 24px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.border1};
   transition: background-color 0.2s ease-in-out;
+  opacity: ${({ isDragging }) => (isDragging ? 0.5 : 1)};
 
   &:last-of-type {
     border-bottom: none;
@@ -74,6 +184,14 @@ const ListRow = styled.div`
 
   &:not(:first-of-type):hover {
     background-color: #f5f5f5;
+  }
+
+  &:not(:first-of-type) {
+    cursor: grab;
+  }
+
+  &:not(:first-of-type):active {
+    cursor: grabbing;
   }
 `;
 
@@ -188,6 +306,24 @@ interface QuestionSetApiResponse {
   questionSets: QuestionSets;
 }
 
+const FOLDER_COLORS = [
+  { bg: '#3b82f6', hover: '#2563eb' }, // 파란색
+  { bg: '#10b981', hover: '#059669' }, // 초록색
+  { bg: '#8b5cf6', hover: '#7c3aed' }, // 보라색
+  { bg: '#f59e0b', hover: '#d97706' }, // 주황색
+  { bg: '#ec4899', hover: '#db2777' }, // 분홍색
+  { bg: '#06b6d4', hover: '#0891b2' }, // 청록색
+  { bg: '#ef4444', hover: '#dc2626' }, // 빨간색
+  { bg: '#6366f1', hover: '#4f46e5' }, // 인디고
+  { bg: '#14b8a6', hover: '#0d9488' }, // 틸
+  { bg: '#f97316', hover: '#ea580c' }, // 오렌지
+];
+
+const getFolderColor = (folderId: number) => {
+  const index = folderId % FOLDER_COLORS.length;
+  return FOLDER_COLORS[index];
+};
+
 const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -195,6 +331,10 @@ const Library = () => {
   const [editingTitle, setEditingTitle] = useState('');
   const [isVisibleMenu, setIsVisibleMenu] = useState<boolean>(false);
   const [selectedCell, setSelectedCell] = useState<QuestionSetContentType | null>(null);
+  const [draggedItem, setDraggedItem] = useState<QuestionSetContentType | null>(null);
+  const [dragOverFolderId, setDragOverFolderId] = useState<number | null>(null);
+  const [isAddingFolder, setIsAddingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
 
   const [mousePoint, setMousePoint] = useState<{
     x: number;
@@ -244,6 +384,38 @@ const Library = () => {
     },
     onError: (error) => {
       alert(`삭제 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
+  const moveFolderMutation = useMutation({
+    mutationFn: ({ questionSetId, folderId }: { questionSetId: number; folderId: number }) => {
+      return api.patch(`/question-set/${questionSetId}`, {
+        commonFolderId: folderId,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['folders'] });
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+    },
+    onError: (error) => {
+      alert(`폴더 이동 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
+  const createFolderMutation = useMutation({
+    mutationFn: (name: string) => {
+      return api.post('/common-folders', {
+        name,
+        type: QUESTION_SET_TYPE,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['folders'] });
+      setIsAddingFolder(false);
+      setNewFolderName('');
+    },
+    onError: (error) => {
+      alert(`폴더 생성 중 에러가 발생했습니다: ${error.message}`);
     },
   });
 
@@ -300,6 +472,65 @@ const Library = () => {
         : false,
   });
 
+  const { data: folders, isPending: isFoldersPending } = useQuery({
+    queryKey: ['folders'],
+    queryFn: async () => {
+      const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
+      return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
+    },
+  });
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: QuestionSetContentType) => {
+    setDraggedItem(item);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+    setDragOverFolderId(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, folderId: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverFolderId(folderId);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverFolderId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, folder: Folder) => {
+    e.preventDefault();
+    setDragOverFolderId(null);
+
+    if (!draggedItem) return;
+
+    moveFolderMutation.mutate({
+      questionSetId: draggedItem.questionSetId,
+      folderId: folder.id,
+    });
+
+    setDraggedItem(null);
+  };
+
+  const handleAddFolder = () => {
+    setIsAddingFolder(true);
+  };
+
+  const handleCancelAddFolder = () => {
+    setIsAddingFolder(false);
+    setNewFolderName('');
+  };
+
+  const handleConfirmAddFolder = () => {
+    if (!newFolderName.trim()) {
+      alert('폴더 이름을 입력해주세요.');
+      return;
+    }
+    createFolderMutation.mutate(newFolderName.trim());
+  };
+
   const handleMenuRename = useCallback(() => {
     if (!selectedCell) return;
     handleRenameClick(selectedCell);
@@ -318,7 +549,7 @@ const Library = () => {
     setIsVisibleMenu(false);
   }, [selectedCell, handleSolveClick]);
 
-  if (isPending) {
+  if (isPending || isFoldersPending) {
     return <Spinner />;
   }
 
@@ -364,6 +595,49 @@ const Library = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Spacer height="12px" />
+        <FolderContainer>
+          {folders &&
+            folders.map((folder) => {
+              const colors = getFolderColor(folder.id);
+              return (
+                <FolderTag
+                  key={folder.id}
+                  isDragOver={dragOverFolderId === folder.id}
+                  folderColor={colors.bg}
+                  folderHoverColor={colors.hover}
+                  onDragOver={(e) => handleDragOver(e, folder.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, folder)}
+                >
+                  📁 {folder.name}
+                </FolderTag>
+              );
+            })}
+          {isAddingFolder ? (
+            <FolderInputContainer>
+              <span>📁</span>
+              <FolderInput
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleConfirmAddFolder();
+                  }
+                  if (e.key === 'Escape') {
+                    handleCancelAddFolder();
+                  }
+                }}
+                placeholder="폴더 이름"
+                autoFocus
+              />
+              <FolderActionButton onClick={handleConfirmAddFolder}>✔️</FolderActionButton>
+              <FolderActionButton onClick={handleCancelAddFolder}>❌</FolderActionButton>
+            </FolderInputContainer>
+          ) : (
+            <AddFolderButton onClick={handleAddFolder}>➕ 폴더 추가</AddFolderButton>
+          )}
+        </FolderContainer>
+        <Spacer height="12px" />
         {/* 여기에서 부터 리스트 박스입니다.*/}
         <ListBox>
           <ListRow>
@@ -381,7 +655,14 @@ const Library = () => {
               const isEditing = editingItemId === item.questionSetId;
 
               return (
-                <ListRow key={item.questionSetId} onContextMenu={(e) => handleContextMenu(e, item)}>
+                <ListRow
+                  key={item.questionSetId}
+                  draggable={item.status === 'COMPLETE'}
+                  isDragging={draggedItem?.questionSetId === item.questionSetId}
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  onDragEnd={handleDragEnd}
+                  onContextMenu={(e) => handleContextMenu(e, item)}
+                >
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>

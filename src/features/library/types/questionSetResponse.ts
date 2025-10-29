@@ -11,4 +11,6 @@ export interface MyQuestionSetsResponse {
   difficultyType: DifficultyType;
   questionType: QuestionType;
   createdAt: string;
+  commonFolderId: number;
+  commonFolderName: string;
 }
