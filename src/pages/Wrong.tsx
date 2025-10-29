@@ -140,6 +140,7 @@ function Wrong() {
   // 에러
   if (error) return <h1>Error</h1>;
 
+  throw new Error();
   return (
     <WrongWrapper>
       <ContentWrapper>
