@@ -286,6 +286,44 @@ const EditIconButton = styled.button`
   }
 `;
 
+const FolderSelectWrapper = styled.div`
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const FolderSelectLabel = styled.span`
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+`;
+
+const FolderSelect = styled.select`
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  font-size: 14px;
+  background-color: ${({ theme }) => theme.colors.background.foreground};
+  color: ${({ theme }) => theme.colors.text.default};
+  cursor: pointer;
+  outline: none;
+
+  &:hover:not(:disabled) {
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+`;
+
 const TYPE_MAP: Record<QuestionType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
@@ -627,6 +665,18 @@ const Library = () => {
     setIsVisibleMenu(false);
   }, [selectedCell, handleSolveClick]);
 
+  const handleMenuMoveToFolder = useCallback(
+    (folderId: number) => {
+      if (!selectedCell) return;
+      moveFolderMutation.mutate({
+        questionSetId: selectedCell.questionSetId,
+        folderId: folderId,
+      });
+      setIsVisibleMenu(false);
+    },
+    [selectedCell, moveFolderMutation],
+  );
+
   const handleFolderMenuRename = useCallback(() => {
     if (!selectedFolder) return;
     setEditingFolderId(selectedFolder.id);
@@ -694,6 +744,31 @@ const Library = () => {
           disabled={selectedCell?.status !== 'COMPLETE'}
         />
         <RightClickMenuDivider />
+        {folders && folders.length > 0 && (
+          <>
+            <FolderSelectWrapper>
+              <FolderSelectLabel>📁 폴더 이동</FolderSelectLabel>
+              <FolderSelect
+                disabled={selectedCell?.status !== 'COMPLETE'}
+                defaultValue={selectedFolderId ?? ''}
+                onChange={(e) => {
+                  const targetFolderId = Number(e.target.value);
+                  if (targetFolderId !== selectedFolderId) {
+                    handleMenuMoveToFolder(targetFolderId);
+                  }
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {folders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>
+                    {folder.name}
+                  </option>
+                ))}
+              </FolderSelect>
+            </FolderSelectWrapper>
+            <RightClickMenuDivider />
+          </>
+        )}
         <RightClickMenuItem
           icon="📝"
           title="문제집 풀기"
