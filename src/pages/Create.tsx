@@ -12,16 +12,30 @@ import ChooseType from '@/features/create/innerPages/ChooseType';
 import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
 const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: ${({ theme }) => theme.colors.background.background};
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  justify-content: flex-start;
+`;
 
 const CreateWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 700px;
+  width: 100%;
+  max-width: 1000px;
 `;
 
-const Container = styled.div`
+const CreateContainer = styled.div`
   width: 100%;
-  min-height: 400px;
+  min-height: 380px;
+  max-height: 880px;
+  height: calc(30dvh + 180px);
 `;
 
 type CreateProps = {
@@ -135,22 +149,24 @@ const Create = () => {
   const progress = (currentStep / stepLabels.length) * 100;
 
   return (
-    <PageLayout>
-      <CreateWrapper>
-        <Spacer height="20px" />
-        <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
-        <Container>{renderStepComponent()}</Container>
-        {currentStep !== 4 && (
-          <NavigationButtons
-            onNext={handleNext}
-            onPrev={handlePrev}
-            isFirst={currentStep === 1}
-            isLast={currentStep === stepLabels.length}
-            nextDisabled={isNextDisabled}
-          />
-        )}
-      </CreateWrapper>
-    </PageLayout>
+    <Container>
+      <PageLayout>
+        <CreateWrapper>
+          <Spacer height="20px" />
+          <CommonProgress progress={progress} stepLabels={stepLabels} width="100%" />
+          <CreateContainer>{renderStepComponent()}</CreateContainer>
+          {currentStep !== 4 && (
+            <NavigationButtons
+              onNext={handleNext}
+              onPrev={handlePrev}
+              isFirst={currentStep === 1}
+              isLast={currentStep === stepLabels.length}
+              nextDisabled={isNextDisabled}
+            />
+          )}
+        </CreateWrapper>
+      </PageLayout>
+    </Container>
   );
 };
 
