@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { refreshAccessToken, getUserInfo } from '@/shared/api/apiService';
 import { getToken } from '@/shared/utils/tokenManager';
 import { AuthContext, type UserInfo } from './AuthContext';
+import { error } from 'console';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -14,11 +15,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // 페이지 새로고침 시에는 쿠키의 리프레시 토큰으로 '조용한 재인증'을 시도합니다.
         // 이 과정은 메모리에 토큰이 없을 때만 실행됩니다.
         if (!getToken()) {
-          try {
-            await refreshAccessToken();
-          } catch {
-            ;
-          }
+          await refreshAccessToken();
         }
 
         // 토큰이 존재하면(원래 있었거나, 재인증에 성공했거나) 사용자 정보를 조회합니다.
