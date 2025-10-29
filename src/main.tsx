@@ -15,14 +15,7 @@ createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <ErrorBoundary
-          fallback={
-            <div style={{ padding: '2rem', color: 'red', textAlign: 'center' }}>
-              <h2>앗! 예상치 못한 오류가 발생했습니다 😢</h2>
-              <p>잠시 후 다시 시도해주세요.</p>
-            </div>
-          }
-        >
+        <ErrorBoundary>
           <App />
         </ErrorBoundary>
         <ToastContainer position="bottom-center" hideProgressBar={true} />
