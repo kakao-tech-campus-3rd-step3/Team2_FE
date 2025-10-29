@@ -2,7 +2,6 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { refreshAccessToken, getUserInfo } from '@/shared/api/apiService';
 import { getToken } from '@/shared/utils/tokenManager';
 import { AuthContext, type UserInfo } from './AuthContext';
-import { error } from 'console';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -15,7 +14,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // 페이지 새로고침 시에는 쿠키의 리프레시 토큰으로 '조용한 재인증'을 시도합니다.
         // 이 과정은 메모리에 토큰이 없을 때만 실행됩니다.
         if (!getToken()) {
-          await refreshAccessToken();
+          try {
+            await refreshAccessToken();
+          } catch {
+            // console.log('리프레시 토큰이 없거나 만료되었습니다');;
+          }
         }
 
         // 토큰이 존재하면(원래 있었거나, 재인증에 성공했거나) 사용자 정보를 조회합니다.
@@ -24,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userData = await getUserInfo();
           setUser(userData);
         } else {
-          // console.log('유효한 토큰이 없어 비로그인 상태로 처리합니다');
+          console.log('유효한 토큰이 없어 비로그인 상태로 처리합니다');
         }
       } catch (error) {
         // 사용자 정보 조회 실패 시에만 에러 로그 출력

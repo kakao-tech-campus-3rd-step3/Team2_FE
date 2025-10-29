@@ -2,13 +2,10 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import styled from '@emotion/styled';
 import type { DailyStatItem } from '@/features/dashboard/types/dailyStats';
+import { cloneElement } from 'react';
+import type { ReactElement, SVGProps } from 'react';
 const CalendarHeatmapWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing50};
-  height: 300px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   .react-calendar-heatmap .color-empty {
     fill: ${({ theme }) => theme.colors.gray.gray0};
@@ -40,6 +37,20 @@ function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
         startDate={new Date(startDate)}
         endDate={new Date(endDate)}
         values={values}
+        titleForValue={(value: unknown) => {
+          const v = value as DailyStatItem | undefined;
+          // console.log(value);
+          if (!v) {
+            return '';
+          }
+          return `${v.date}: ${v.count}회`;
+        }}
+        transformDayElement={(rect) =>
+          cloneElement(
+            rect as ReactElement,
+            { rx: 2, ry: 2 } as unknown as SVGProps<SVGRectElement>,
+          )
+        }
         classForValue={(value) => {
           if (!value) return 'color-empty';
           if (value.count === 0) return 'color-empty';
