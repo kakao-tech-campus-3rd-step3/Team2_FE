@@ -3,7 +3,7 @@ import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
 import api from '@/shared/api/axiosClient';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/app/auth/useAuth';
-import CalendarHeatmapCompo from '@/features/dashboard/CalendarHeatmapCompo';
+import CalendarHeatmapCompo from '@/features/dashboard/components/CalendarHeatmapCompo';
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 import type { DailyStatsResponse } from '@/features/dashboard/types/dailyStats';
 
