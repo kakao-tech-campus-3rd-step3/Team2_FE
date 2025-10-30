@@ -191,7 +191,12 @@ function TrueFalseSolve({
       </QuestionAreaHeader>
       <QuestionWrapper>
         <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
-        <OptionList>
+        <OptionList
+          style={{
+            pointerEvents: isExplanationPage ? 'none' : 'auto',
+            opacity: isExplanationPage ? 0.7 : 1,
+          }}
+        >
           <OptionItem
             onClick={() => {
               markSolved(true);

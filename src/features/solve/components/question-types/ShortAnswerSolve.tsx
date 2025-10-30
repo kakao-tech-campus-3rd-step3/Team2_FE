@@ -190,7 +190,12 @@ function ShortAnswerSolve({
       </QuestionAreaHeader>
       <QuestionWrapper>
         <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
-        <OptionList>
+        <OptionList
+          style={{
+            pointerEvents: isExplanationPage ? 'none' : 'auto',
+            opacity: isExplanationPage ? 0.7 : 1,
+          }}
+        >
           <OptionInput
             type="text"
             placeholder="답변을 입력하세요"

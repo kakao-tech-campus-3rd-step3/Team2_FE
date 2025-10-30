@@ -59,6 +59,7 @@ function Solve() {
   const goExplanationPage = () => {
     setIsAllSolved(false);
     setIsExplanationPage(true);
+    setCurrentQuestionIndex(1);
   }; // 해설 보러 가는 wrapper 함수
   const isReviewing = searchParams.get('isReviewing') === 'true';
 

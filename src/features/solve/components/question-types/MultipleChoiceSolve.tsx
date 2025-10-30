@@ -188,7 +188,12 @@ function MultipleChoiceSolve({
       </QuestionAreaHeader>
       <QuestionWrapper>
         <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
-        <OptionList>
+        <OptionList
+          style={{
+            pointerEvents: isExplanationPage ? 'none' : 'auto',
+            opacity: isExplanationPage ? 0.7 : 1,
+          }}
+        >
           {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
             <OptionItem
               key={i}
