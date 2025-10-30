@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import { CheckCircle, XCircle } from 'lucide-react';
-import { useTheme } from '@emotion/react';
 import Spacer from '@/shared/components/Spacer';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 
@@ -52,29 +50,12 @@ const SummaryProgressPercentInfo = styled.h4`
   color: ${({ theme }) => theme.colors.gray.gray6};
 `;
 
-const ProgressBarExplainBox = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const ExplainItem = styled.div<{ color: string }>`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: ${({ color }) => color};
-`;
-
 interface LibraryProgressSummaryProps {
-  totalCount: number;
-  completedCount: number;
+  percent: number;
 }
 
-const LibraryProgressSummary = ({ totalCount, completedCount }: LibraryProgressSummaryProps) => {
-  const theme = useTheme();
-  const noStartCount = totalCount - completedCount;
-  const progress = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
+const LibraryProgressSummary = ({ percent }: LibraryProgressSummaryProps) => {
+  const progress = Math.min(Math.max(percent, 0), 100);
 
   return (
     <SummaryInfoBox>
@@ -82,9 +63,7 @@ const LibraryProgressSummary = ({ totalCount, completedCount }: LibraryProgressS
         <SummaryTitleBox>
           <SummaryTitleState>학습 진행률</SummaryTitleState>
           <Spacer height={'4px'} />
-          <SummaryTitleSubState>
-            완료 {completedCount}개 / 전체 {totalCount}개
-          </SummaryTitleSubState>
+          <SummaryTitleSubState>학습 진행 상황을 확인하세요</SummaryTitleSubState>
         </SummaryTitleBox>
         <SummaryRightBox>
           <SummaryProgressPercent>{progress}%</SummaryProgressPercent>
@@ -93,16 +72,6 @@ const LibraryProgressSummary = ({ totalCount, completedCount }: LibraryProgressS
         </SummaryRightBox>
       </TopRow>
       <CommonProgress progress={progress} stepLabels={[]} width="100%" animate={true} />
-      <ProgressBarExplainBox>
-        <ExplainItem color={theme.colors.semantic.primary}>
-          <CheckCircle size={15} color={theme.colors.semantic.primary} />
-          <SummaryProgressPercentInfo>완료: {completedCount}개</SummaryProgressPercentInfo>
-        </ExplainItem>
-        <ExplainItem color={theme.colors.gray.gray6}>
-          <XCircle size={15} color={theme.colors.gray.gray6} />
-          <SummaryProgressPercentInfo>시작 전: {noStartCount}개</SummaryProgressPercentInfo>
-        </ExplainItem>
-      </ProgressBarExplainBox>
     </SummaryInfoBox>
   );
 };

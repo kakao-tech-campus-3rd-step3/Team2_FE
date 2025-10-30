@@ -1,4 +1,3 @@
-export { default as ModeCard } from './components/ModeCard';
 export { default as ProgressCard } from './components/ProgressCard';
 export { default as ProgressDescription } from './components/ProgressDescription';
 export { default as QuestionArea } from './components/question-types/MultipleChoiceSolve';

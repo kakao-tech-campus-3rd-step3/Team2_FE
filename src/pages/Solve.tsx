@@ -7,7 +7,6 @@ import SolveHeader from '@/features/solve/components/SolveHeader';
 import ProgressDescription from '@/features/solve/components/ProgressDescription';
 import QuestionNavigator from '@/features/solve/components/QuestionNavigator';
 
-import ModeCard from '@/features/solve/components/ModeCard';
 import ProgressCard from '@/features/solve/components/ProgressCard';
 
 import SolveResult from './SolveResult';
@@ -53,10 +52,15 @@ function Solve() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1); // 현재 풀고있는 문항 위치
   const [solvedCheck, setSolvedCheck] = useState<MarkingRequest[]>([]); // 문항에 대한 배열이고 각 문항의 필드는 문항 id, 선택한 답, 선택한 답에 대한 타입으로 구성됨
   const [isAllSolved, setIsAllSolved] = useState<boolean>(false); // 전체 문제가 다 풀렸는지 감지는 solvedCheck state가 다찼는지르 확인 할 수 있음 제거헤도 될듯
-  const [selectedMode, setSelectedMode] = useState<string>('시험'); // 문제 풀이 모드 선택 얜 신경쓰지마 아직 무시해
   const { questionSetId } = useParams<{ questionSetId: string }>(); // 문제집 id를 받아와서 문제집을 출력함
   const [searchParams] = useSearchParams();
+  const [isExplanationPage, setIsExplanationPage] = useState<boolean>(false); // 하그냥 시원하게 상태 한개 더써야겠다...일단은...
 
+  const goExplanationPage = () => {
+    setIsAllSolved(false);
+    setIsExplanationPage(true);
+    setCurrentQuestionIndex(1);
+  }; // 해설 보러 가는 wrapper 함수
   const isReviewing = searchParams.get('isReviewing') === 'true';
 
   console.log('풀고있는 문제 state', solvedCheck);
@@ -73,9 +77,7 @@ function Solve() {
     },
   });
 
-  // 문제집이 객관식인지, 참거짓인지, 단답형인지 판별하는 부분
-  // if(data?.questions[0].questionType) {}
-
+  // console.log(data);
   // 로딩
   if (isPending)
     return (
@@ -108,6 +110,7 @@ function Solve() {
             solvedCheck={solvedCheck}
             setCurrentQuestionIndex={setCurrentQuestionIndex}
             setIsAllSolved={setIsAllSolved}
+            isExplanationPage={isExplanationPage}
           />
         );
       case 'TRUE_FALSE':
@@ -119,6 +122,7 @@ function Solve() {
             solvedCheck={solvedCheck}
             setCurrentQuestionIndex={setCurrentQuestionIndex}
             setIsAllSolved={setIsAllSolved}
+            isExplanationPage={isExplanationPage}
           />
         );
       case 'SHORT_ANSWER':
@@ -130,6 +134,7 @@ function Solve() {
             solvedCheck={solvedCheck}
             setCurrentQuestionIndex={setCurrentQuestionIndex}
             setIsAllSolved={setIsAllSolved}
+            isExplanationPage={isExplanationPage}
           />
         );
       default:
@@ -145,6 +150,7 @@ function Solve() {
             solvedCheck={solvedCheck}
             questions={data} // TODO: 이건 나중에 정답만 내려주는 방식으로 리팩토링하자
             isReviewing={isReviewing} // 이게 지금 일반 문제풀이인지 오답노트중인지 체크
+            goExplanationPage={goExplanationPage}
           />
         ) : (
           <>
@@ -164,10 +170,8 @@ function Solve() {
               questions={data}
             />
             <SolveContentWrapper>
-              {/* TODO: 이 부분을 참거짓, 단답형 두개더 만들어야함 컴포넌트로 분리하자 */}
               {renderSolveComponent()}
               <RightSidebar>
-                <ModeCard selectedMode={selectedMode} setSelectedMode={setSelectedMode} />
                 <ProgressCard questionLength={data.questions.length} solvedCheck={solvedCheck} />
               </RightSidebar>
             </SolveContentWrapper>

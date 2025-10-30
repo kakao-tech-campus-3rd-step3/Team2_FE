@@ -255,5 +255,21 @@ src/
         </b>
       </sub>
     </td>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/flareseek" target="_blank">
+        <img 
+          src="https://avatars.githubusercontent.com/u/124516776?v=4" 
+          width="100px" 
+          style="border-radius: 8px; border: 1.5px solid #000;" 
+          alt="홍지환"
+        />
+      </a>
+      <br/>
+      <sub>
+        <b>
+          <a href="https://github.com/flareseek" style="text-decoration: none; color: #58a6ff;">홍지환</a>
+        </b>
+      </sub>
+    </td>
   </tr>
 </table>

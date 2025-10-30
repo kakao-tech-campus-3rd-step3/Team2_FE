@@ -5,6 +5,7 @@ import api from '@/shared/api/axiosClient';
 import { useQuery } from '@tanstack/react-query';
 import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useState, useEffect } from 'react';
+import Spinner from '@/shared/components/Spinner';
 
 const WrongWrapper = styled.div`
   display: flex;
@@ -12,7 +13,7 @@ const WrongWrapper = styled.div`
   align-items: center;
   padding: 20px;
   background-color: ${({ theme }) => theme.colors.background.background};
-  height: calc(100dvh - 76px);
+  height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
   justify-content: flex-start;
@@ -135,12 +136,11 @@ function Wrong() {
   );
 
   // 로딩
-  if (isPending) return <h1>Loading...</h1>;
+  if (isPending) return <Spinner />;
   // 에러
   if (error) return <h1>Error</h1>;
 
   return (
-    // <PageLayout>
     <WrongWrapper>
       <ContentWrapper>
         <WrongPageTitleWrapper>
@@ -173,7 +173,6 @@ function Wrong() {
         </WrongNoteList>
       </ContentWrapper>
     </WrongWrapper>
-    // </PageLayout>
   );
 }
 

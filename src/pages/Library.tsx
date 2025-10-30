@@ -1,17 +1,31 @@
 import styled from '@emotion/styled';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
+
 import {
   type MyQuestionSetsResponse,
   type QuestionType,
 } from '@/features/library/types/questionSetResponse';
-import EditIcon from '@/shared/assets/EditIcon.svg?react';
+
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
+import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
+import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
+import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
+import FolderList from '@/shared/components/FolderList';
+
+interface Folder {
+  id: number;
+  name: string;
+  type: 'QUESTION_SET';
+  sortOrder: number;
+}
+
+const QUESTION_SET_TYPE = 'QUESTION_SET';
 
 const Container = styled.div`
   display: flex;
@@ -19,7 +33,7 @@ const Container = styled.div`
   align-items: center;
   padding: 20px;
   background-color: ${({ theme }) => theme.colors.background.background};
-  height: calc(100dvh - 76px);
+  height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
   justify-content: flex-start;
@@ -55,21 +69,30 @@ const ListBox = styled.div`
   overflow: hidden;
 `;
 
-const ListRow = styled.div`
+const ListRow = styled.div<{ isDragging?: boolean }>`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1fr 1.2fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.border1};
   transition: background-color 0.2s ease-in-out;
+  opacity: ${({ isDragging }) => (isDragging ? 0.5 : 1)};
 
   &:last-of-type {
     border-bottom: none;
   }
 
   &:not(:first-of-type):hover {
-    background-color: ${({ theme }) => theme.colors.semantic.primary};
+    background-color: #f5f5f5;
+  }
+
+  &:not(:first-of-type) {
+    cursor: grab;
+  }
+
+  &:not(:first-of-type):active {
+    cursor: grabbing;
   }
 `;
 
@@ -91,12 +114,6 @@ type QuestionSetStatus = 'PENDING' | 'COMPLETE';
 
 const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
   font-weight: 500;
-`;
-
-const ActionsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 8px;
 `;
 
 const ActionButton = styled.button`
@@ -167,6 +184,44 @@ const EditIconButton = styled.button`
   }
 `;
 
+const FolderSelectWrapper = styled.div`
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const FolderSelectLabel = styled.span`
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+`;
+
+const FolderSelect = styled.select`
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.border.border1};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  font-size: 14px;
+  background-color: ${({ theme }) => theme.colors.background.foreground};
+  color: ${({ theme }) => theme.colors.text.default};
+  cursor: pointer;
+  outline: none;
+
+  &:hover:not(:disabled) {
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.semantic.primary};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+`;
+
 const TYPE_MAP: Record<QuestionType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
@@ -178,24 +233,46 @@ const STATUS_MAP: Record<QuestionSetStatus, string> = {
   COMPLETE: '생성완료',
 };
 
-interface QuestionSetApiResponse {
-  content: (MyQuestionSetsResponse & { status: QuestionSetStatus })[];
+type QuestionSetContentType = MyQuestionSetsResponse & { status: QuestionSetStatus };
+interface QuestionSets {
+  content: QuestionSetContentType[];
   nextCursor: number;
   hasNext: boolean;
   size: number;
 }
+interface QuestionSetApiResponse {
+  learningProgress: number;
+  questionSets: QuestionSets;
+}
 
 const Library = () => {
-  const totalCount = 5;
-  const completedCount = 1;
-
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
+  const [isVisibleMenu, setIsVisibleMenu] = useState<boolean>(false);
+  const [selectedCell, setSelectedCell] = useState<QuestionSetContentType | null>(null);
+  const [draggedItem, setDraggedItem] = useState<QuestionSetContentType | null>(null);
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+
+  const [mousePoint, setMousePoint] = useState<{
+    x: number;
+    y: number;
+  }>({ x: 0, y: 0 });
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  const handleContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    item: QuestionSetContentType,
+  ) => {
+    e.preventDefault();
+
+    setSelectedCell(item);
+    setIsVisibleMenu(true);
+    setMousePoint({ x: e.clientX, y: e.clientY });
+  };
 
   const updateTitleMutation = useMutation({
     mutationFn: ({ id, title }: { id: number | undefined; title: string }) => {
@@ -208,7 +285,9 @@ const Library = () => {
       return api.patch(`/question-set/${id}`, { title });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      queryClient.invalidateQueries({
+        queryKey: ['questionSets', selectedFolderId],
+      });
       setEditingItemId(null);
       setEditingTitle('');
     },
@@ -222,19 +301,60 @@ const Library = () => {
       return api.delete(`/question-set/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+      queryClient.invalidateQueries({
+        queryKey: ['questionSets', selectedFolderId],
+      });
     },
     onError: (error) => {
       alert(`삭제 중 에러가 발생했습니다: ${error.message}`);
     },
   });
 
-  const submitTitleEdit = (item: MyQuestionSetsResponse) => {
+  const moveFolderMutation = useMutation({
+    mutationFn: ({ questionSetId, folderId }: { questionSetId: number; folderId: number }) => {
+      return api.patch(`/question-set/${questionSetId}`, {
+        commonFolderId: folderId,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['folders'] });
+      queryClient.invalidateQueries({ queryKey: ['questionSets'] });
+    },
+    onError: (error) => {
+      alert(`폴더 이동 중 에러가 발생했습니다: ${error.message}`);
+    },
+  });
+
+  const submitTitleEdit = (item: QuestionSetContentType) => {
     updateTitleMutation.mutate({
       id: item.questionSetId,
       title: editingTitle,
     });
   };
+
+  const handleSolveClick = useCallback(
+    (questionSetId: number) => {
+      navigate(`/solve/${questionSetId}`);
+    },
+    [navigate],
+  );
+
+  const handleDeleteClick = useCallback(
+    (item: QuestionSetContentType) => {
+      if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
+        deleteMutation.mutate(item.questionSetId);
+      }
+    },
+    [deleteMutation],
+  );
+
+  const handleRenameClick = useCallback(
+    (item: QuestionSetContentType) => {
+      setEditingItemId(item.questionSetId);
+      setEditingTitle(item.title);
+    },
+    [setEditingItemId, setEditingTitle],
+  );
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -246,18 +366,81 @@ const Library = () => {
     };
   }, [searchTerm]);
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ['questionSets'],
+  const { data: folders, isPending: isFoldersPending } = useQuery({
+    queryKey: ['folders'],
     queryFn: async () => {
-      const res = await api.get<QuestionSetApiResponse>(`/question-set`);
-      return res.data.content;
+      const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
+      return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
     },
-    // 생성 중('PENDING') 상태인 항목이 있을 경우 5초마다 데이터를 다시 가져옵니다.
-    refetchInterval: (query) =>
-      query.state.data?.some((item) => item.status === 'PENDING') ? 5000 : false,
   });
 
-  if (isPending) {
+  useEffect(() => {
+    if (folders && folders.length > 0 && selectedFolderId === null) {
+      setSelectedFolderId(folders[0].id);
+    }
+  }, [folders, selectedFolderId]);
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ['questionSets', selectedFolderId],
+    queryFn: async () => {
+      if (selectedFolderId === null) {
+        return {
+          learningProgress: 0,
+          questionSets: { content: [], nextCursor: 0, hasNext: false, size: 0 },
+        };
+      }
+      const res = await api.get<QuestionSetApiResponse>(
+        `/question-set?size=9999&folderId=${selectedFolderId}`,
+      );
+      return res.data;
+    },
+    enabled: selectedFolderId !== null,
+    refetchInterval: (query) =>
+      query.state.data?.questionSets.content.some((item) => item.status === 'PENDING')
+        ? 5000
+        : false,
+  });
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: QuestionSetContentType) => {
+    setDraggedItem(item);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+  };
+
+  const handleMenuRename = useCallback(() => {
+    if (!selectedCell) return;
+    handleRenameClick(selectedCell);
+    setIsVisibleMenu(false);
+  }, [selectedCell, handleRenameClick]);
+
+  const handleMenuDelete = useCallback(() => {
+    if (!selectedCell) return;
+    handleDeleteClick(selectedCell);
+    setIsVisibleMenu(false);
+  }, [selectedCell, handleDeleteClick]);
+
+  const handleMenuSolve = useCallback(() => {
+    if (!selectedCell) return;
+    handleSolveClick(selectedCell.questionSetId);
+    setIsVisibleMenu(false);
+  }, [selectedCell, handleSolveClick]);
+
+  const handleMenuMoveToFolder = useCallback(
+    (folderId: number) => {
+      if (!selectedCell) return;
+      moveFolderMutation.mutate({
+        questionSetId: selectedCell.questionSetId,
+        folderId: folderId,
+      });
+      setIsVisibleMenu(false);
+    },
+    [selectedCell, moveFolderMutation],
+  );
+
+  if (isPending || isFoldersPending) {
     return <Spinner />;
   }
 
@@ -265,24 +448,80 @@ const Library = () => {
     return <span>에러가 발생했습니다: {error.message}</span>;
   }
 
-  const filteredQuestionSets = data.filter((item) =>
-    item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-  );
+  const filteredQuestionSets =
+    data?.questionSets.content.filter((item) =>
+      item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    ) ?? [];
 
   return (
     <Container>
+      <RightClickMenu isVisible={isVisibleMenu} setIsVisible={setIsVisibleMenu} point={mousePoint}>
+        <RightClickMenuItem
+          icon="✏️"
+          title="문제집 이름 변경"
+          onClick={handleMenuRename}
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        />
+        <RightClickMenuItem
+          icon="❌"
+          title="삭제"
+          onClick={handleMenuDelete}
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        />
+        <RightClickMenuDivider />
+        {folders && folders.length > 0 && (
+          <>
+            <FolderSelectWrapper>
+              <FolderSelectLabel>📁 폴더 이동</FolderSelectLabel>
+              <FolderSelect
+                disabled={selectedCell?.status !== 'COMPLETE'}
+                defaultValue={selectedFolderId ?? ''}
+                onChange={(e) => {
+                  const targetFolderId = Number(e.target.value);
+                  if (targetFolderId !== selectedFolderId) {
+                    handleMenuMoveToFolder(targetFolderId);
+                  }
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {folders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>
+                    {folder.name}
+                  </option>
+                ))}
+              </FolderSelect>
+            </FolderSelectWrapper>
+            <RightClickMenuDivider />
+          </>
+        )}
+        <RightClickMenuItem
+          icon="📝"
+          title="문제집 풀기"
+          onClick={handleMenuSolve}
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        />
+      </RightClickMenu>
+
       <LibraryWrapper>
         <LibraryTitle />
-        <LibraryProgressSummary totalCount={totalCount} completedCount={completedCount} />
+        <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
         <Spacer height="12px" />
-        {/* 검색 input창 -> 디바운싱 구현되어 있습니다. */}
         <FileListSearchInput
           placeholder="문제집 제목으로 검색"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Spacer height="12px" />
-        {/* 여기에서 부터 리스트 박스입니다.*/}
+        <FolderList
+          folders={folders}
+          selectedFolderId={selectedFolderId}
+          onFolderSelect={setSelectedFolderId}
+          draggedItem={draggedItem}
+          onItemDrop={(folderId, questionSetId) => {
+            moveFolderMutation.mutate({ questionSetId, folderId });
+          }}
+        />
+        <Spacer height="12px" />
         <ListBox>
           <ListRow>
             <HeaderCell align="left">문제집</HeaderCell>
@@ -291,19 +530,25 @@ const Library = () => {
             <HeaderCell>유형</HeaderCell>
             <HeaderCell>상태</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
-            <HeaderCell>작업</HeaderCell>
           </ListRow>
 
           {[...filteredQuestionSets]
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 시간 내림차순
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
+
               return (
-                <ListRow key={item.questionSetId}>
+                <ListRow
+                  key={item.questionSetId}
+                  draggable={item.status === 'COMPLETE'}
+                  isDragging={draggedItem?.questionSetId === item.questionSetId}
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  onDragEnd={handleDragEnd}
+                  onContextMenu={(e) => handleContextMenu(e, item)}
+                >
                   <ListCell align="left">
                     {isEditing ? (
                       <TitleContainer>
-                        {/* TODO: callback 따로 빼기*/}
                         <TitleEditInput
                           value={editingTitle}
                           onChange={(e) => setEditingTitle(e.target.value)}
@@ -325,14 +570,6 @@ const Library = () => {
                     ) : (
                       <TitleContainer>
                         <TitleText title={item.title}>{item.title}</TitleText>
-                        <EditIconButton
-                          onClick={() => {
-                            setEditingItemId(item.questionSetId);
-                            setEditingTitle(item.title);
-                          }}
-                        >
-                          <EditIcon />
-                        </EditIconButton>
                       </TitleContainer>
                     )}
                   </ListCell>
@@ -340,30 +577,15 @@ const Library = () => {
                   <ListCell>
                     {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
                   </ListCell>
-                  <ListCell>{TYPE_MAP[item.questionType] ?? '알 수 없음'}</ListCell>
+                  <ListCell>{TYPE_MAP[item.questionType] ?? '생성 실패'}</ListCell>
                   <StatusCell status={item.status}>
-                    {STATUS_MAP[item.status] ?? '알 수 없음'}
+                    {STATUS_MAP[item.status] ?? '생성 실패'}
                   </StatusCell>
                   <ListCell>
                     {item.status === 'COMPLETE' && (
-                      <PrimaryButton onClick={() => navigate(`/solve/${item.questionSetId}`)}>
+                      <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
                         풀기
                       </PrimaryButton>
-                    )}
-                  </ListCell>
-                  <ListCell>
-                    {item.status === 'COMPLETE' && (
-                      <ActionsContainer>
-                        <ActionButton
-                          onClick={() => {
-                            if (window.confirm(`'${item.title}' 문제집을 정말 삭제하시겠습니까?`)) {
-                              deleteMutation.mutate(item.questionSetId);
-                            }
-                          }}
-                        >
-                          삭제
-                        </ActionButton>
-                      </ActionsContainer>
                     )}
                   </ListCell>
                 </ListRow>

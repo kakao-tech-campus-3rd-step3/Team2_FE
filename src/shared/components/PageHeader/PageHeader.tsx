@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Sidebar } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const PageHeaderWrapper = styled.header`
   width: 100%;
@@ -29,15 +30,26 @@ const PageTitle = styled.h1`
 interface PageHeaderProps {
   isOpen: boolean;
   openSideBar: () => void;
-  selectedMenu: string;
 }
 
-function PageHeader({ isOpen, openSideBar, selectedMenu }: PageHeaderProps) {
+function PageHeader({ isOpen, openSideBar }: PageHeaderProps) {
+  const location = useLocation();
+  const path = location.pathname;
+
+  let title = '페이지';
+
+  if (path.startsWith('/dashboard')) title = '대시보드';
+  else if (path.startsWith('/create')) title = '문제집 생성';
+  else if (path.startsWith('/solve')) title = '문제 풀이';
+  else if (path.startsWith('/library')) title = '나의 문제집';
+  else if (path.startsWith('/wrong')) title = '오답노트';
+  else if (path === '/') title = '문제집 생성';
+
   return (
     <PageHeaderWrapper>
       <HeaderLeft>
         {!isOpen && <Sidebar size={16} onClick={openSideBar} />}
-        <PageTitle>{selectedMenu}</PageTitle>
+        <PageTitle>{title}</PageTitle>
       </HeaderLeft>
     </PageHeaderWrapper>
   );

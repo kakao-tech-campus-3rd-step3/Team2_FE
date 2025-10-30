@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { LucideFileText } from 'lucide-react';
+import { LucideFileText, X } from 'lucide-react';
 
 const FILE_INFO_SEPARATOR = ' · ';
 
@@ -22,16 +22,20 @@ const FileContentBox = styled.div<{ isSelected: boolean }>`
 const RadioInput = styled.input`
   width: 10px;
   height: 10px;
+  flex-shrink: 0;
 `;
 
 const FileIcon = styled(LucideFileText)`
   margin: 10px;
+  flex-shrink: 0;
 `;
 
 const FileInfoBox = styled.div`
-  width: 100%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 `;
 
 const FileInfoUnderBox = styled.div`
@@ -42,15 +46,34 @@ const FileInfoUnderBox = styled.div`
 const FileName = styled.h4`
   font-size: ${({ theme }) => theme.typography.body3Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.body3Bold.fontWeight};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const FileInfo = styled.span`
   font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray6};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
+
 const NewItemSpan = styled.span`
   font-size: ${({ theme }) => theme.typography.body4Regular.fontSize};
   color: ${({ theme }) => theme.colors.semantic.primary};
+  flex-shrink: 0;
+`;
+
+const DeleteIcon = styled(X)`
+  color: ${({ theme }) => theme.colors.gray.gray6};
+  flex-shrink: 0;
+  margin-left: 10px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.red.red4};
+  }
 `;
 
 interface FileItemProps {
@@ -62,11 +85,17 @@ interface FileItemProps {
   };
   isSelected: boolean;
   onClick: () => void;
+  onDelete: () => void;
 }
 
-const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
+const PdfFileItem = ({ file, isSelected, onClick, onDelete }: FileItemProps) => {
   const fileInfoItems = [file.size, file.date];
   const theme = useTheme();
+
+  const handleDeleteClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    e.stopPropagation();
+    onDelete();
+  };
 
   return (
     <FileContentBox isSelected={isSelected} onClick={onClick}>
@@ -81,6 +110,7 @@ const PdfFileItem = ({ file, isSelected, onClick }: FileItemProps) => {
           </FileInfo>
         </FileInfoUnderBox>
       </FileInfoBox>
+      <DeleteIcon size={18} onClick={handleDeleteClick} />
     </FileContentBox>
   );
 };

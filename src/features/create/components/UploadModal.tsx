@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { CloudUpload } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
+import useDragAndDrop from '@/features/create/hooks/useDragAndDrop';
 
 const IconWrapper = styled.div`
   width: 50px;
@@ -46,7 +47,7 @@ const ModalContent = styled.div<{ isVisible: boolean }>`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transform: translateY(${({ isVisible }) => (isVisible ? '0' : '20px')});
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 그림자 효과 추가 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
 const TitleBox = styled.div`
@@ -127,11 +128,9 @@ interface UploadModalProps {
 }
 
 const UploadModal = ({ onClose, onFileUpload }: UploadModalProps) => {
-  const [isDragging, setIsDragging] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const dragCounter = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -152,53 +151,16 @@ const UploadModal = ({ onClose, onFileUpload }: UploadModalProps) => {
         alert('PDF 파일만 업로드할 수 있습니다.');
         return;
       }
+
       onFileUpload(file);
       handleClose();
     },
     [onFileUpload, handleClose],
   );
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
-
-  const handleDragIn = useCallback(
-    (e: React.DragEvent) => {
-      handleDrag(e);
-      dragCounter.current++;
-      if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-        setIsDragging(true);
-      }
-    },
-    [handleDrag],
-  );
-
-  const handleDragOut = useCallback(
-    (e: React.DragEvent) => {
-      handleDrag(e);
-      dragCounter.current--;
-      if (dragCounter.current === 0) {
-        setIsDragging(false);
-      }
-    },
-    [handleDrag],
-  );
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      handleDrag(e);
-      dragCounter.current = 0;
-      setIsDragging(false);
-      const files = e.dataTransfer.files;
-      if (files && files.length === 1) {
-        handleFile(files[0]);
-      } else {
-        alert('PDF 파일 1개만 업로드할 수 있습니다.');
-      }
-    },
-    [handleDrag, handleFile],
-  );
+  const { isDragging, handleDragIn, handleDragOut, handleDragOver, handleDrop } = useDragAndDrop({
+    onDropFile: handleFile,
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -225,7 +187,7 @@ const UploadModal = ({ onClose, onFileUpload }: UploadModalProps) => {
           onClick={handleZoneClick}
           onDragEnter={handleDragIn}
           onDragLeave={handleDragOut}
-          onDragOver={handleDrag}
+          onDragOver={handleDragOver}
           onDrop={handleDrop}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -247,5 +209,4 @@ const UploadModal = ({ onClose, onFileUpload }: UploadModalProps) => {
     </ModalOverlay>
   );
 };
-
 export default UploadModal;

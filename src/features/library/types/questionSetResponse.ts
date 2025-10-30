@@ -1,4 +1,5 @@
 export type DifficultyType = 'EASY' | 'MEDIUM' | 'HARD';
+
 export type QuestionType = 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER';
 
 export interface MyQuestionSetsResponse {
@@ -10,4 +11,6 @@ export interface MyQuestionSetsResponse {
   difficultyType: DifficultyType;
   questionType: QuestionType;
   createdAt: string;
+  commonFolderId: number;
+  commonFolderName: string;
 }

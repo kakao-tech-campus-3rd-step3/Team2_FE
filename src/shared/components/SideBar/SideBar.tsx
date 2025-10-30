@@ -12,21 +12,25 @@ import { useState } from 'react';
 
 import { clearToken } from '@/shared/utils/tokenManager';
 import { administratorApi } from '@/shared/api/axiosClient';
+import { useLocation } from 'react-router-dom';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
-  width: ${({ isOpen }) => (isOpen ? '240px' : '0px')};
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
 
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
   flex-direction: column;
 
-  overflow: hidden;
-  transition: width 0.3s ease-in-out;
+  transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
+  z-index: 100;
+  transition: transform 0.4s ease;
 `;
 
 // 사이드바 헤더
@@ -94,12 +98,12 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
 
   background-color: 'transparent';
 
-  &.active {
-    background: ${({ theme }) => theme.colors.gray.gray3};
-  }
+  background-color: ${({ active, theme }) => (active ? theme.colors.gray.gray3 : 'transparent')};
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.gray.gray1};
+    background-color: ${({ active, theme }) =>
+      active ? theme.colors.gray.gray3 : theme.colors.gray.gray1};
   }
 `;
 
@@ -151,12 +155,16 @@ const SideBarUserInfoTextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: ${({ theme }) => theme.spacing.spacing2};
+  width: 145px;
 `;
 
 const SideBarUserInfoName = styled.p`
   font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const SideBarUserInfoEmail = styled.p`
@@ -164,6 +172,10 @@ const SideBarUserInfoEmail = styled.p`
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray7};
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const DropdownWrapper = styled.div`
@@ -199,15 +211,14 @@ const DropdownItemTxt = styled.span``;
 interface SideBarProps {
   isOpen: boolean;
   closeSideBar: () => void;
-  selectedMenu: string;
-  changeMenu: (menu: string) => void;
   esClose: () => void;
 }
 
-function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: SideBarProps) {
+function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
   const { userInfo } = useAuth();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -221,6 +232,20 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
       console.error('로그아웃 실패:', error);
     }
   };
+
+  const path = location.pathname;
+
+  let selectedMenu = '페이지';
+
+  if (path === ROUTES.CREATE) {
+    selectedMenu = MENUS.CREATE;
+  } else if (path.startsWith(ROUTES.DASHBOARD)) {
+    selectedMenu = MENUS.DASHBOARD;
+  } else if (path.startsWith(ROUTES.LIBRARY)) {
+    selectedMenu = MENUS.LIBRARY;
+  } else if (path.startsWith(ROUTES.WRONG)) {
+    selectedMenu = MENUS.WRONG;
+  }
 
   return (
     <SideBarWrapper isOpen={isOpen}>
@@ -243,51 +268,27 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
       <SideBarMain>
         <SideBarNav>
           <NavLink to={ROUTES.DASHBOARD}>
-            <SideBarNavItem
-              active={MENUS.DASHBOARD === selectedMenu}
-              onClick={() => changeMenu(MENUS.DASHBOARD)}
-            >
+            <SideBarNavItem active={MENUS.DASHBOARD === selectedMenu}>
               <LayoutDashboard size={14} />
               <SideBarNavTxt>{MENUS.DASHBOARD}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
-
-          {/* TODO: 일단 주석처리만 해둠 나중에 살릴수도 있으니까 */}
-          {/* <NavLink to={ROUTES.SOURCE}>
-            <SideBarNavItem
-              active={MENUS.SOURCE === selectedMenu}
-              onClick={() => changeMenu(MENUS.SOURCE)}
-            >
-              <FileText size={14} />
-              <SideBarNavTxt>{MENUS.SOURCE}</SideBarNavTxt>
-            </SideBarNavItem>
-          </NavLink> */}
-
           <NavLink to={ROUTES.CREATE}>
-            <SideBarNavItem
-              active={MENUS.CREATE === selectedMenu}
-              onClick={() => changeMenu(MENUS.CREATE)}
-            >
+            <SideBarNavItem active={MENUS.CREATE === selectedMenu}>
               <Plus size={14} />
               <SideBarNavTxt>{MENUS.CREATE}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.LIBRARY}>
-            <SideBarNavItem
-              active={MENUS.LIBRARY === selectedMenu}
-              onClick={() => changeMenu(MENUS.LIBRARY)}
-            >
+            <SideBarNavItem active={MENUS.LIBRARY === selectedMenu}>
               <BookOpen size={14} />
               <SideBarNavTxt>{MENUS.LIBRARY}</SideBarNavTxt>
             </SideBarNavItem>
           </NavLink>
 
           <NavLink to={ROUTES.WRONG}>
-            <SideBarNavItem
-              active={MENUS.WRONG === selectedMenu}
-              onClick={() => changeMenu(MENUS.WRONG)}
-            >
+            <SideBarNavItem active={MENUS.WRONG === selectedMenu}>
               <CircleX size={14} />
               <SideBarNavTxt>{MENUS.WRONG}</SideBarNavTxt>
             </SideBarNavItem>
@@ -304,10 +305,7 @@ function SideBar({ isOpen, closeSideBar, selectedMenu, changeMenu, esClose }: Si
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
-              {/* 이 부분 api에 이메일까지 오면 교체만 하면됨 */}
-              <SideBarUserInfoEmail>
-                {userInfo?.name + '@kakao.com' || '로그인 필요'}
-              </SideBarUserInfoEmail>
+              <SideBarUserInfoEmail>{userInfo?.email || '로그인 필요'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
           </SideBarUserInfoAvatarTextWrapper>
           <Settings

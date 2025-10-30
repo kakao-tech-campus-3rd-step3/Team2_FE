@@ -187,3 +187,8 @@ body {
   min-height: 640px;
   overflow: auto;
 }
+#root,
+html,
+body {
+  height: 100%;
+}

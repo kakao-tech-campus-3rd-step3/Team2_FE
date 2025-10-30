@@ -82,6 +82,31 @@ const NextButton = styled.button`
   align-items: center;
 `;
 
+const ExplanationBox = styled.div`
+  background-color: ${({ theme }) => theme.colors.gray.gray1};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing4};
+  margin-top: ${({ theme }) => theme.spacing.spacing3};
+`;
+
+const ExplanationBoxTitle = styled.span`
+  font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
+`;
+
+const AnswerTxt = styled.p`
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+`;
+
+const ExplanationTxt = styled.p`
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+`;
+
 type QuestionAreaProps = {
   currentQuestionIndex: number;
   questions: QuestionSet;
@@ -89,6 +114,7 @@ type QuestionAreaProps = {
   setSolvedCheck: React.Dispatch<React.SetStateAction<MarkingRequest[]>>;
   setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
+  isExplanationPage: boolean;
 };
 
 function MultipleChoiceSolve({
@@ -98,6 +124,7 @@ function MultipleChoiceSolve({
   setSolvedCheck,
   setCurrentQuestionIndex,
   setIsAllSolved,
+  isExplanationPage,
 }: QuestionAreaProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null); // 어떤 선지가 선택되어있는지
 
@@ -161,7 +188,12 @@ function MultipleChoiceSolve({
       </QuestionAreaHeader>
       <QuestionWrapper>
         <QuestionStem>{questions.questions[currentQuestionIndex - 1].questionText}</QuestionStem>
-        <OptionList>
+        <OptionList
+          style={{
+            pointerEvents: isExplanationPage ? 'none' : 'auto',
+            opacity: isExplanationPage ? 0.7 : 1,
+          }}
+        >
           {questions.questions[currentQuestionIndex - 1].options.map((opt, i) => (
             <OptionItem
               key={i}
@@ -173,7 +205,15 @@ function MultipleChoiceSolve({
             >{`${i + 1}. ${opt}`}</OptionItem>
           ))}
         </OptionList>
-
+        {isExplanationPage && (
+          <ExplanationBox>
+            <ExplanationBoxTitle>정답 및 해설</ExplanationBoxTitle>
+            <AnswerTxt>정답 : {questions.questions[currentQuestionIndex - 1].answer}</AnswerTxt>
+            <ExplanationTxt>
+              {questions.questions[currentQuestionIndex - 1].explanation}
+            </ExplanationTxt>
+          </ExplanationBox>
+        )}
         <QuestionNavigation>
           <PrevButton onClick={goPrev} disabled={currentQuestionIndex === 1}>
             <ArrowLeft size={20} />

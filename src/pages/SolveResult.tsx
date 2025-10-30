@@ -116,9 +116,15 @@ type SolveResultProps = {
   solvedCheck: MarkingRequest[];
   questions: QuestionSet;
   isReviewing: boolean;
+  goExplanationPage: () => void;
 };
 
-function SolveResult({ questionLength, solvedCheck, isReviewing }: SolveResultProps) {
+function SolveResult({
+  questionLength,
+  solvedCheck,
+  isReviewing,
+  goExplanationPage,
+}: SolveResultProps) {
   const [correctCount, setCorrectCount] = useState(0);
   const [score, setScore] = useState(0);
   const submitMarking = (data: MarkingRequest[]) => {
@@ -193,6 +199,7 @@ function SolveResult({ questionLength, solvedCheck, isReviewing }: SolveResultPr
             <Link to="/dashboard">
               <GoToDashboardButton>대시보드로 이동</GoToDashboardButton>
             </Link>
+            <GoToDashboardButton onClick={goExplanationPage}>정답 확인</GoToDashboardButton>
           </ResultActions>
         </>
       )}

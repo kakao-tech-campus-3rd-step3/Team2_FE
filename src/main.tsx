@@ -7,13 +7,17 @@ import { ToastContainer } from 'react-toastify';
 
 import '@/shared/styles/global.css';
 import App from '@/app/App.tsx';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
         <ToastContainer position="bottom-center" hideProgressBar={true} />
       </QueryClientProvider>
     </ChakraProvider>

@@ -12,28 +12,34 @@ const AppLayoutWrapper = styled.div`
   width: 100%;
   height: 100dvh;
   min-height: ${MIN_HEIGHT};
+  min-width: 1050px;
   display: flex;
-  overflow: auto;
+  overflow: hidden;
 `;
 
-const AppLayoutVertical = styled.div`
-  width: 100%;
+const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+  overflow-x: auto;
+
+  margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
+  transition: margin-left 0.4s ease;
 `;
 
 const Main = styled.div`
   width: 100%;
+  min-width: 800px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
   flex: 1;
+  height: calc(100% - 76px);
 `;
 
 function AppLayout() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(true);
-  const [selectedMenu, setSelectedMenu] = useState<string>('문제집 생성'); // 현재 페이지 저장 state
   const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state
   const [questionSetId, setQuestionSetId] = useState<number>(0); // 문제 조회할때 보낼 state
 
@@ -43,9 +49,6 @@ function AppLayout() {
   // wrapper 함수들
   const openSideBar = () => setIsOpen(true); // LSB 여는 함수
   const closeSideBar = () => setIsOpen(false); // LSB 닫는 함수
-  const changeMenu = (menu: string) => {
-    setSelectedMenu(menu); // 현재 페이지 text를 바꾸는 함수
-  };
   const handleNavigate = useCallback(
     (path: string) => {
       navigate(path);
@@ -58,7 +61,7 @@ function AppLayout() {
     // 토큰이 없으면 SSE 연결을 시도하지 않음
     const token = getToken();
     if (!token) {
-      console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
+      // console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
       return;
     }
 
@@ -82,7 +85,7 @@ function AppLayout() {
           },
         });
       } else {
-        console.log('[SSE] 문제집 생성 실패');
+        // console.log('[SSE] 문제집 생성 실패');
       }
     });
 
@@ -100,15 +103,9 @@ function AppLayout() {
 
   return (
     <AppLayoutWrapper>
-      <SideBar
-        isOpen={isOpen}
-        closeSideBar={closeSideBar}
-        selectedMenu={selectedMenu}
-        changeMenu={changeMenu}
-        esClose={esClose}
-      />
-      <AppLayoutVertical>
-        <PageHeader isOpen={isOpen} openSideBar={openSideBar} selectedMenu={selectedMenu} />
+      <SideBar isOpen={isOpen} closeSideBar={closeSideBar} esClose={esClose} />
+      <AppLayoutVertical isOpen={isOpen}>
+        <PageHeader isOpen={isOpen} openSideBar={openSideBar} />
         <Main>
           <Outlet
             context={{ questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady }}
