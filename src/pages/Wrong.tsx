@@ -154,7 +154,7 @@ function Wrong() {
   // 선택된 폴더에 포함된 문제집 목록 조회 (ID만 필요) 이 부분 좀 이상함
   const { data: questionSetsData } = useQuery({
     queryKey: ['questionSets', selectedFolderId],
-        queryFn: async () => {
+    queryFn: async () => {
       const res = await api.get(`/question-set?size=9999&folderId=${selectedFolderId}`);
       return res.data as { questionSets: { content: QuestionSetContent[] } };
     },
