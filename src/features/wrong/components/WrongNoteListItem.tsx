@@ -96,7 +96,7 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
       </WrongNoteInfoTitleWrapper>
       <WrongCount>{item.incorrectCount}개</WrongCount>
       <DifficultyLevel>{item.difficulty}</DifficultyLevel>
-      <CategoryType>{"전체"}</CategoryType>
+      <CategoryType>{'전체'}</CategoryType>
       <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
     </WrongNoteListItemWrapper>
   );
