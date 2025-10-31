@@ -220,7 +220,9 @@ function TrueFalseSolve({
         {isExplanationPage && (
           <ExplanationBox>
             <ExplanationBoxTitle>정답 및 해설</ExplanationBoxTitle>
-            <AnswerTxt>정답 : {questions.questions[currentQuestionIndex - 1].answer ? "참" : "거짓"}</AnswerTxt>
+            <AnswerTxt>
+              정답 : {questions.questions[currentQuestionIndex - 1].answer ? '참' : '거짓'}
+            </AnswerTxt>
             <ExplanationTxt>
               {questions.questions[currentQuestionIndex - 1].explanation}
             </ExplanationTxt>
