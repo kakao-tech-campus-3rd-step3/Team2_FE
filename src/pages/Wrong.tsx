@@ -71,10 +71,11 @@ const SearchBar = styled.input`
   font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
-  padding: ${({ theme }) => theme.spacing.spacing2};
+  padding: ${({ theme }) => theme.spacing.spacing4};
 
   border: 1px solid ${({ theme }) => theme.colors.gray.gray3};
-  border-radius: ${({ theme }) => theme.radius.radius1};
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   &:focus {
     outline: none;
     border: 1px solid ${({ theme }) => theme.colors.semantic.primary};
@@ -86,24 +87,26 @@ const SearchBar = styled.input`
 const WrongNoteList = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray5};
-  border-radius: ${({ theme }) => theme.radius.radius2};
+  /* border: 1px solid ${({ theme }) => theme.colors.gray.gray5}; */
+  border-radius: ${({ theme }) => theme.radius.radius3};
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 `;
 
 const WrongNoteListHeader = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
-  background-color: ${({ theme }) => theme.colors.gray.gray1};
-  /* align-items: center; */
-  padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
-  /* border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4}; */
-`;
-
-const WrongNoteListHeaderColumn = styled.span`
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
+  padding: ${({ theme }) => theme.spacing.spacing5} ${({ theme }) => theme.spacing.spacing5};
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+`;
+
+const WrongNoteListHeaderColumn = styled.span`
+  font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label2Bold.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray9};
 `;
 
@@ -163,9 +166,9 @@ function Wrong() {
           <WrongNoteListHeader>
             <WrongNoteListHeaderColumn>문제집</WrongNoteListHeaderColumn>
             <WrongNoteListHeaderColumn>오답 수</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>난이도</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>카테고리</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>작업</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>유형</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>폴더</WrongNoteListHeaderColumn>
+            <WrongNoteListHeaderColumn>오답노트</WrongNoteListHeaderColumn>
           </WrongNoteListHeader>
           {filteredQuestionSets?.map((item) => (
             <WrongNoteListItem key={item.questionSetId} item={item} />

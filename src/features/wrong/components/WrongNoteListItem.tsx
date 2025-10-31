@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { BookOpen } from 'lucide-react';
 // import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useNavigate } from 'react-router-dom';
 const WrongNoteListItemWrapper = styled.div`
@@ -11,21 +10,10 @@ const WrongNoteListItemWrapper = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
   align-items: center;
-`;
 
-const WrongNoteInfoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const IconWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ theme }) => theme.colors.green.green2};
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray.gray2};
+  }
 `;
 
 const WrongNoteInfoTitleWrapper = styled.div`
@@ -35,9 +23,9 @@ const WrongNoteInfoTitleWrapper = styled.div`
 `;
 
 const WrongNoteTitle = styled.span`
-  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
+  font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
 `;
 
 const WrongNoteFileName = styled.span`
@@ -56,22 +44,16 @@ const DifficultyLevel = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
-  background-color: ${({ theme }) => theme.colors.red.red0};
-  color: ${({ theme }) => theme.colors.red.red3};
   border-radius: ${({ theme }) => theme.radius.radius2};
   width: fit-content;
-  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const CategoryType = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
-  background-color: ${({ theme }) => theme.colors.blue.blue0};
-  color: ${({ theme }) => theme.colors.blue.blue2};
   border-radius: ${({ theme }) => theme.radius.radius2};
   width: fit-content;
-  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const RetryBtn = styled.button`
@@ -108,18 +90,13 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
 
   return (
     <WrongNoteListItemWrapper>
-      <WrongNoteInfoWrapper>
-        <IconWrapper>
-          <BookOpen color="green" size={16} />
-        </IconWrapper>
-        <WrongNoteInfoTitleWrapper>
-          <WrongNoteTitle>{item.questionSetTitle}</WrongNoteTitle>
-          <WrongNoteFileName>{item.sourceNames[0]}</WrongNoteFileName>
-        </WrongNoteInfoTitleWrapper>
-      </WrongNoteInfoWrapper>
+      <WrongNoteInfoTitleWrapper>
+        <WrongNoteTitle>{item.questionSetTitle}</WrongNoteTitle>
+        <WrongNoteFileName>{item.sourceNames[0]}</WrongNoteFileName>
+      </WrongNoteInfoTitleWrapper>
       <WrongCount>{item.incorrectCount}개</WrongCount>
       <DifficultyLevel>{item.difficulty}</DifficultyLevel>
-      <CategoryType>{'수학'}</CategoryType>
+      <CategoryType>{"전체"}</CategoryType>
       <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
     </WrongNoteListItemWrapper>
   );
