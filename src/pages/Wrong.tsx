@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useState, useEffect } from 'react';
 import Spinner from '@/shared/components/Spinner';
+import FolderList from '@/shared/components/FolderList';
 
 const WrongWrapper = styled.div`
   display: flex;
@@ -110,6 +111,20 @@ const WrongNoteListHeaderColumn = styled.span`
   color: ${({ theme }) => theme.colors.gray.gray9};
 `;
 
+// 폴더 관련 타입 + 인터페이스들
+const QUESTION_SET_TYPE = 'QUESTION_SET';
+const ALL_FOLDER_ID = 1;
+interface Folder {
+  id: number;
+  name: string;
+  type: 'QUESTION_SET';
+  sortOrder: number;
+}
+
+interface QuestionSetContent {
+  questionSetId: number;
+}
+
 function Wrong() {
   const { isPending, error, data } = useQuery({
     queryKey: ['wrongNoteSet', 'wrongNoteSetId'],
@@ -117,6 +132,36 @@ function Wrong() {
       const res = await api.get<WrongNoteSetResponse>(`/wrong-answers/all`);
       return res.data;
     },
+  });
+
+  // 폴더 목록 조회
+  const { data: folders } = useQuery({
+    queryKey: ['folders'],
+    queryFn: async () => {
+      const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
+      return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
+    },
+  });
+
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (folders && folders.length > 0 && selectedFolderId === null) {
+      setSelectedFolderId(folders[0].id);
+    }
+  }, [folders, selectedFolderId]);
+
+  // 선택된 폴더에 포함된 문제집 목록 조회 (ID만 필요)
+  const { data: questionSetsData } = useQuery({
+    queryKey: ['questionSets', selectedFolderId],
+    queryFn: async () => {
+      if (selectedFolderId === null) {
+        return { questionSets: { content: [] as QuestionSetContent[] } };
+      }
+      const res = await api.get(`/question-set?size=9999&folderId=${selectedFolderId}`);
+      return res.data as { questionSets: { content: QuestionSetContent[] } };
+    },
+    enabled: selectedFolderId !== null,
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -134,8 +179,16 @@ function Wrong() {
 
   const normalize = (str: string) => str.toLowerCase().normalize('NFC').replace(/\s+/g, '');
 
-  const filteredQuestionSets = data?.filter((item) =>
-    normalize(item.questionSetTitle).includes(normalize(debouncedSearchTerm)),
+  const filteredQuestionSets = data?.filter(
+    (item) =>
+      normalize(item.questionSetTitle).includes(normalize(debouncedSearchTerm)) &&
+      // 폴더 필터 적용: 선택된 폴더가 없거나 ALL_FOLDER_ID이면 전체 표시
+      (selectedFolderId === null || selectedFolderId === ALL_FOLDER_ID
+        ? true
+        : // 선택된 폴더에 포함된 questionSetId인지 확인
+          (questionSetsData?.questionSets?.content || []).some(
+            (qs: { questionSetId: number }) => qs.questionSetId === item.questionSetId,
+          )),
   );
 
   // 로딩
@@ -162,6 +215,16 @@ function Wrong() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </SearchBarWrapper>
+        <FolderList
+          folders={folders}
+          selectedFolderId={selectedFolderId}
+          onFolderSelect={setSelectedFolderId}
+          // Wrong 페이지에서는 드래그로 문제집을 이동시키는 기능을 아직 사용하지 않으므로 null/noop 전달
+          draggedItem={null}
+          onItemDrop={() => {
+            /* noop */
+          }}
+        />
         <WrongNoteList>
           <WrongNoteListHeader>
             <WrongNoteListHeaderColumn>문제집</WrongNoteListHeaderColumn>
