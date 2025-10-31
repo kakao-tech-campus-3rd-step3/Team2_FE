@@ -39,7 +39,6 @@ function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
         values={values}
         titleForValue={(value: unknown) => {
           const v = value as DailyStatItem | undefined;
-          // console.log(value);
           if (!v) {
             return '';
           }

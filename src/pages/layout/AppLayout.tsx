@@ -68,10 +68,14 @@ function AppLayout() {
     const es = new NotificationSse();
     esRef.current = es;
 
-    es.onOpen(() => console.log('[SSE] 연결 성공 (Open)'));
-    es.onHandShake(() => console.log('[SSE] HandShake 완료'));
-    es.onError((e) => {
-      console.error('[SSE] 에러 발생:', e);
+    es.onOpen(() => {
+      // console.log('[SSE] 연결 성공 (Open)');
+    });
+    es.onHandShake(() => {
+      // console.log('[SSE] HandShake 완료');
+    });
+    es.onError(() => {
+      // console.error('[SSE] 에러 발생:', e);
       // EventSource는 자동으로 재연결을 시도합니다 (기본 동작)
     });
 

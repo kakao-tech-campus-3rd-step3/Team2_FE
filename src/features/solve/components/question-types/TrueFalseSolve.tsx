@@ -184,7 +184,6 @@ function TrueFalseSolve({
     }
   }, [currentQuestionIndex, solvedCheck, questions]);
 
-  console.log(questions.questions[currentQuestionIndex - 1]);
   return (
     <QuestionAreaWrapper>
       <QuestionAreaHeader>

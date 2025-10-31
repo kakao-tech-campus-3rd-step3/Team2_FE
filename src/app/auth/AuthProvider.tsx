@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userData = await getUserInfo();
           setUser(userData);
         } else {
-          console.log('유효한 토큰이 없어 비로그인 상태로 처리합니다');
+          // console.log('유효한 토큰이 없어 비로그인 상태로 처리합니다');
         }
       } catch (error) {
         // 사용자 정보 조회 실패 시에만 에러 로그 출력
