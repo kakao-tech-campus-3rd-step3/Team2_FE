@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '@/shared/components/Spinner';
 import FolderList from '@/shared/components/FolderList';
 
+// prettier 돌려줘
 const WrongWrapper = styled.div`
   display: flex;
   flex-direction: column;
