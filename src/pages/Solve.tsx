@@ -172,7 +172,7 @@ function Solve() {
             <SolveContentWrapper>
               {renderSolveComponent()}
               <RightSidebar>
-                <ProgressCard questionLength={data.questions.length} solvedCheck={solvedCheck} />
+                <ProgressCard questionLength={data.questions.length} solvedCheck={solvedCheck} questions={data} setIsAllSolved={setIsAllSolved}/>
               </RightSidebar>
             </SolveContentWrapper>
           </>
