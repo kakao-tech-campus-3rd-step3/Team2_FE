@@ -72,7 +72,7 @@ function ProgressCard({
   const goResult = () => {
     if (solvedCheck.length === questions.questions.length) {
       setIsAllSolved(true);
-    } else if (solvedCheck.length !== questions.questions.length) {
+    } else {
       toast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }
   };
