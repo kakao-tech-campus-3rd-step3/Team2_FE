@@ -55,7 +55,7 @@ const SubmitBtn = styled.button`
   background-color: ${({ theme }) => theme.colors.semantic.primary};
   padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius1};
-`
+`;
 type ProgressCardProps = {
   questionLength: number;
   solvedCheck: MarkingRequest[];
@@ -63,15 +63,16 @@ type ProgressCardProps = {
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function ProgressCard({ questionLength, solvedCheck, questions, setIsAllSolved }: ProgressCardProps) {
+function ProgressCard({
+  questionLength,
+  solvedCheck,
+  questions,
+  setIsAllSolved,
+}: ProgressCardProps) {
   const goResult = () => {
-    if (
-      solvedCheck.length === questions.questions.length
-    ) {
+    if (solvedCheck.length === questions.questions.length) {
       setIsAllSolved(true);
-    } else if (
-      solvedCheck.length !== questions.questions.length
-    ) {
+    } else if (solvedCheck.length !== questions.questions.length) {
       toast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }
   };
