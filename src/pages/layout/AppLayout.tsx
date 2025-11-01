@@ -1,8 +1,7 @@
 // 필수 라이브러리
 import styled from '@emotion/styled';
 import { useState, useEffect, useRef } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { NotificationSse } from '@/shared/utils/sse';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 // UI 컴포넌트
 import SideBar from '@/shared/components/SideBar/SideBar';
