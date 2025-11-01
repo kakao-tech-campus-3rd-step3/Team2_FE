@@ -7,10 +7,12 @@ import Create from '@/pages/Create';
 import Solve from '@/pages/Solve';
 import Library from '@/pages/Library';
 import Wrong from '@/pages/Wrong';
+import Settings from '@/pages/Settings';
 import NotFound from '@/pages/NotFound';
 
 import { ROUTES } from '@/app/routePaths';
 import ProtectedRoute from '@/app/auth/ProtectedRoute';
+
 function AppRoutes() {
   return (
     <Routes>
@@ -26,6 +28,7 @@ function AppRoutes() {
           <Route path={ROUTES.SOLVE} element={<Solve />} />
           <Route path={ROUTES.LIBRARY} element={<Library />} />
           <Route path={ROUTES.WRONG} element={<Wrong />} />
+          <Route path={ROUTES.SETTINGS} element={<Settings />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
