@@ -5,7 +5,7 @@ import type { DailyStatItem } from '@/features/dashboard/types/dailyStats';
 import { cloneElement } from 'react';
 import type { ReactElement, SVGProps } from 'react';
 const CalendarHeatmapWrapper = styled.div`
-  margin-top: ${({ theme }) => theme.spacing.spacing50};
+  margin-top: ${({ theme }) => theme.spacing.spacing20};
 
   .react-calendar-heatmap .color-empty {
     fill: ${({ theme }) => theme.colors.gray.gray0};
