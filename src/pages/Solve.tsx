@@ -9,7 +9,7 @@ import QuestionNavigator from '@/features/solve/components/QuestionNavigator';
 
 import ProgressCard from '@/features/solve/components/ProgressCard';
 
-import SolveResult from './SolveResult';
+import SolveResult from '../features/solve/components/SolveResult';
 
 import type { QuestionSet } from '@/features/solve/types/question';
 
@@ -76,7 +76,6 @@ function Solve() {
     },
   });
 
-  // console.log(data);
   // 로딩
   if (isPending)
     return (

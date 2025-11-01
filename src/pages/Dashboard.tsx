@@ -1,9 +1,15 @@
+// 필수 라이브러리
 import styled from '@emotion/styled';
-import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
-import api from '@/shared/api/axiosClient';
 import { useQuery } from '@tanstack/react-query';
+// 에셋
+import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
+// API
+import api from '@/shared/api/axiosClient';
+// 로그인 정보
 import { useAuth } from '@/app/auth/useAuth';
+// UI 컴포넌트
 import CalendarHeatmapCompo from '@/features/dashboard/components/CalendarHeatmapCompo';
+// 타입
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 import type { DailyStatsResponse } from '@/features/dashboard/types/dailyStats';
 
