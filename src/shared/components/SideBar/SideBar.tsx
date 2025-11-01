@@ -1,18 +1,19 @@
-import BrainIconWithBadge from '@/shared/assets/IconBadge';
-import { MIN_HEIGHT } from '@/shared/config/constants';
+// 필수 라이브러리
 import styled from '@emotion/styled';
-import { useNavigate, NavLink } from 'react-router-dom';
-import { ROUTES } from '@/app/routePaths';
-import { useAuth } from '@/app/auth/useAuth';
-
-import { Sidebar, LayoutDashboard, Plus, BookOpen, CircleX, Settings, LogOut } from 'lucide-react';
-
-import { MENUS } from '@/shared/config/constants';
 import { useState } from 'react';
-
+import { useNavigate, NavLink } from 'react-router-dom';
+import { Sidebar, LayoutDashboard, Plus, BookOpen, CircleX, Settings, LogOut } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+// 유저 정보
+import { useAuth } from '@/app/auth/useAuth';
 import { clearToken } from '@/shared/utils/tokenManager';
 import { administratorApi } from '@/shared/api/axiosClient';
-import { useLocation } from 'react-router-dom';
+// 에셋
+import BrainIconWithBadge from '@/shared/assets/IconBadge';
+// 상수
+import { MIN_HEIGHT } from '@/shared/config/constants';
+import { MENUS } from '@/shared/config/constants';
+import { ROUTES } from '@/app/routePaths';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
@@ -215,10 +216,10 @@ interface SideBarProps {
 }
 
 function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
-  const { userInfo } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // 설정 드롭다운 열림, 닫힘 상태
   const navigate = useNavigate();
   const location = useLocation();
+  const { userInfo } = useAuth(); // 유저 정보 불러오기
 
   const handleLogout = async () => {
     try {
@@ -234,7 +235,6 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
   };
 
   const path = location.pathname;
-
   let selectedMenu = '페이지';
 
   if (path === ROUTES.CREATE) {
@@ -259,7 +259,6 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
               <SideBarDescription>AI 학습 도구</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
-          {/* TODO: 이 부분 페이지 컴포넌트랑 이름이 같네? 문제가 생길수도? */}
           <Sidebar size={16} onClick={closeSideBar} />
         </SideBarHeaderItemWrapper>
       </SideBarHeader>

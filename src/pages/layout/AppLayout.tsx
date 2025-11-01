@@ -1,13 +1,19 @@
+// 필수 라이브러리
 import styled from '@emotion/styled';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
+// UI 컴포넌트
 import SideBar from '@/shared/components/SideBar/SideBar';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
-import { MIN_HEIGHT } from '@/shared/config/constants';
+// SSE
+import { NotificationSse } from '@/shared/utils/sse';
+// 로그인 정보
 import { getToken } from '@/shared/utils/tokenManager';
+// 에러 바운더리
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+// 상수 값
+import { MIN_HEIGHT } from '@/shared/config/constants';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
@@ -26,6 +32,7 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   overflow-x: auto;
 
+  /* 사이드바를 위한 왼쪽 마진 */
   margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
   transition: margin-left 0.4s ease;
 `;
@@ -39,14 +46,12 @@ const Main = styled.div`
 `;
 
 function AppLayout() {
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState<boolean>(true);
-  const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state
-  const [questionSetId, setQuestionSetId] = useState<number>(0); // 문제 조회할때 보낼 state
+  const [isOpen, setIsOpen] = useState<boolean>(true); // LSB 열림, 닫힘 상태
+  const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 상태
+  const [questionSetId, setQuestionSetId] = useState<number>(0); // 문제풀이에서 문제집을 받아오기 위한 상태
   const location = useLocation();
-
-  // SSE 연결 인스턴스를 ref로 관리 (리렌더링 시 재생성 방지)
-  const esRef = useRef<NotificationSse | null>(null);
+  const navigate = useNavigate();
+  const esRef = useRef<NotificationSse | null>(null); // SSE 연결 인스턴스를 ref로 관리 (리렌더링 시 재생성 방지)
 
   // wrapper 함수들
   const openSideBar = () => setIsOpen(true); // LSB 여는 함수
@@ -58,12 +63,11 @@ function AppLayout() {
     [navigate],
   );
 
-  // SSE 연결 설정 (토큰이 있을 때만, 마운트 시 한 번만 실행)
+  // SSE 연결 설정
   useEffect(() => {
-    // 토큰이 없으면 SSE 연결을 시도하지 않음
     const token = getToken();
     if (!token) {
-      console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
+      // 토큰이 없으면 SSE 연결을 시도하지 않음
       return;
     }
 
@@ -76,23 +80,22 @@ function AppLayout() {
     es.onHandShake(() => {
       console.log('[SSE] HandShake 완료');
     });
-    es.onError(() => {
-      // console.error('[SSE] 에러 발생:', e);
-      // EventSource는 자동으로 재연결을 시도합니다 (기본 동작)
+    es.onError((e) => {
+      console.error('[SSE] 에러 발생:', e);
     });
 
     es.onQuestionCreationComplete((payload) => {
-      console.log('문제집 생성');
+      console.log('[SSE] 문제집 생성 완료');
       if (payload.success) {
-        setQuestionSetReady(true);
-        setQuestionSetId(payload.questionSetId);
+        setQuestionSetReady(true); // 문제집 생성 완료 상태 변경
+        setQuestionSetId(payload.questionSetId); // 만들어진 문제집 id 상태 변경
         toast(payload.message, {
           onClick: () => {
             handleNavigate(`/solve/${payload.questionSetId}`);
           },
         });
       } else {
-        // console.log('[SSE] 문제집 생성 실패');
+        console.log('[SSE] 문제집 생성 실패');
       }
     });
 
