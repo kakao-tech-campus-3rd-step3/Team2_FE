@@ -20,7 +20,6 @@ const CardTitle = styled.h6`
   font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing6};
 `;
 
 const ProgressStats = styled.div`
@@ -36,15 +35,17 @@ const ProgressStatItem = styled.div`
 `;
 
 const ProgressStatLabel = styled.span`
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray8};
 `;
 
 const ProgressStatValue = styled.span`
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray8};
 `;
 
 const SubmitBtn = styled.button`
@@ -54,7 +55,7 @@ const SubmitBtn = styled.button`
   color: ${({ theme }) => theme.colors.gray.gray0};
   background-color: ${({ theme }) => theme.colors.semantic.primary};
   padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing4};
-  border-radius: ${({ theme }) => theme.radius.radius1};
+  border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 type ProgressCardProps = {
   questionLength: number;
