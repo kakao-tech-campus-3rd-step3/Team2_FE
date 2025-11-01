@@ -101,7 +101,7 @@ const RetryButton = styled.button`
   color: ${({ theme }) => theme.colors.gray.gray10};
 `;
 
-const GoToDashboardButton = styled.button`
+const GoToAnswerButton = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-radius: ${({ theme }) => theme.radius.radius2};
   padding: ${({ theme }) => theme.spacing.spacing2};
@@ -187,16 +187,13 @@ function SolveResult({
             </ResultCard>
           </ResultCardsWrapper>
           <ResultActions>
+            <GoToAnswerButton onClick={goExplanationPage}>정답 확인</GoToAnswerButton>
             <Link to="/wrong">
               <ReviewWrongAnswersButton>오답노트 확인</ReviewWrongAnswersButton>
             </Link>
             <Link to="/">
               <RetryButton>다시 생성하기</RetryButton>
             </Link>
-            <Link to="/dashboard">
-              <GoToDashboardButton>대시보드로 이동</GoToDashboardButton>
-            </Link>
-            <GoToDashboardButton onClick={goExplanationPage}>정답 확인</GoToDashboardButton>
           </ResultActions>
         </>
       )}
