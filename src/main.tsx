@@ -9,7 +9,6 @@ import { ToastContainer } from 'react-toastify';
 import '@/shared/styles/global.css';
 import App from '@/app/App.tsx';
 
-
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(

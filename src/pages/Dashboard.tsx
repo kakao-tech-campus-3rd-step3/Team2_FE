@@ -115,6 +115,7 @@ const DashboardCardDescription = styled.p`
 function Dashboard() {
   const { userInfo, isAuthLoading } = useAuth();
   const memberId = userInfo?.id;
+  
 
   const { data } = useQuery<LearnStatsResponse>({
     queryKey: ['learnStats', memberId],
