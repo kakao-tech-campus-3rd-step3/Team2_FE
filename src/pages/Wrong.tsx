@@ -193,7 +193,7 @@ function Wrong() {
   if (isPending) return <Spinner />;
   // 에러
   if (error) return <h1>Error</h1>;
-  
+
   return (
     <WrongWrapper>
       <ContentWrapper>

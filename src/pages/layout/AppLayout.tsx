@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
 import SideBar from '@/shared/components/SideBar/SideBar';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
 import { MIN_HEIGHT } from '@/shared/config/constants';
 import { getToken } from '@/shared/utils/tokenManager';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
@@ -42,6 +43,7 @@ function AppLayout() {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [questionSetReady, setQuestionSetReady] = useState<boolean>(false); // 문제 생성이 완료되었는지 state
   const [questionSetId, setQuestionSetId] = useState<number>(0); // 문제 조회할때 보낼 state
+  const location = useLocation();
 
   // SSE 연결 인스턴스를 ref로 관리 (리렌더링 시 재생성 방지)
   const esRef = useRef<NotificationSse | null>(null);
@@ -61,7 +63,7 @@ function AppLayout() {
     // 토큰이 없으면 SSE 연결을 시도하지 않음
     const token = getToken();
     if (!token) {
-      // console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
+      console.log('토큰이 없어 SSE 연결을 건너뜁니다.');
       return;
     }
 
@@ -69,10 +71,10 @@ function AppLayout() {
     esRef.current = es;
 
     es.onOpen(() => {
-      // console.log('[SSE] 연결 성공 (Open)');
+      console.log('[SSE] 연결 성공 (Open)');
     });
     es.onHandShake(() => {
-      // console.log('[SSE] HandShake 완료');
+      console.log('[SSE] HandShake 완료');
     });
     es.onError(() => {
       // console.error('[SSE] 에러 발생:', e);
@@ -80,6 +82,7 @@ function AppLayout() {
     });
 
     es.onQuestionCreationComplete((payload) => {
+      console.log('문제집 생성');
       if (payload.success) {
         setQuestionSetReady(true);
         setQuestionSetId(payload.questionSetId);
@@ -111,9 +114,11 @@ function AppLayout() {
       <AppLayoutVertical isOpen={isOpen}>
         <PageHeader isOpen={isOpen} openSideBar={openSideBar} />
         <Main>
-          <Outlet
-            context={{ questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady }}
-          />
+          <ErrorBoundary key={location.pathname}>
+            <Outlet
+              context={{ questionSetId, questionSetReady, setQuestionSetId, setQuestionSetReady }}
+            />
+          </ErrorBoundary>
         </Main>
       </AppLayoutVertical>
     </AppLayoutWrapper>

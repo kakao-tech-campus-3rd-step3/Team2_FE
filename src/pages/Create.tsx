@@ -147,7 +147,7 @@ const Create = () => {
   };
 
   const progress = (currentStep / stepLabels.length) * 100;
-  
+
   return (
     <Container>
       <PageLayout>

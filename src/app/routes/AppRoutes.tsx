@@ -1,17 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
 import AppLayout from '@/pages/layout/AppLayout';
 import Login from '@/pages/Login';
+import LoginSuccess from '@/pages/LoginSuccess';
 import Dashboard from '@/pages/Dashboard';
 import Create from '@/pages/Create';
 import Solve from '@/pages/Solve';
 import Library from '@/pages/Library';
 import Wrong from '@/pages/Wrong';
 import NotFound from '@/pages/NotFound';
-import LoginSuccess from '@/pages/LoginSuccess';
 
 import { ROUTES } from '@/app/routePaths';
 import ProtectedRoute from '@/app/auth/ProtectedRoute';
-import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 function AppRoutes() {
   return (
     <Routes>
@@ -22,46 +21,11 @@ function AppRoutes() {
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route
-            path={ROUTES.DASHBOARD}
-            element={
-              <ErrorBoundary key={ROUTES.DASHBOARD}>
-                <Dashboard />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path={ROUTES.CREATE}
-            element={
-              <ErrorBoundary key={ROUTES.CREATE}>
-                <Create />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path={ROUTES.SOLVE}
-            element={
-              <ErrorBoundary key={ROUTES.SOLVE}>
-                <Solve />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path={ROUTES.LIBRARY}
-            element={
-              <ErrorBoundary key={ROUTES.LIBRARY}>
-                <Library />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path={ROUTES.WRONG}
-            element={
-              <ErrorBoundary key={ROUTES.WRONG}>
-                <Wrong />
-              </ErrorBoundary>
-            }
-          />
+          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          <Route path={ROUTES.CREATE} element={<Create />} />
+          <Route path={ROUTES.SOLVE} element={<Solve />} />
+          <Route path={ROUTES.LIBRARY} element={<Library />} />
+          <Route path={ROUTES.WRONG} element={<Wrong />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
