@@ -8,7 +8,7 @@ const WrongNoteListItemWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
   align-items: center;
 
   &:hover {
@@ -40,15 +40,7 @@ const WrongCount = styled.span`
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
 `;
 
-const DifficultyLevel = styled.span`
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  width: fit-content;
-`;
-
-const CategoryType = styled.span`
+const QuestionSetType = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
@@ -74,29 +66,38 @@ interface WrongNoteListItemProps {
 interface WrongNoteSet {
   questionSetId: number;
   questionSetTitle: string;
-  sourceNames: string[];
+  sourceNames?: string[];
   difficulty: string;
   majorTopic: string;
   incorrectCount: number;
+  category?: string;
 }
 
 function WrongNoteListItem({ item }: WrongNoteListItemProps) {
-  // TODO: 여기에 몇번 오답문제지인지도 넘겨줘서 해야함
   const navigate = useNavigate();
 
   const handleReviewNavigate = () => {
     navigate(`/solve/${item.questionSetId}?isReviewing=true`);
   };
 
+  const TYPE_MAP: Record<string, string> = {
+    MULTIPLE_CHOICE: '객관식',
+    SHORT_ANSWER: '단답형',
+    TRUE_FALSE: '참/거짓',
+  };
+
+  const displayType = item.category
+    ? (TYPE_MAP[item.category] ?? item.category)
+    : (item.majorTopic ?? '전체');
+
   return (
     <WrongNoteListItemWrapper>
       <WrongNoteInfoTitleWrapper>
         <WrongNoteTitle>{item.questionSetTitle}</WrongNoteTitle>
-        <WrongNoteFileName>{item.sourceNames[0]}</WrongNoteFileName>
+        <WrongNoteFileName>{item.sourceNames?.[0] ?? ''}</WrongNoteFileName>
       </WrongNoteInfoTitleWrapper>
       <WrongCount>{item.incorrectCount}개</WrongCount>
-      <DifficultyLevel>{item.difficulty}</DifficultyLevel>
-      <CategoryType>{'전체'}</CategoryType>
+      <QuestionSetType>{displayType}</QuestionSetType>
       <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
     </WrongNoteListItemWrapper>
   );

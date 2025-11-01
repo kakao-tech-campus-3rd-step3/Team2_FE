@@ -3,11 +3,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from './shared/styles/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ToastContainer } from 'react-toastify';
 
 import '@/shared/styles/global.css';
 import App from '@/app/App.tsx';
-import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 const queryClient = new QueryClient();
 
