@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { NotificationSse } from '@/shared/utils/sse';
 import { toast } from 'react-toastify';
@@ -49,12 +49,6 @@ function AppLayout() {
   // wrapper 함수들
   const openSideBar = () => setIsOpen(true); // LSB 여는 함수
   const closeSideBar = () => setIsOpen(false); // LSB 닫는 함수
-  const handleNavigate = useCallback(
-    (path: string) => {
-      navigate(path);
-    },
-    [navigate],
-  );
 
   // SSE 연결 설정 (토큰이 있을 때만, 마운트 시 한 번만 실행)
   useEffect(() => {
@@ -85,7 +79,7 @@ function AppLayout() {
         setQuestionSetId(payload.questionSetId);
         toast(payload.message, {
           onClick: () => {
-            handleNavigate(`/solve/${payload.questionSetId}`);
+            navigate(`/solve/${payload.questionSetId}`);
           },
         });
       } else {
@@ -97,7 +91,8 @@ function AppLayout() {
     return () => {
       es.close();
     };
-  }, [handleNavigate]); // navigate는 안정적인 참조이므로 의존성에 포함해도 재실행되지 않음
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const esClose = () => {
     if (esRef.current) {
