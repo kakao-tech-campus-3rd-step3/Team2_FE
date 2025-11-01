@@ -192,3 +192,8 @@ html,
 body {
   height: 100%;
 }
+
+/* react-toastify: hover 시 포인터 커서 보이게 함 */
+.Toastify__toast:hover {
+  cursor: pointer;
+}
