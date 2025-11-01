@@ -4,11 +4,16 @@ import styled from '@emotion/styled';
 import type { DailyStatItem } from '@/features/dashboard/types/dailyStats';
 import { cloneElement } from 'react';
 import type { ReactElement, SVGProps } from 'react';
+import { CalendarDays } from 'lucide-react';
 const CalendarHeatmapWrapper = styled.div`
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
+  padding: ${({ theme }) => theme.spacing.spacing5};
   margin-top: ${({ theme }) => theme.spacing.spacing20};
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: ${({ theme }) => theme.radius.radius3};
 
   .react-calendar-heatmap .color-empty {
-    fill: ${({ theme }) => theme.colors.gray.gray0};
+    fill: ${({ theme }) => theme.colors.gray.gray2};
   }
 
   .react-calendar-heatmap .color-scale-1 {
@@ -24,6 +29,30 @@ const CalendarHeatmapWrapper = styled.div`
   }
 `;
 
+const CalendarHeatmapTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.spacing2} 0;
+`
+
+const CalendarDaysWrapper = styled.div`
+  color: ${({ theme }) => theme.colors.semantic.primary};
+`
+const CalendarHeatmapTitle = styled.span`
+  font-size: ${({ theme }) => theme.typography.body1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body1Bold.lineHeight};
+  margin-left: ${({ theme }) => theme.spacing.spacing2};
+  margin-right: ${({ theme }) => theme.spacing.spacing2};
+  color: ${({ theme }) => theme.colors.gray.gray7};
+`;
+
+const CalendarHeatmapSupTitle = styled.p`
+  font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray7};
+`;
 interface Props {
   values: DailyStatItem[];
   startDate: string;
@@ -33,6 +62,14 @@ interface Props {
 function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
   return (
     <CalendarHeatmapWrapper>
+      <CalendarHeatmapTitleWrapper>
+        <CalendarDaysWrapper>
+            <CalendarDays size={20}/>
+        </CalendarDaysWrapper>
+        <CalendarHeatmapTitle>학습 활동</CalendarHeatmapTitle>
+        <CalendarHeatmapSupTitle>지난 1년간 {values.length}일 학습</CalendarHeatmapSupTitle>
+      </CalendarHeatmapTitleWrapper>
+
       <CalendarHeatmap
         startDate={new Date(startDate)}
         endDate={new Date(endDate)}
@@ -53,7 +90,7 @@ function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
         classForValue={(value) => {
           if (!value) return 'color-empty';
           if (value.count === 0) return 'color-empty';
-          if (value.count < 20) return 'color-scale-1';
+          if (value.count < 10) return 'color-scale-1';
           if (value.count < 40) return 'color-scale-2';
           return 'color-scale-3';
         }}
