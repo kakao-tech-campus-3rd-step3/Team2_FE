@@ -2,7 +2,7 @@
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 // 에셋
-import { BookOpen, CheckCircle, Target, Flame} from 'lucide-react';
+import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
 // API
 import api from '@/shared/api/axiosClient';
 // 로그인 정보

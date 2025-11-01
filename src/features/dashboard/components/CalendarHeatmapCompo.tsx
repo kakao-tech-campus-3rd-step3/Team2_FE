@@ -33,11 +33,11 @@ const CalendarHeatmapTitleWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: ${({ theme }) => theme.spacing.spacing2} 0;
-`
+`;
 
 const CalendarDaysWrapper = styled.div`
   color: ${({ theme }) => theme.colors.semantic.primary};
-`
+`;
 const CalendarHeatmapTitle = styled.span`
   font-size: ${({ theme }) => theme.typography.body1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.body1Bold.fontWeight};
@@ -64,7 +64,7 @@ function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
     <CalendarHeatmapWrapper>
       <CalendarHeatmapTitleWrapper>
         <CalendarDaysWrapper>
-            <CalendarDays size={20}/>
+          <CalendarDays size={20} />
         </CalendarDaysWrapper>
         <CalendarHeatmapTitle>학습 활동</CalendarHeatmapTitle>
         <CalendarHeatmapSupTitle>지난 1년간 {values.length}일 학습</CalendarHeatmapSupTitle>
