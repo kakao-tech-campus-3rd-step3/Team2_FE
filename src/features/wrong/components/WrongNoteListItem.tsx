@@ -79,7 +79,7 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
   const handleReviewNavigate = () => {
     navigate(`/solve/${item.questionSetId}?isReviewing=true`);
   };
-  
+
   const TYPE_MAP: Record<string, string> = {
     MULTIPLE_CHOICE: '객관식',
     SHORT_ANSWER: '단답형',
@@ -87,8 +87,8 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
   };
 
   const displayType = item.category
-    ? TYPE_MAP[item.category] ?? item.category
-    : item.majorTopic ?? '전체';
+    ? (TYPE_MAP[item.category] ?? item.category)
+    : (item.majorTopic ?? '전체');
 
   return (
     <WrongNoteListItemWrapper>

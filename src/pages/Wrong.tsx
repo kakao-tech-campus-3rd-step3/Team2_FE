@@ -97,7 +97,7 @@ const WrongNoteList = styled.div`
 
 const WrongNoteListHeader = styled.div`
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
   background-color: ${({ theme }) => theme.colors.gray.gray0};
   padding: ${({ theme }) => theme.spacing.spacing5} ${({ theme }) => theme.spacing.spacing5};
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
@@ -127,6 +127,10 @@ interface QuestionSetContent {
 }
 
 function Wrong() {
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState(''); // 검색 버퍼
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // 검색 값 저장
+  // 오답노트 조회
   const { isPending, error, data } = useQuery({
     queryKey: ['wrongNoteSet', 'wrongNoteSetId'],
     queryFn: async () => {
@@ -144,8 +148,6 @@ function Wrong() {
     },
   });
 
-  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
-
   useEffect(() => {
     if (folders && folders.length > 0 && selectedFolderId === null) {
       setSelectedFolderId(folders[0].id);
@@ -161,9 +163,6 @@ function Wrong() {
     },
     enabled: selectedFolderId !== null,
   });
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -188,10 +187,8 @@ function Wrong() {
             (qs: { questionSetId: number }) => qs.questionSetId === item.questionSetId,
           )),
   );
-
-  // 로딩
+  // TODO: 나중에 에러 바운더리랑 서스팬스 적용되면 지울수도???
   if (isPending) return <Spinner />;
-  // 에러
   if (error) return <h1>Error</h1>;
 
   return (
@@ -228,7 +225,6 @@ function Wrong() {
             <WrongNoteListHeaderColumn>문제집</WrongNoteListHeaderColumn>
             <WrongNoteListHeaderColumn>오답 수</WrongNoteListHeaderColumn>
             <WrongNoteListHeaderColumn>유형</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>폴더</WrongNoteListHeaderColumn>
             <WrongNoteListHeaderColumn>오답노트</WrongNoteListHeaderColumn>
           </WrongNoteListHeader>
           {filteredQuestionSets?.map((item) => (
