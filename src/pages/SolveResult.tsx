@@ -4,10 +4,8 @@ import type { QuestionSet } from '@/features/solve/types/question';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
-import LoadingDots from '@/shared/assets/lotties/loading_dots.lottie';
 import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
-
+import Spinner from '@/shared/components/Spinner';
 const SolveResultTitle = styled.h1`
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
@@ -150,7 +148,7 @@ function SolveResult({
     // TODO: 디자인 해주세요
     <>
       {mutation.isPending ? (
-        <DotLottiePlayer src={LoadingDots} loop autoplay subframe={true} />
+        <Spinner />
       ) : mutation.isError ? (
         <p>점수 계산에 실패했습니다.</p>
       ) : (
