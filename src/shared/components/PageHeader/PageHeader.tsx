@@ -43,6 +43,7 @@ function PageHeader({ isOpen, openSideBar }: PageHeaderProps) {
   else if (path.startsWith('/solve')) title = '문제 풀이';
   else if (path.startsWith('/library')) title = '나의 문제집';
   else if (path.startsWith('/wrong')) title = '오답노트';
+  else if (path.startsWith('/settings')) title = '설정';
   else if (path === '/') title = '문제집 생성';
 
   return (

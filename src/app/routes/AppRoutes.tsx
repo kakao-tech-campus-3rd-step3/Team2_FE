@@ -12,6 +12,7 @@ import LoginSuccess from '@/pages/LoginSuccess';
 import { ROUTES } from '@/app/routePaths';
 import ProtectedRoute from '@/app/auth/ProtectedRoute';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import Settings from '@/pages/Settings';
 function AppRoutes() {
   return (
     <Routes>
@@ -59,6 +60,14 @@ function AppRoutes() {
             element={
               <ErrorBoundary key={ROUTES.WRONG}>
                 <Wrong />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path={ROUTES.SETTINGS}
+            element={
+              <ErrorBoundary key={ROUTES.SETTINGS}>
+                <Settings />
               </ErrorBoundary>
             }
           />

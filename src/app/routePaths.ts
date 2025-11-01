@@ -6,4 +6,5 @@ export const ROUTES = {
   SOLVE: '/solve/:questionSetId',
   LIBRARY: '/library',
   WRONG: '/wrong',
+  SETTINGS: '/settings',
 } as const;
