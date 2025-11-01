@@ -65,7 +65,7 @@ function Solve() {
 
   // 1. 서버로부터 문제조회를 하는 부분 questionSetId로 문제집 조회
   const { isPending, error, data } = useQuery({
-    queryKey: ['questionSet', questionSetId, isReviewing],
+    queryKey: ['questionSet', 'detail', questionSetId, isReviewing],
     queryFn: async () => {
       const url = isReviewing
         ? `/question-set/${questionSetId}?isReviewing=true`

@@ -132,7 +132,7 @@ function Wrong() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // 검색 값 저장
   // 오답노트 조회
   const { isPending, error, data } = useQuery({
-    queryKey: ['wrongNoteSet', 'wrongNoteSetId'],
+    queryKey: ['wrongNotes', 'list'],
     queryFn: async () => {
       const res = await api.get<WrongNoteSetResponse>(`/wrong-answers/all`);
       return res.data;
@@ -141,7 +141,7 @@ function Wrong() {
 
   // 폴더 목록 조회
   const { data: folders } = useQuery({
-    queryKey: ['folders'],
+    queryKey: ['folders', 'all'],
     queryFn: async () => {
       const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
       return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
@@ -156,7 +156,7 @@ function Wrong() {
 
   // 선택된 폴더에 포함된 문제집 목록 조회 (ID만 필요) 이 부분 좀 이상함
   const { data: questionSetsData } = useQuery({
-    queryKey: ['questionSets', selectedFolderId],
+    queryKey: ['questionSets', 'forFolder', selectedFolderId],
     queryFn: async () => {
       const res = await api.get(`/question-set?size=9999&folderId=${selectedFolderId}`);
       return res.data as { questionSets: { content: QuestionSetContent[] } };
