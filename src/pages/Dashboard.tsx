@@ -35,16 +35,22 @@ const DashboardWrapper = styled.div`
 `;
 
 const DashboardTitle = styled.h1`
+  width: 100%;
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
+  text-align: left;
+  margin-bottom: 5px;
 `;
 
 const DashboardDescription = styled.p`
+  display: block;
+  width: 100%;
   font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray.gray7};
+  color: ${({ theme }) => theme.colors.gray.gray6};
+  text-align: left;
 `;
 
 const DashboardStatCardWrapper = styled.div`

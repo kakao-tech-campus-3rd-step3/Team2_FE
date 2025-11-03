@@ -31,21 +31,25 @@ const ContentWrapper = styled.div`
 const WrongPageTitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.spacing2};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const WrongPageTitle = styled.div`
+  width: 100%;
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
+  text-align: left;
+  padding: 5px 0px;
 `;
 
 const WrongPageDescription = styled.p`
+  display: block;
+  width: 100%;
   font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray.gray7};
+  color: ${({ theme }) => theme.colors.gray.gray6};
+  text-align: left;
 `;
 
 // 검색바 부분

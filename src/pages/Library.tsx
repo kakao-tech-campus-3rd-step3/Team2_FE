@@ -504,6 +504,7 @@ const Library = () => {
 
       <LibraryWrapper>
         <LibraryTitle />
+        <Spacer height={'10px'} />
         <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
         <Spacer height="12px" />
         <FileListSearchInput
