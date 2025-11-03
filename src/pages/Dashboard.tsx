@@ -27,6 +27,7 @@ const Container = styled.div`
 
 const DashboardWrapper = styled.div`
   width: 100%;
+  max-width: 1500px;
   padding: ${({ theme }) => theme.spacing.spacing5};
   height: 100%;
   overflow-y: auto;
