@@ -7,8 +7,9 @@ import api from '@/shared/api/axiosClient';
 import Spacer from '@/shared/components/Spacer';
 
 import {
-  type MyQuestionSetsResponse,
   type QuestionType,
+  type QuestionSetStatus,
+  type QuestionSetContentType,
 } from '@/features/library/types/questionSetResponse';
 
 import { useNavigate } from 'react-router-dom';
@@ -109,8 +110,6 @@ const HeaderCell = styled(ListCell)`
   font-weight: 600;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
 `;
-
-type QuestionSetStatus = 'PENDING' | 'COMPLETE';
 
 const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
   font-weight: 500;
@@ -229,11 +228,11 @@ const TYPE_MAP: Record<QuestionType, string> = {
 };
 
 const STATUS_MAP: Record<QuestionSetStatus, string> = {
+  FAILED: '생성 실패',
   PENDING: '생성 중',
   COMPLETE: '생성완료',
 };
 
-type QuestionSetContentType = MyQuestionSetsResponse & { status: QuestionSetStatus };
 interface QuestionSets {
   content: QuestionSetContentType[];
   nextCursor: number;
@@ -460,13 +459,13 @@ const Library = () => {
           icon="✏️"
           title="문제집 이름 변경"
           onClick={handleMenuRename}
-          disabled={selectedCell?.status !== 'COMPLETE'}
+          disabled={selectedCell?.status === 'PENDING'}
         />
         <RightClickMenuItem
           icon="❌"
           title="삭제"
           onClick={handleMenuDelete}
-          disabled={selectedCell?.status !== 'COMPLETE'}
+          disabled={selectedCell?.status === 'PENDING'}
         />
         <RightClickMenuDivider />
         {folders && folders.length > 0 && (
@@ -474,7 +473,7 @@ const Library = () => {
             <FolderSelectWrapper>
               <FolderSelectLabel>📁 폴더 이동</FolderSelectLabel>
               <FolderSelect
-                disabled={selectedCell?.status !== 'COMPLETE'}
+                disabled={selectedCell?.status === 'PENDING'}
                 defaultValue={selectedFolderId ?? ''}
                 onChange={(e) => {
                   const targetFolderId = Number(e.target.value);
@@ -498,7 +497,7 @@ const Library = () => {
           icon="📝"
           title="문제집 풀기"
           onClick={handleMenuSolve}
-          disabled={selectedCell?.status !== 'COMPLETE'}
+          disabled={selectedCell?.status === 'PENDING'}
         />
       </RightClickMenu>
 
