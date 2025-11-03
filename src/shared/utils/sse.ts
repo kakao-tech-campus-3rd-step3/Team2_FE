@@ -29,6 +29,7 @@ export class NotificationSse {
         Authorization: `Bearer ${token}`,
       },
       withCredentials: true,
+      heartbeatTimeout: 120000, 
     });
   }
 
