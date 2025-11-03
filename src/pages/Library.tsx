@@ -455,31 +455,33 @@ const Library = () => {
       item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
     ) ?? [];
 
+  const isSelectedCellPending = selectedCell?.status === 'PENDING';
+
   return (
     <Container>
       <RightClickMenu isVisible={isVisibleMenu} setIsVisible={setIsVisibleMenu} point={mousePoint}>
         <RightClickMenuItem
           icon={Pencil}
           onClick={handleMenuRename}
-          disabled={selectedCell?.status === 'PENDING'}
+          disabled={isSelectedCellPending}
         >
           문제집 이름 변경
         </RightClickMenuItem>
         <RightClickMenuItem
           icon={Trash2}
           onClick={handleMenuDelete}
-          disabled={selectedCell?.status !== 'COMPLETE'}
+          disabled={isSelectedCellPending}
         >
           삭제
         </RightClickMenuItem>
         <RightClickMenuDivider />
         {folders && folders.length > 0 && (
           <>
-            <RightClickMenuItem icon={Folder} disabled={selectedCell?.status === 'PENDING'}>
+            <RightClickMenuItem icon={Folder} disabled={isSelectedCellPending}>
               <FolderSelectWrapper>
                 <FolderSelectLabel>폴더 이동</FolderSelectLabel>
                 <FolderSelect
-                  disabled={selectedCell?.status === 'PENDING'}
+                  disabled={isSelectedCellPending}
                   defaultValue={selectedFolderId ?? ''}
                   onChange={(e) => {
                     const targetFolderId = Number(e.target.value);
@@ -503,7 +505,7 @@ const Library = () => {
         <RightClickMenuItem
           icon={FileEdit}
           onClick={handleMenuSolve}
-          disabled={selectedCell?.status === 'PENDING'}
+          disabled={isSelectedCellPending}
         >
           문제집 풀기
         </RightClickMenuItem>
