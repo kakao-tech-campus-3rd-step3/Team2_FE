@@ -7,7 +7,11 @@ import { Brain } from 'lucide-react';
 // 사용자 측면에서 짧은 로딩 시간에로 스피너가 나오는 것은 UX를 저하시킨다는 의견으로
 // 일정 시간(DELAY_MS) 동안 대기 후 로딩이 발생하는 식으로 변경함
 
-const DELAY_MS = 500;
+// TIMEOUT_MS 보다 지연될 경우 DELAY_MESSAGE와 새로고침 버튼을 주어 사용자 경험 향상
+
+const SPINNER_DELAY_MS = 800; // 0.8초
+const TIMEOUT_MS = 10000; // 10초
+const DELAY_MESSAGE = '응답이 평소보다 지연되고 있습니다';
 
 const spin = keyframes`
   to {
@@ -22,10 +26,12 @@ const FullScreenWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.7);
   z-index: 9999;
+  gap: 1rem;
 `;
 
 const SpinnerWrapper = styled.div`
@@ -64,32 +70,79 @@ const StyledBrain = styled(Brain)`
   color: ${({ theme }) => theme.colors.semantic.primary};
 `;
 
+const TimeoutWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const TimeoutMessage = styled.p`
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.gray.gray7};
+`;
+
+const RefreshButton = styled.button`
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: white;
+  background-color: ${({ theme }) => theme.colors.semantic.primary};
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
 const SpinnerVisual = () => (
-  <FullScreenWrapper>
-    <SpinnerWrapper>
-      <OuterRing />
-      <AnimatedRing />
-      <IconWrapper>
-        <StyledBrain />
-      </IconWrapper>
-    </SpinnerWrapper>
-  </FullScreenWrapper>
+  <SpinnerWrapper>
+    <OuterRing />
+    <AnimatedRing />
+    <IconWrapper>
+      <StyledBrain />
+    </IconWrapper>
+  </SpinnerWrapper>
 );
 
 const Spinner = () => {
   const [showSpinner, setShowSpinner] = useState(false);
+  const [showTimeoutUI, setShowTimeoutUI] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const spinnerTimer = setTimeout(() => {
       setShowSpinner(true);
-    }, DELAY_MS);
+    }, SPINNER_DELAY_MS);
+
+    const timeoutTimer = setTimeout(() => {
+      setShowTimeoutUI(true);
+    }, TIMEOUT_MS);
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(spinnerTimer);
+      clearTimeout(timeoutTimer);
     };
   }, []);
 
-  return showSpinner ? <SpinnerVisual /> : null;
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
+  if (!showSpinner) {
+    return null;
+  }
+
+  return (
+    <FullScreenWrapper>
+      <SpinnerVisual />
+      {showTimeoutUI && (
+        <TimeoutWrapper>
+          <TimeoutMessage>{DELAY_MESSAGE}</TimeoutMessage>
+          <RefreshButton onClick={handleRefresh}>새로고침</RefreshButton>
+        </TimeoutWrapper>
+      )}
+    </FullScreenWrapper>
+  );
 };
 
 export default Spinner;
