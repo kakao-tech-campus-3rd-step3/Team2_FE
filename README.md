@@ -2,66 +2,291 @@
 
 ![PullIt Banner](./public/pullit_banner.png)
 
-<p align="center">
-  AI 기반 학습 플랫폼 <b>“Pull It”</b><br/>
-  학습 자료를 업로드하면 자동으로 문제를 생성하고, 오답노트를 관리할 수 있습니다.<br/>
-</p>
+<div align="center">
+
+## 🎓 AI 기반 스마트 학습 플랫폼, Pull It
+
+> **PDF만 업로드하면 AI가 자동으로 문제를 생성하고, 오답노트까지 관리해주는 통합 학습 플랫폼**
+
+---
+
+### 💡 왜 Pull It인가?
+
+| 핵심 가치 | 설명 |
+|:---:|---|
+| **능동적 학습** | 책을 읽기만 하는 수동적 학습이 아닌, 문제 풀이를 통한 정보 인출로 장기 기억 형성 |
+| **자동화** | 문제 제작의 피로감 없이 학습에만 집중 |
+| **지속 가능한 시스템** | 학습 기록 관리 + 오답 복습 + 학습 동기부여까지 제공하는 학습 생태계 |
+
+---
+
+**개발기간**: 2025년 9월 ~ 2025년 11월 (3개월)
+
+</div>
+
+---
 
 ## 목차
 
-[프로젝트 소개](#프로젝트-소개) <br/>
-[기술 스택](#기술-스택) <br/>
-[Git 규칙](#git-규칙) <br/>
-[코드 컨벤션](#코드-컨벤션) <br/>
-[디렉터리 구조](#디렉터리-구조) <br/>
-[팀원](#팀원) <br/>
+<table>
+<tr>
+<td width="50%">
 
-## 프로젝트 소개
+### 📋 프로젝트 정보
+- **[주요 기능](#주요-기능)** - 5가지 핵심 기능 소개
+- **[아키텍처](#아키텍처)** - 시스템 구조 및 설계
+- **[기술 스택](#기술-스택)** - 사용된 기술 및 도구
+- **[디렉터리 구조](#디렉터리-구조)** - 프로젝트 파일 구성
 
-**Pull It**은 대학생 및 학습자를 위한 AI 기반 학습 보조 플랫폼입니다.  
-단순히 공부 자료를 모으는 것을 넘어, **AI가 직접 문제를 만들어주고**,  
-**오답 관리·학습 진도 추적**까지 도와주는 통합 학습 환경을 제공합니다.
+</td>
+<td width="50%">
+
+### 🤝 협업 가이드
+- **[Git 규칙](#git-규칙)** - Commit, Branch, PR 가이드
+- **[코드 컨벤션](#코드-컨벤션)** - Airbnb 스타일 가이드
+- **[팀원](#팀원)** - 프론트엔드 개발팀
+
+</td>
+</tr>
+</table>
+
+---
+
+<!-- 주요 기능 -->
+## 주요 기능
+
+### 1. 대시보드 - 학습 현황 한눈에
+
+> **종합 학습 통계**  
+> 총 문제집 수, 이번 주 푼 문제, 총 푼 문제 수, 연속 학습일 제공
+
+> **잔디 그래프**  
+> 최근 1년간의 학습 현황을 시각화하여 학습 동기 부여
+
+<br/>
+
+### 2. 문제집 생성 - AI 자동 생성
+
+> **PDF 업로드 및 관리**  
+> 학습 자료를 업로드하고 체계적으로 관리
+
+> **다양한 문제 유형**  
+> 객관식, 참/거짓, 단답형 문제 자동 생성
+
+> **실시간 알림(SSE)**  
+> 문제 생성 중에도 다른 페이지 이용 가능, 완료 시 알림 제공
+
+<br/>
+
+### 3. 문제 풀이 - 실시간 채점 시스템
+
+> **유형별 맞춤 인터페이스**  
+> 문제 유형에 최적화된 풀이 환경 제공
+
+> **자동 채점**  
+> 모든 문제 풀이 완료 시 즉시 정답/오답 확인
+
+> **정답 및 해설 제공**  
+> 학습 능률 향상을 위한 상세 해설
+
+> **반복 학습**  
+> 생성된 문제집에 언제든 여러 번 접근 가능
+
+<br/>
+
+### 4. 나의 문제집 - 체계적 관리
+
+> **폴더 구조**  
+> 폴더 생성/삭제를 통한 문제집 분류 및 관리
+
+> **문제집 관리**  
+> 이름 변경, 복습, 삭제 등 체계적인 관리 기능
+
+> **전체 문제 제공**  
+> 풀기 버튼으로 전체 문제 테스트 진행
+
+<br/>
+
+### 5. 오답노트 - 효율적 복습
+
+> **틀린 문제만 집중**  
+> 오답에 대해서만 선택적 복습 가능
+
+> **폴더 연동**  
+> 나의 문제집 폴더와 동기화되어 체계적 관리
+
+> **진도 관리**  
+> 오답을 맞힐 때마다 오답 수 감소, 모두 맞추면 자동 삭제
+
+> **효과적인 학습**  
+> 약점만 집중 공략하여 학습 효율 극대화
+
+<!-- 주요 기능 -->
+
+---
+
+## 아키텍처
+
+### 시스템 구조
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Frontend Application                    │
+│                    React + TypeScript                       │
+│                                                             │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐           │
+│  │ AppLayout  │  │  Create    │  │   Solve    │           │
+│  │            │  │            │  │            │           │
+│  │ SSE 연결   │  │ PDF → S3   │  │ 문제 풀이  │           │
+│  │ 문제생성   │  │ 문제생성   │  │ 자동 채점  │           │
+│  │ 완료 알림  │  │ 요청       │  │ 정답/해설  │           │
+│  └────────────┘  └────────────┘  └────────────┘           │
+│                                                             │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐           │
+│  │  Library   │  │   Wrong    │  │ Dashboard  │           │
+│  │            │  │            │  │            │           │
+│  │ 문제집     │  │ 오답       │  │ 학습 통계  │           │
+│  │ 목록 조회  │  │ 목록 조회  │  │ 히트맵     │           │
+│  │ qid→Solve  │  │ qid→Solve  │  │            │           │
+│  └────────────┘  └────────────┘  └────────────┘           │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                   HTTPS / SSE / S3 Upload
+                              │
+                              ▼
+        ┌──────────────────────────────────────────┐
+        │         Backend (Spring Server)          │
+        │                                          │
+        │  • PDF 기반 문제 생성 (Gemini API)       │
+        │  • 문제 채점 및 해설 제공               │
+        │  • 문제집/오답 관리                     │
+        │  • 학습 통계 데이터                     │
+        └──────────────────────────────────────────┘
+```
+
+### 페이지별 주요 기능
+
+> **AppLayout (전역)**  
+> SSE 연결 유지, 문제 생성 완료 시 실시간 알림 수신
+
+> **Create (문제집 생성)**  
+> PDF 파일을 S3에 업로드 → S3 URL을 Spring 서버로 전달하여 문제 생성 요청
+
+> **Solve (문제 풀이)**  
+> qid(문제집 ID)로 문제 조회 → 사용자 답안 제출 → 자동 채점 → 정답/해설 표시
+
+> **Library (문제집 관리)**  
+> 생성된 문제집 목록 조회 → 문제집 선택 시 qid와 함께 Solve 페이지로 이동
+
+> **Wrong (오답노트)**  
+> 틀린 문제집 목록 조회 → 오답 선택 시 qid와 함께 Solve 페이지로 이동
+
+> **Dashboard (학습 현황)**  
+> 학습 통계 데이터 조회 및 히트맵 시각화
+
+---
 
 ## 기술 스택
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
-  <img src="https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white"/>
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
-  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black"/>
-</p>
+| 분류 | 기술 스택 |
+|------|-----------|
+| **빌드 도구** | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) ![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white) |
+| **언어 & 프레임워크** | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black) |
+| **상태 관리 & 라우팅** | ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white) ![React Router](https://img.shields.io/badge/React_Router_Dom-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white) |
+| **API 통신** | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white) |
+| **스타일링 & UI** | ![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=emotion&logoColor=white) ![Chakra UI](https://img.shields.io/badge/Chakra_UI-319795?style=for-the-badge&logo=chakraui&logoColor=white) ![Lottie](https://img.shields.io/badge/Lottie-00B2A9?style=for-the-badge&logo=lottiefiles&logoColor=white) ![Lucide React](https://img.shields.io/badge/Lucide_React-8A2BE2?style=for-the-badge&logo=lucide&logoColor=white) ![React Toastify](https://img.shields.io/badge/React_Toastify-FF8C00?style=for-the-badge&logo=react&logoColor=white) |
+| **코드 품질** | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black) ![Husky](https://img.shields.io/badge/Husky-000000?style=for-the-badge&logo=husky&logoColor=white) ![Airbnb](https://img.shields.io/badge/Airbnb_Code_Style-FF5A5F?style=for-the-badge&logo=airbnb&logoColor=white) |
+| **배포 & CI/CD** | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white) ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) |
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"/>
-  <img src="https://img.shields.io/badge/React_Router_Dom-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"/>
-  <img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"/>
-</p>
+---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=emotion&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Chakra_UI-319795?style=for-the-badge&logo=chakraui&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Lottie-00B2A9?style=for-the-badge&logo=lottiefiles&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Lucide_React-8A2BE2?style=for-the-badge&logo=lucide&logoColor=white"/>
-  <img src="https://img.shields.io/badge/React_Toastify-FF8C00?style=for-the-badge&logo=react&logoColor=white"/>
-</p>
+## 디렉터리 구조
 
-<p align="center">
-  <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black"/>
-  <img src="https://img.shields.io/badge/Husky-000000?style=for-the-badge&logo=husky&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Airbnb_Code_Style-FF5A5F?style=for-the-badge&logo=airbnb&logoColor=white"/>
-</p>
+### Feature-based 구조
 
-<p align="center">
-  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
-</p>
+```
+src/
+├─ app/
+│  ├─ App.tsx
+│  ├─ auth/
+│  │  ├─ AuthContext.ts
+│  │  ├─ AuthProvider.tsx
+│  │  ├─ ProtectedRoute.tsx
+│  │  └─ useAuth.ts
+│  ├─ routes/
+│  │  └─ AppRoutes.tsx
+│  └─ routePaths.ts
+│
+├─ pages/
+│  ├─ Create.tsx
+│  ├─ Dashboard.tsx
+│  ├─ Library.tsx
+│  ├─ Login.tsx
+│  ├─ LoginSuccess.tsx
+│  ├─ NotFound.tsx
+│  ├─ Settings.tsx
+│  ├─ Solve.tsx
+│  ├─ Wrong.tsx
+│  └─ layout/
+│     └─ AppLayout.tsx
+│
+├─ features/
+│  ├─ create/
+│  │  ├─ components/
+│  │  ├─ constants/
+│  │  ├─ hooks/
+│  │  ├─ innerPages/
+│  │  ├─ types/
+│  │  └─ utils/
+│  ├─ dashboard/
+│  │  ├─ components/
+│  │  ├─ mock/
+│  │  └─ types/
+│  ├─ library/
+│  │  ├─ components/
+│  │  ├─ innerPages/
+│  │  └─ types/
+│  ├─ login/
+│  │  └─ components/
+│  ├─ solve/
+│  │  ├─ components/
+│  │  ├─ service/
+│  │  └─ types/
+│  └─ wrong/
+│     ├─ components/
+│     ├─ mocks/
+│     └─ types/
+│
+├─ shared/
+│  ├─ api/
+│  │  ├─ apiService.ts
+│  │  └─ axiosClient.ts
+│  ├─ assets/
+│  │  └─ lotties/
+│  ├─ components/
+│  │  ├─ Layout/
+│  │  ├─ PageHeader/
+│  │  ├─ ProgressBar/
+│  │  ├─ SideBar/
+│  │  └─ ...
+│  ├─ config/
+│  │  └─ constants.ts
+│  ├─ hooks/
+│  │  └─ useSSEConnection.ts
+│  ├─ styles/
+│  │  ├─ emotion.d.ts
+│  │  ├─ global.css
+│  │  └─ theme.ts
+│  └─ utils/
+│     ├─ sse.ts
+│     └─ tokenManager.ts
+│
+└─ main.tsx
+```
+
+---
 
 ## Git 규칙
-
-[Commit](#commit) <br/>
-[Branch](#branch) <br/>
-[PR](#pr) <br/>
 
 ### Commit
 
@@ -168,56 +393,7 @@ PR 설명
 Air bnb Style</br>
 출처: https://github.com/airbnb/javascript<br/>
 
-## 디렉터리 구조
-
-### Feature-based 구조
-
-```
-src/
-├─ app/
-│  ├─ routes/
-│  ├─ index.tsx
-│  └─ routePaths.ts
-│
-│
-├─ pages/
-│  ├─ HomePage.tsx
-│  ├─ LoginPage.tsx
-│  ├─ ProductListPage.tsx
-│  ├─ ProductDetailPage.tsx
-│  ├─ OrderPage.tsx
-│  ├─ NotFoundPage.tsx
-│  └─ _layout/
-│     └─ AppLayout.tsx
-│
-│
-├─ features/
-│  ├─ auth/
-│  │  ├─ components/
-│  │  ├─ hooks/
-│  │  ├─ services/
-│  │  └─ index.ts
-│  ├─ order/
-│  │  ├─ components/
-│  │  ├─ hooks/
-│  │  ├─ services/
-│  │  └─ index.ts
-│  └─ product/
-│     ├─ components/
-│     ├─ hooks/
-│     ├─ services/
-│     └─ index.ts
-│
-├─ shared/
-│  ├─ components/
-│  ├─ hooks/
-│  ├─ utils/
-│  ├─ api/
-│  ├─ styles/
-│  └─ config/
-│
-└─ main.tsx
-```
+---
 
 ## 팀원
 
