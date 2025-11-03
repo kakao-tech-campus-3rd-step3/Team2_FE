@@ -17,7 +17,7 @@ import RightClickMenu from '@/features/library/components/RightClickMenu/RightCl
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList from '@/shared/components/FolderList';
-import { Pencil, Trash2, FileEdit, Folder } from 'lucide-react';
+import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
 
 interface Folder {
   id: number;
@@ -571,8 +571,12 @@ const Library = () => {
                           autoFocus
                         />
                         <div>
-                          <EditIconButton onClick={() => submitTitleEdit(item)}>✔️</EditIconButton>
-                          <EditIconButton onClick={() => setEditingItemId(null)}>❌</EditIconButton>
+                          <EditIconButton onClick={() => submitTitleEdit(item)}>
+                            <Check size={16} />
+                          </EditIconButton>
+                          <EditIconButton onClick={() => setEditingItemId(null)}>
+                            <X size={16} />
+                          </EditIconButton>
                         </div>
                       </TitleContainer>
                     ) : (

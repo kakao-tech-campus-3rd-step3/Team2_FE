@@ -5,7 +5,7 @@ import api from '@/shared/api/axiosClient';
 import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import { type MyQuestionSetsResponse } from '@/features/library/types/questionSetResponse';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Check, Pencil, Trash2, X } from 'lucide-react';
 
 interface Folder {
   id: number;
@@ -321,16 +321,18 @@ const FolderList = ({
       >
         <RightClickMenuItem
           icon={Pencil}
-          title="폴더 이름 변경"
           onClick={handleFolderMenuRename}
           disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        />
+        >
+          폴더 이름 변경
+        </RightClickMenuItem>
         <RightClickMenuItem
           icon={Trash2}
-          title="폴더 삭제"
           onClick={handleFolderMenuDelete}
           disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        />
+        >
+          폴더 삭제
+        </RightClickMenuItem>
       </RightClickMenu>
       <FolderContainer>
         {folders &&
@@ -352,7 +354,7 @@ const FolderList = ({
               >
                 {isEditingThisFolder ? (
                   <>
-                    📁{' '}
+                    {' '}
                     <FolderInput
                       value={editingFolderName}
                       onChange={(e) => setEditingFolderName(e.target.value)}
@@ -373,7 +375,7 @@ const FolderList = ({
                         submitFolderNameEdit(folder);
                       }}
                     >
-                      ✔️
+                      <Check size={16} />
                     </FolderActionButton>
                     <FolderActionButton
                       onClick={(e) => {
@@ -381,11 +383,11 @@ const FolderList = ({
                         setEditingFolderId(null);
                       }}
                     >
-                      ❌
+                      <X size={16} />
                     </FolderActionButton>
                   </>
                 ) : (
-                  <>📁 {folder.name}</>
+                  <>{folder.name}</>
                 )}
               </FolderTag>
             );
