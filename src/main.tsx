@@ -5,9 +5,14 @@ import { theme } from './shared/styles/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ToastContainer } from 'react-toastify';
+import Sentry from '@sentry/react';
 
 import '@/shared/styles/global.css';
 import App from '@/app/App.tsx';
+
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+});
 
 const queryClient = new QueryClient();
 
