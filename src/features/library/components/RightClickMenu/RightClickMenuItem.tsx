@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { type LucideIcon } from 'lucide-react';
 
 const StyledMenuItem = styled.li<{ disabled?: boolean }>`
   padding: 8px 16px;
@@ -28,19 +29,28 @@ const MenuIcon = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 interface RightClickMenuItemProps {
   onClick?: () => void;
   disabled?: boolean;
-  icon?: string;
+  icon?: LucideIcon;
   title: string;
 }
 
-function RightClickMenuItem({ onClick, disabled, icon, title }: RightClickMenuItemProps) {
+function RightClickMenuItem({ onClick, disabled, icon: Icon, title }: RightClickMenuItemProps) {
   return (
     <StyledMenuItem onClick={disabled ? undefined : onClick} disabled={disabled}>
-      {icon && <MenuIcon>{icon}</MenuIcon>}
+      {Icon && (
+        <MenuIcon>
+          <Icon />
+        </MenuIcon>
+      )}
       {title}
     </StyledMenuItem>
   );

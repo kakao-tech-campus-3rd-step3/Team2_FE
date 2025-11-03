@@ -5,6 +5,7 @@ import api from '@/shared/api/axiosClient';
 import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import { type MyQuestionSetsResponse } from '@/features/library/types/questionSetResponse';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface Folder {
   id: number;
@@ -319,13 +320,13 @@ const FolderList = ({
         point={folderMousePoint}
       >
         <RightClickMenuItem
-          icon="✏️"
+          icon={Pencil}
           title="폴더 이름 변경"
           onClick={handleFolderMenuRename}
           disabled={selectedFolder?.id === ALL_FOLDER_ID}
         />
         <RightClickMenuItem
-          icon="❌"
+          icon={Trash2}
           title="폴더 삭제"
           onClick={handleFolderMenuDelete}
           disabled={selectedFolder?.id === ALL_FOLDER_ID}

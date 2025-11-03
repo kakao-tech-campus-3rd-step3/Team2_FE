@@ -17,6 +17,7 @@ import RightClickMenu from '@/features/library/components/RightClickMenu/RightCl
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList from '@/shared/components/FolderList';
+import { Pencil, Trash2, FileEdit, Folder } from 'lucide-react';
 
 interface Folder {
   id: number;
@@ -457,13 +458,13 @@ const Library = () => {
     <Container>
       <RightClickMenu isVisible={isVisibleMenu} setIsVisible={setIsVisibleMenu} point={mousePoint}>
         <RightClickMenuItem
-          icon="✏️"
+          icon={Pencil}
           title="문제집 이름 변경"
           onClick={handleMenuRename}
           disabled={selectedCell?.status !== 'COMPLETE'}
         />
         <RightClickMenuItem
-          icon="❌"
+          icon={Trash2}
           title="삭제"
           onClick={handleMenuDelete}
           disabled={selectedCell?.status !== 'COMPLETE'}
@@ -472,7 +473,7 @@ const Library = () => {
         {folders && folders.length > 0 && (
           <>
             <FolderSelectWrapper>
-              <FolderSelectLabel>📁 폴더 이동</FolderSelectLabel>
+              <FolderSelectLabel>폴더 이동</FolderSelectLabel>
               <FolderSelect
                 disabled={selectedCell?.status !== 'COMPLETE'}
                 defaultValue={selectedFolderId ?? ''}
@@ -495,7 +496,7 @@ const Library = () => {
           </>
         )}
         <RightClickMenuItem
-          icon="📝"
+          icon={FileEdit}
           title="문제집 풀기"
           onClick={handleMenuSolve}
           disabled={selectedCell?.status !== 'COMPLETE'}
