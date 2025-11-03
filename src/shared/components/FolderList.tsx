@@ -314,17 +314,19 @@ const FolderList = ({
         point={folderMousePoint}
       >
         <RightClickMenuItem
-          icon="✏️"
-          title="폴더 이름 변경"
+          icon={Pencil}
           onClick={handleFolderMenuRename}
           disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        />
+        >
+          폴더 이름 변경
+        </RightClickMenuItem>
         <RightClickMenuItem
-          icon="❌"
-          title="폴더 삭제"
+          icon={Trash2}
           onClick={handleFolderMenuDelete}
           disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        />
+        >
+          폴더 삭제
+        </RightClickMenuItem>
       </RightClickMenu>
       <FolderContainer>
         {folders &&
@@ -346,7 +348,7 @@ const FolderList = ({
               >
                 {isEditingThisFolder ? (
                   <>
-                    📁{' '}
+                    {' '}
                     <FolderInput
                       value={editingFolderName}
                       onChange={(e) => setEditingFolderName(e.target.value)}
@@ -367,7 +369,7 @@ const FolderList = ({
                         submitFolderNameEdit(folder);
                       }}
                     >
-                      ✔️
+                      <Check size={16} />
                     </FolderActionButton>
                     <FolderActionButton
                       onClick={(e) => {
@@ -375,18 +377,18 @@ const FolderList = ({
                         setEditingFolderId(null);
                       }}
                     >
-                      ❌
+                      <X size={16} />
                     </FolderActionButton>
                   </>
                 ) : (
-                  <>📁 {folder.name}</>
+                  <>{folder.name}</>
                 )}
               </FolderTag>
             );
           })}
         {isAddingFolder ? (
           <FolderInputContainer>
-            <span>📁</span>
+            <FolderIcon size={16} />
             <FolderInput
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
@@ -401,11 +403,17 @@ const FolderList = ({
               placeholder="폴더 이름"
               autoFocus
             />
-            <FolderActionButton onClick={handleConfirmAddFolder}>✔️</FolderActionButton>
-            <FolderActionButton onClick={handleCancelAddFolder}>❌</FolderActionButton>
+            <FolderActionButton onClick={handleConfirmAddFolder}>
+              <Check size={16} />
+            </FolderActionButton>
+            <FolderActionButton onClick={handleCancelAddFolder}>
+              <X size={16} />
+            </FolderActionButton>
           </FolderInputContainer>
         ) : (
-          <AddFolderButton onClick={handleAddFolder}>➕</AddFolderButton>
+          <AddFolderButton onClick={handleAddFolder}>
+            <Plus size={16} />
+          </AddFolderButton>
         )}
       </FolderContainer>
     </>

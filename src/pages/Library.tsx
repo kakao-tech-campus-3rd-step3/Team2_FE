@@ -18,6 +18,7 @@ import RightClickMenu from '@/features/library/components/RightClickMenu/RightCl
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList from '@/shared/components/FolderList';
+import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
 
 interface Folder {
   id: number;
@@ -184,24 +185,26 @@ const EditIconButton = styled.button`
 `;
 
 const FolderSelectWrapper = styled.div`
-  padding: 8px 16px;
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
 `;
 
 const FolderSelectLabel = styled.span`
   font-size: 14px;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.default};
   white-space: nowrap;
+  flex-shrink: 0;
 `;
 
 const FolderSelect = styled.select`
   flex: 1;
-  padding: 6px 8px;
+  min-width: 0;
+  padding: 4px 8px;
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
   border-radius: ${({ theme }) => theme.radius.radius2};
-  font-size: 14px;
+  font-size: 13px;
   background-color: ${({ theme }) => theme.colors.background.foreground};
   color: ${({ theme }) => theme.colors.text.default};
   cursor: pointer;
@@ -456,49 +459,54 @@ const Library = () => {
     <Container>
       <RightClickMenu isVisible={isVisibleMenu} setIsVisible={setIsVisibleMenu} point={mousePoint}>
         <RightClickMenuItem
-          icon="✏️"
-          title="문제집 이름 변경"
+          icon={Pencil}
           onClick={handleMenuRename}
           disabled={selectedCell?.status === 'PENDING'}
-        />
+        >
+          문제집 이름 변경
+        </RightClickMenuItem>
         <RightClickMenuItem
-          icon="❌"
-          title="삭제"
+          icon={Trash2}
           onClick={handleMenuDelete}
-          disabled={selectedCell?.status === 'PENDING'}
-        />
+          disabled={selectedCell?.status !== 'COMPLETE'}
+        >
+          삭제
+        </RightClickMenuItem>
         <RightClickMenuDivider />
         {folders && folders.length > 0 && (
           <>
-            <FolderSelectWrapper>
-              <FolderSelectLabel>📁 폴더 이동</FolderSelectLabel>
-              <FolderSelect
-                disabled={selectedCell?.status === 'PENDING'}
-                defaultValue={selectedFolderId ?? ''}
-                onChange={(e) => {
-                  const targetFolderId = Number(e.target.value);
-                  if (targetFolderId !== selectedFolderId) {
-                    handleMenuMoveToFolder(targetFolderId);
-                  }
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {folders.map((folder) => (
-                  <option key={folder.id} value={folder.id}>
-                    {folder.name}
-                  </option>
-                ))}
-              </FolderSelect>
-            </FolderSelectWrapper>
+            <RightClickMenuItem icon={Folder} disabled={selectedCell?.status === 'PENDING'}>
+              <FolderSelectWrapper>
+                <FolderSelectLabel>폴더 이동</FolderSelectLabel>
+                <FolderSelect
+                  disabled={selectedCell?.status === 'PENDING'}
+                  defaultValue={selectedFolderId ?? ''}
+                  onChange={(e) => {
+                    const targetFolderId = Number(e.target.value);
+                    if (targetFolderId !== selectedFolderId) {
+                      handleMenuMoveToFolder(targetFolderId);
+                    }
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {folders.map((folder) => (
+                    <option key={folder.id} value={folder.id}>
+                      {folder.name}
+                    </option>
+                  ))}
+                </FolderSelect>
+              </FolderSelectWrapper>
+            </RightClickMenuItem>
             <RightClickMenuDivider />
           </>
         )}
         <RightClickMenuItem
-          icon="📝"
-          title="문제집 풀기"
+          icon={FileEdit}
           onClick={handleMenuSolve}
           disabled={selectedCell?.status === 'PENDING'}
-        />
+        >
+          문제집 풀기
+        </RightClickMenuItem>
       </RightClickMenu>
 
       <LibraryWrapper>
@@ -562,8 +570,12 @@ const Library = () => {
                           autoFocus
                         />
                         <div>
-                          <EditIconButton onClick={() => submitTitleEdit(item)}>✔️</EditIconButton>
-                          <EditIconButton onClick={() => setEditingItemId(null)}>❌</EditIconButton>
+                          <EditIconButton onClick={() => submitTitleEdit(item)}>
+                            <Check size={16} />
+                          </EditIconButton>
+                          <EditIconButton onClick={() => setEditingItemId(null)}>
+                            <X size={16} />
+                          </EditIconButton>
                         </div>
                       </TitleContainer>
                     ) : (
