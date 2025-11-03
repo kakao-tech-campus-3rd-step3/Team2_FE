@@ -53,7 +53,7 @@ export const useSSEConnection = () => {
           },
         });
       } else {
-        console.log('[SSE] 문제집 생성 실패');
+        toast.error(payload.message || '문제집 생성에 실패했습니다.');
       }
     });
 

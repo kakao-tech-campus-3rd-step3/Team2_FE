@@ -47,8 +47,13 @@ function AppLayout() {
   const location = useLocation();
 
   // SSE 연결 관리
-  const { questionSetReady, questionSetId, setQuestionSetReady, setQuestionSetId, closeConnection } =
-    useSSEConnection();
+  const {
+    questionSetReady,
+    questionSetId,
+    setQuestionSetReady,
+    setQuestionSetId,
+    closeConnection,
+  } = useSSEConnection();
 
   // wrapper 함수들
   const openSideBar = () => setIsOpen(true); // LSB 여는 함수
