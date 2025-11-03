@@ -1,8 +1,13 @@
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import { Brain } from 'lucide-react';
 
-// 전역 스피너
+// 전역 스피너(개선판)
+// 사용자 측면에서 짧은 로딩 시간에로 스피너가 나오는 것은 UX를 저하시킨다는 의견으로
+// 일정 시간(DELAY_MS) 동안 대기 후 로딩이 발생하는 식으로 변경함
+
+const DELAY_MS = 500;
 
 const spin = keyframes`
   to {
@@ -59,8 +64,7 @@ const StyledBrain = styled(Brain)`
   color: ${({ theme }) => theme.colors.semantic.primary};
 `;
 
-const Spinner = () => (
-  // 브라우저 정 가운데의 스피너
+const SpinnerVisual = () => (
   <FullScreenWrapper>
     <SpinnerWrapper>
       <OuterRing />
@@ -71,5 +75,21 @@ const Spinner = () => (
     </SpinnerWrapper>
   </FullScreenWrapper>
 );
+
+const Spinner = () => {
+  const [showSpinner, setShowSpinner] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSpinner(true);
+    }, DELAY_MS);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return showSpinner ? <SpinnerVisual /> : null;
+};
 
 export default Spinner;
