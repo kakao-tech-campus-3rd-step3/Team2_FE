@@ -5,7 +5,7 @@ import api from '@/shared/api/axiosClient';
 import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import { type MyQuestionSetsResponse } from '@/features/library/types/questionSetResponse';
-import { Check, Pencil, Trash2, X } from 'lucide-react';
+import { Check, Pencil, Trash2, X, Folder as FolderIcon, Plus } from 'lucide-react';
 
 interface Folder {
   id: number;
@@ -394,7 +394,7 @@ const FolderList = ({
           })}
         {isAddingFolder ? (
           <FolderInputContainer>
-            <span>📁</span>
+            <FolderIcon size={16} />
             <FolderInput
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
@@ -409,11 +409,17 @@ const FolderList = ({
               placeholder="폴더 이름"
               autoFocus
             />
-            <FolderActionButton onClick={handleConfirmAddFolder}>✔️</FolderActionButton>
-            <FolderActionButton onClick={handleCancelAddFolder}>❌</FolderActionButton>
+            <FolderActionButton onClick={handleConfirmAddFolder}>
+              <Check size={16} />
+            </FolderActionButton>
+            <FolderActionButton onClick={handleCancelAddFolder}>
+              <X size={16} />
+            </FolderActionButton>
           </FolderInputContainer>
         ) : (
-          <AddFolderButton onClick={handleAddFolder}>➕</AddFolderButton>
+          <AddFolderButton onClick={handleAddFolder}>
+            <Plus size={16} />
+          </AddFolderButton>
         )}
       </FolderContainer>
     </>
