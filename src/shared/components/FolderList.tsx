@@ -5,6 +5,7 @@ import api from '@/shared/api/axiosClient';
 import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import { type QuestionSetContentType } from '@/features/library/types/questionSetResponse';
+import { Check, FolderIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
 
 interface Folder {
   id: number;
