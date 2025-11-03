@@ -61,21 +61,31 @@ function AppLayout() {
   useEffect(() => {
     const token = getToken();
     if (!token) {
-      // 토큰이 없으면 SSE 연결을 시도하지 않음
       return;
     }
+    // sse 연결해제 에러 메시지가 event-source-polyfill 라이블러리 단에서 출력하는거라 console.error를 오버라이딩해서 처리해야함
+    const originalError = console.error;
+    console.error = (...args: unknown[]) => {
+      const message = args[0]?.toString() || '';
+      // SSE 타임아웃 관련 에러는 무시
+      if (message.includes('No activity within') || message.includes('[SSE] 에러 발생')) {
+        return;
+      }
+      originalError.apply(console, args);
+    };
 
     const es = new NotificationSse();
     esRef.current = es;
 
-    es.onOpen(() => {
-      console.log('[SSE] 연결 성공 (Open)');
-    });
-    es.onHandShake(() => {
-      console.log('[SSE] HandShake 완료');
-    });
     es.onError((e) => {
-      console.error('[SSE] 에러 발생:', e);
+      const errorEvent = e as ErrorEvent;
+      // 타임아웃으로 인한 자동 재연결은 정상 동작이므로 로그 출력 안 함
+      if (errorEvent.message && errorEvent.message.includes('No activity within')) {
+        // 재연결은 라이브러리가 자동으로 처리하므로 아무것도 안 함
+        return;
+      }
+      // 실제 에러만 콘솔에 표시 (오버라이드된 console.error 사용)
+      originalError('[SSE] 에러 발생:', e);
     });
 
     es.onQuestionCreationComplete((payload) => {
@@ -93,9 +103,10 @@ function AppLayout() {
       }
     });
 
-    // 컴포넌트 언마운트 시 SSE 연결 정리
+    // 컴포넌트 언마운트 시 SSE 연결 정리 및 console.error 복원
     return () => {
       es.close();
+      console.error = originalError; // console.error 원래대로 복원
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
