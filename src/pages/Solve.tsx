@@ -25,6 +25,8 @@ import MultipleChoiceSolve from '@/features/solve/components/question-types/Mult
 import ShortAnswerSolve from '@/features/solve/components/question-types/ShortAnswerSolve';
 import TrueFalseSolve from '@/features/solve/components/question-types/TrueFalseSolve';
 
+import NotFoundQuestionSet from '@/features/solve/components/NotFoundQuestionSet';
+
 const SolveWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
   display: flex;
@@ -88,7 +90,7 @@ function Solve() {
   if (error)
     return (
       <PageLayout>
-        <h1>Error</h1>
+        <NotFoundQuestionSet />
       </PageLayout>
     );
 
