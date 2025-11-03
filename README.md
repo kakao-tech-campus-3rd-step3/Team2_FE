@@ -12,11 +12,11 @@
 
 ### 💡 왜 Pull It인가?
 
-| 핵심 가치 | 설명 |
-|:---:|---|
-| **능동적 학습** | 책을 읽기만 하는 수동적 학습이 아닌, 문제 풀이를 통한 정보 인출로 장기 기억 형성 |
-| **자동화** | 문제 제작의 피로감 없이 학습에만 집중 |
-| **지속 가능한 시스템** | 학습 기록 관리 + 오답 복습 + 학습 동기부여까지 제공하는 학습 생태계 |
+|       핵심 가치        | 설명                                                                             |
+| :--------------------: | -------------------------------------------------------------------------------- |
+|    **능동적 학습**     | 책을 읽기만 하는 수동적 학습이 아닌, 문제 풀이를 통한 정보 인출로 장기 기억 형성 |
+|       **자동화**       | 문제 제작의 피로감 없이 학습에만 집중                                            |
+| **지속 가능한 시스템** | 학습 기록 관리 + 오답 복습 + 학습 동기부여까지 제공하는 학습 생태계              |
 
 ---
 
@@ -33,6 +33,7 @@
 <td width="50%">
 
 ### 📋 프로젝트 정보
+
 - **[주요 기능](#주요-기능)** - 5가지 핵심 기능 소개
 - **[아키텍처](#아키텍처)** - 시스템 구조 및 설계
 - **[기술 스택](#기술-스택)** - 사용된 기술 및 도구
@@ -42,6 +43,7 @@
 <td width="50%">
 
 ### 🤝 협업 가이드
+
 - **[Git 규칙](#git-규칙)** - Commit, Branch, PR 가이드
 - **[코드 컨벤션](#코드-컨벤션)** - Airbnb 스타일 가이드
 - **[팀원](#팀원)** - 프론트엔드 개발팀
@@ -53,6 +55,7 @@
 ---
 
 <!-- 주요 기능 -->
+
 ## 주요 기능
 
 ### 1. 대시보드 - 학습 현황 한눈에
@@ -188,15 +191,15 @@
 
 ## 기술 스택
 
-| 분류 | 기술 스택 |
-|------|-----------|
-| **빌드 도구** | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) ![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white) |
-| **언어 & 프레임워크** | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black) |
-| **상태 관리 & 라우팅** | ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white) ![React Router](https://img.shields.io/badge/React_Router_Dom-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white) |
-| **API 통신** | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white) |
-| **스타일링 & UI** | ![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=emotion&logoColor=white) ![Chakra UI](https://img.shields.io/badge/Chakra_UI-319795?style=for-the-badge&logo=chakraui&logoColor=white) ![Lottie](https://img.shields.io/badge/Lottie-00B2A9?style=for-the-badge&logo=lottiefiles&logoColor=white) ![Lucide React](https://img.shields.io/badge/Lucide_React-8A2BE2?style=for-the-badge&logo=lucide&logoColor=white) ![React Toastify](https://img.shields.io/badge/React_Toastify-FF8C00?style=for-the-badge&logo=react&logoColor=white) |
-| **코드 품질** | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black) ![Husky](https://img.shields.io/badge/Husky-000000?style=for-the-badge&logo=husky&logoColor=white) ![Airbnb](https://img.shields.io/badge/Airbnb_Code_Style-FF5A5F?style=for-the-badge&logo=airbnb&logoColor=white) |
-| **배포 & CI/CD** | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white) ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) |
+| 분류                   | 기술 스택                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **빌드 도구**          | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) ![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                          |
+| **언어 & 프레임워크**  | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)                                                                                                                                                                                                                                                                                                                                                     |
+| **상태 관리 & 라우팅** | ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white) ![React Router](https://img.shields.io/badge/React_Router_Dom-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)                                                                                                                                                                                                                                                                                                                           |
+| **API 통신**           | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **스타일링 & UI**      | ![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=emotion&logoColor=white) ![Chakra UI](https://img.shields.io/badge/Chakra_UI-319795?style=for-the-badge&logo=chakraui&logoColor=white) ![Lottie](https://img.shields.io/badge/Lottie-00B2A9?style=for-the-badge&logo=lottiefiles&logoColor=white) ![Lucide React](https://img.shields.io/badge/Lucide_React-8A2BE2?style=for-the-badge&logo=lucide&logoColor=white) ![React Toastify](https://img.shields.io/badge/React_Toastify-FF8C00?style=for-the-badge&logo=react&logoColor=white) |
+| **코드 품질**          | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black) ![Husky](https://img.shields.io/badge/Husky-000000?style=for-the-badge&logo=husky&logoColor=white) ![Airbnb](https://img.shields.io/badge/Airbnb_Code_Style-FF5A5F?style=for-the-badge&logo=airbnb&logoColor=white)                                                                                                                                    |
+| **배포 & CI/CD**       | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white) ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)                                                                                                                                                                                                                                                                                                                                       |
 
 ---
 

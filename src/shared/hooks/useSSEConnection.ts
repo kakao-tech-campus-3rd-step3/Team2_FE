@@ -40,7 +40,7 @@ export const useSSEConnection = () => {
         return;
       }
       // 실제 에러만 콘솔에 표시 (오버라이드된 console.error 사용)
-    //   originalError('[SSE] 에러 발생:', e);
+      //   originalError('[SSE] 에러 발생:', e);
     });
 
     es.onQuestionCreationComplete((payload) => {
