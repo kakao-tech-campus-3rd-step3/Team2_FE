@@ -40,10 +40,10 @@ interface RightClickMenuItemProps {
   onClick?: () => void;
   disabled?: boolean;
   icon?: LucideIcon;
-  title: string;
+  children?: React.ReactNode;
 }
 
-function RightClickMenuItem({ onClick, disabled, icon: Icon, title }: RightClickMenuItemProps) {
+function RightClickMenuItem({ onClick, disabled, icon: Icon, children }: RightClickMenuItemProps) {
   return (
     <StyledMenuItem onClick={disabled ? undefined : onClick} disabled={disabled}>
       {Icon && (
@@ -51,7 +51,7 @@ function RightClickMenuItem({ onClick, disabled, icon: Icon, title }: RightClick
           <Icon />
         </MenuIcon>
       )}
-      {title}
+      {children}
     </StyledMenuItem>
   );
 }
