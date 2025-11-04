@@ -8,7 +8,6 @@ import Spacer from '@/shared/components/Spacer';
 
 import {
   type QuestionType,
-  type QuestionSetStatus,
   type QuestionSetContentType,
 } from '@/features/library/types/questionSetResponse';
 
@@ -18,6 +17,7 @@ import RightClickMenu from '@/features/library/components/RightClickMenu/RightCl
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
+import { getFolderColor } from '@/shared/constants/folderColors';
 import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
@@ -66,7 +66,7 @@ const ListBox = styled.div`
 
 const ListRow = styled.div<{ isDragging?: boolean; isDisabled?: boolean }>`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 0.8fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
@@ -105,13 +105,23 @@ const HeaderCell = styled(ListCell)`
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
 `;
 
-const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
-  font-weight: 500;
-  display: flex;
+const FolderCellContent = styled.div`
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
 `;
+
+const FolderColorDot = styled.span<{ color: string }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: ${({ color }) => color};
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+`;
+
+const DEFAULT_FOLDER_COLOR = '#d1d5db';
 
 const LoadingSpinner = styled.div`
   border: 2px solid #f3f3f3;
@@ -243,12 +253,6 @@ const TYPE_MAP: Record<QuestionType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
   TRUE_FALSE: '참/거짓',
-};
-
-const STATUS_MAP: Record<QuestionSetStatus, string> = {
-  FAILED: '생성 실패',
-  PENDING: '생성 중',
-  COMPLETE: '생성완료',
 };
 
 interface QuestionSets {
@@ -557,7 +561,7 @@ const Library = () => {
             <HeaderCell>문제 수</HeaderCell>
             <HeaderCell>생성일</HeaderCell>
             <HeaderCell>유형</HeaderCell>
-            <HeaderCell>상태</HeaderCell>
+            <HeaderCell align="left">폴더</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
           </ListRow>
 
@@ -617,9 +621,18 @@ const Library = () => {
                   <ListCell isDisabled={isPending}>
                     {TYPE_MAP[item.questionType] ?? '생성 실패'}
                   </ListCell>
-                  <StatusCell status={item.status} isDisabled={isPending}>
-                    {STATUS_MAP[item.status] ?? '생성 실패'}
-                  </StatusCell>
+                  <ListCell align="left" isDisabled={isPending}>
+                    <FolderCellContent>
+                      <FolderColorDot
+                        color={
+                          item.commonFolderId
+                            ? getFolderColor(item.commonFolderId).bg
+                            : DEFAULT_FOLDER_COLOR
+                        }
+                      />
+                      <span>{item.commonFolderName ?? '-'}</span>
+                    </FolderCellContent>
+                  </ListCell>
                   <ListCell isDisabled={isPending}>
                     {item.status === 'COMPLETE' && (
                       <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
