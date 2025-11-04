@@ -235,21 +235,22 @@ function TrueFalseSolve({
           </ExplanationBox>
         )}
         <QuestionNavigation>
-          <PrevButton 
-            onClick={goPrev} 
-            style={{ 
+          <PrevButton
+            onClick={goPrev}
+            style={{
               visibility: currentQuestionIndex === 1 ? 'hidden' : 'visible',
-              pointerEvents: currentQuestionIndex === 1 ? 'none' : 'auto'
+              pointerEvents: currentQuestionIndex === 1 ? 'none' : 'auto',
             }}
           >
             <ArrowLeft size={20} />
             이전
           </PrevButton>
-          <NextButton 
+          <NextButton
             onClick={goNext}
-            style={{ 
-              visibility: currentQuestionIndex === questions.questions.length ? 'hidden' : 'visible',
-              pointerEvents: currentQuestionIndex === questions.questions.length ? 'none' : 'auto'
+            style={{
+              visibility:
+                currentQuestionIndex === questions.questions.length ? 'hidden' : 'visible',
+              pointerEvents: currentQuestionIndex === questions.questions.length ? 'none' : 'auto',
             }}
           >
             다음
