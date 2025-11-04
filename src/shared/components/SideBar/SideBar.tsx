@@ -34,7 +34,7 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   transition: transform 0.4s ease;
 
   background-color: ${({ theme }) => theme.colors.gray.gray0};
-  
+
   @media (max-width: 1050px) {
     width: 100%;
     height: 60px;
@@ -42,7 +42,7 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
     border-right: none;
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
     flex-direction: row;
-    transform: translateY(0); 
+    transform: translateY(0);
     position: fixed;
     background-color: ${({ theme }) => theme.colors.gray.gray0};
   }
