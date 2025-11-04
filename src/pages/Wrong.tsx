@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useState, useEffect } from 'react';
 import Spinner from '@/shared/components/Spinner';
-import FolderList from '@/shared/components/FolderList';
+import FolderList, { type Folder } from '@/shared/components/FolderList';
 
 // prettier 돌려줘
 const WrongWrapper = styled.div`
@@ -116,12 +116,6 @@ const WrongNoteListHeaderColumn = styled.span`
 // 폴더 관련 타입 + 인터페이스들
 const QUESTION_SET_TYPE = 'QUESTION_SET';
 const ALL_FOLDER_ID = 1;
-interface Folder {
-  id: number;
-  name: string;
-  type: 'QUESTION_SET';
-  sortOrder: number;
-}
 
 interface QuestionSetContent {
   questionSetId: number;
