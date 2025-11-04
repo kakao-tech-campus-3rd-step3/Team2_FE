@@ -33,6 +33,12 @@ const DashboardWrapper = styled.div`
   overflow-y: auto;
   box-sizing: border-box;
   justify-content: flex-start;
+
+  @media (max-width: 1050px) {
+    max-width: 100%;
+    padding: ${({ theme }) => theme.spacing.spacing3};
+    overflow-x: hidden;
+  }
 `;
 
 const DashboardTitle = styled.h1`
@@ -58,6 +64,11 @@ const DashboardStatCardWrapper = styled.div`
   display: flex;
   margin-top: ${({ theme }) => theme.spacing.spacing5};
   justify-content: space-between;
+
+  @media (max-width: 1050px) {
+    flex-wrap: wrap;
+    gap: ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 const DashboardStatCard = styled.div`
   width: 24%;
@@ -69,6 +80,11 @@ const DashboardStatCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.spacing4};
+
+  @media (max-width: 1050px) {
+    width: calc(50% - ${({ theme }) => theme.spacing.spacing3} / 2);
+    min-width: 0;
+  }
 `;
 
 const BookOpenWrapper = styled.div`

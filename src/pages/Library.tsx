@@ -19,6 +19,7 @@ import RightClickMenuItem from '@/features/library/components/RightClickMenu/Rig
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
 import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
+import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
 
@@ -39,6 +40,11 @@ const LibraryWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 1000px;
+
+  @media (max-width: 1050px) {
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 
 const FileListSearchInput = styled.input`
@@ -146,6 +152,15 @@ const TitleText = styled.span`
   text-overflow: ellipsis;
 `;
 
+const SourceNames = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.gray.gray6};
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 const TitleEditInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border.border1};
   padding: 4px 8px;
@@ -236,7 +251,7 @@ interface QuestionSets {
   size: number;
 }
 interface QuestionSetApiResponse {
-  learningProgress: number;
+  learnStats: LearnStatsResponse;
   questionSets: QuestionSets;
 }
 
@@ -384,7 +399,7 @@ const Library = () => {
     queryFn: async () => {
       if (selectedFolderId === null) {
         return {
-          learningProgress: 0,
+          learnStats: { totalCorrectQuestionCount: 0, totalQuestionCount: 0 },
           questionSets: { content: [], nextCursor: 0, hasNext: false, size: 0 },
         };
       }
@@ -511,7 +526,16 @@ const Library = () => {
       <LibraryWrapper>
         <LibraryTitle />
         <Spacer height={'10px'} />
-        <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
+        <LibraryProgressSummary
+          percent={
+            data
+              ? Math.floor(
+                  (data.learnStats.totalCorrectQuestionCount / data.learnStats.totalQuestionCount) *
+                    100,
+                )
+              : 0
+          }
+        />
         <Spacer height="12px" />
         <FileListSearchInput
           placeholder="문제집 제목으로 검색"
@@ -579,9 +603,16 @@ const Library = () => {
                         </div>
                       </TitleContainer>
                     ) : (
-                      <TitleContainer>
-                        <TitleText title={item.title}>{item.title}</TitleText>
-                      </TitleContainer>
+                      <div>
+                        <TitleContainer>
+                          <TitleText title={item.title}>{item.title}</TitleText>
+                        </TitleContainer>
+                        {item.sourceNames && item.sourceNames.length > 0 && (
+                          <SourceNames title={item.sourceNames.join(', ')}>
+                            자료: {item.sourceNames.join(', ')}
+                          </SourceNames>
+                        )}
+                      </div>
                     )}
                   </ListCell>
                   <ListCell>{item.questionCount}</ListCell>

@@ -183,10 +183,16 @@ table {
   border-spacing: 0;
 }
 body {
-  min-width: 1024px;
   min-height: 640px;
   overflow: auto;
 }
+
+@media (min-width: 1051px) {
+  body {
+    min-width: 1024px;
+  }
+}
+
 #root,
 html,
 body {

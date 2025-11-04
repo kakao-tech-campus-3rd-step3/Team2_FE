@@ -8,7 +8,7 @@ import { CalendarDays } from 'lucide-react';
 const CalendarHeatmapWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
   padding: ${({ theme }) => theme.spacing.spacing5};
-  margin-top: ${({ theme }) => theme.spacing.spacing20};
+  margin-top: ${({ theme }) => theme.spacing.spacing10};
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   border-radius: ${({ theme }) => theme.radius.radius3};
 

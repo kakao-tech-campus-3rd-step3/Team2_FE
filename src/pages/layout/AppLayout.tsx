@@ -19,6 +19,12 @@ const AppLayoutWrapper = styled.div`
   min-width: 1050px;
   display: flex;
   overflow: hidden;
+
+  @media (max-width: 1050px) {
+    min-width: 100%;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
 `;
 
 const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
@@ -32,6 +38,14 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   /* 사이드바를 위한 왼쪽 마진 */
   margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
   transition: margin-left 0.4s ease;
+
+  @media (max-width: 1050px) {
+    margin-left: 0;
+    margin-top: 60px;
+    min-height: calc(100dvh - 60px);
+    overflow-x: hidden;
+    width: 100%;
+  }
 `;
 
 const Main = styled.div`
@@ -40,6 +54,14 @@ const Main = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray2};
   flex: 1;
   height: calc(100% - 76px);
+
+  @media (max-width: 1050px) {
+    min-width: unset;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 `;
 
 function AppLayout() {
