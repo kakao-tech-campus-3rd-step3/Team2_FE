@@ -36,11 +36,24 @@ const SolveWrapper = styled.div`
   max-width: 960px;
   padding: 0px 20px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
+
+  @media (max-width: 1050px) {
+    margin-top: ${({ theme }) => theme.spacing.spacing3};
+    min-width: unset;
+    width: 100%;
+    max-width: 100%;
+    padding: 0px ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 
 const SolveContentWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing3};
   display: flex;
+
+  @media (max-width: 1050px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 
 const RightSidebar = styled.div`
@@ -48,6 +61,11 @@ const RightSidebar = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 180px;
+
+  @media (max-width: 1050px) {
+    min-width: unset;
+    width: 100%;
+  }
 `;
 
 function Solve() {
