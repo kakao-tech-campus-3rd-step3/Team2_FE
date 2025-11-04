@@ -11,6 +11,12 @@ const RightSide = styled.div`
   align-items: center;
   justify-content: center;
   padding: 2rem;
+
+  @media (max-width: 1050px) {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+  }
 `;
 
 const Card = styled.div`
@@ -18,6 +24,12 @@ const Card = styled.div`
   border-radius: ${({ theme }) => theme.radius.radius5};
   padding: 2rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+
+  @media (max-width: 1050px) {
+    width: 100%;
+    max-width: 500px;
+    padding: 1.5rem;
+  }
 `;
 
 const CardHeader = styled.div`

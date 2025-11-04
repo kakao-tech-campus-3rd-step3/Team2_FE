@@ -12,6 +12,10 @@ const Container = styled.div`
   width: 100%;
   min-height: 100dvh;
   background-color: ${({ theme }) => theme.colors.gray.gray0};
+
+  @media (max-width: 1050px) {
+    flex-direction: column;
+  }
 `;
 
 const Login = () => {
