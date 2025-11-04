@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import { Brain } from 'lucide-react';
 
-// 전역 스피너(개선판)
+// 각 페이지 적용 스피너
 // 사용자 측면에서 짧은 로딩 시간에로 스피너가 나오는 것은 UX를 저하시킨다는 의견으로
 // 일정 시간(DELAY_MS) 동안 대기 후 로딩이 발생하는 식으로 변경함
 
@@ -20,18 +20,14 @@ const spin = keyframes`
 `;
 
 const FullScreenWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.7);
-  z-index: 9999;
-  gap: 1rem;
 `;
 
 const SpinnerWrapper = styled.div`
