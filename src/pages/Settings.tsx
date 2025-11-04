@@ -12,6 +12,12 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 1050px) {
+    padding: ${({ theme }) => theme.spacing.spacing4};
+    justify-content: flex-start;
+    padding-top: ${({ theme }) => theme.spacing.spacing6};
+  }
 `;
 
 const InfoBox = styled.div`
@@ -23,6 +29,12 @@ const InfoBox = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-radius: ${({ theme }) => theme.radius.radius2};
   background-color: ${({ theme }) => theme.colors.gray.gray1};
+
+  @media (max-width: 1050px) {
+    width: 100%;
+    max-width: 500px;
+    padding: ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 
 const InfoTitle = styled.h2`

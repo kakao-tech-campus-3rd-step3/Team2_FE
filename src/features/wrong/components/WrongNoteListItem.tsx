@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 // import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useNavigate } from 'react-router-dom';
 const WrongNoteListItemWrapper = styled.div`
-  padding: ${({ theme }) => theme.spacing.spacing4};
+  padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing6};
   border-top: 1px solid ${({ theme }) => theme.colors.gray.gray5};
   background-color: ${({ theme }) => theme.colors.gray.gray0};
   justify-content: space-between;
@@ -19,7 +19,6 @@ const WrongNoteListItemWrapper = styled.div`
 const WrongNoteInfoTitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const WrongNoteTitle = styled.span`
@@ -38,6 +37,7 @@ const WrongCount = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  text-align: center;
 `;
 
 const QuestionSetType = styled.span`
@@ -45,9 +45,14 @@ const QuestionSetType = styled.span`
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
   border-radius: ${({ theme }) => theme.radius.radius2};
-  width: fit-content;
+  text-align: center;
 `;
 
+const RetryBtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const RetryBtn = styled.button`
   font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
@@ -56,7 +61,8 @@ const RetryBtn = styled.button`
   padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing5};
   color: ${({ theme }) => theme.colors.gray.gray0};
   border-radius: ${({ theme }) => theme.radius.radius2};
-  width: fit-content;
+  width: 100px;
+  text-align: center;
 `;
 
 interface WrongNoteListItemProps {
@@ -98,7 +104,9 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
       </WrongNoteInfoTitleWrapper>
       <WrongCount>{item.incorrectCount}개</WrongCount>
       <QuestionSetType>{displayType}</QuestionSetType>
-      <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
+      <RetryBtnWrapper>
+        <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
+      </RetryBtnWrapper>
     </WrongNoteListItemWrapper>
   );
 }

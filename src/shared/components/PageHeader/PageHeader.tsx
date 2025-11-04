@@ -11,6 +11,10 @@ const PageHeaderWrapper = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 1050px) {
+    display: none;
+  }
 `;
 
 const HeaderLeft = styled.div`

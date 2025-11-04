@@ -22,6 +22,8 @@ interface FolderListProps {
   onFolderSelect: (id: number) => void;
   draggedItem: QuestionSetContentType | null;
   onItemDrop: (folderId: number, questionSetId: number) => void;
+  rightClickDisabled?: boolean;
+  addFolderDisabled?: boolean;
 }
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
@@ -136,6 +138,8 @@ const FolderList = ({
   onFolderSelect,
   draggedItem,
   onItemDrop,
+  rightClickDisabled,
+  addFolderDisabled,
 }: FolderListProps) => {
   const [dragOverFolderId, setDragOverFolderId] = useState<number | null>(null);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
@@ -287,18 +291,20 @@ const FolderList = ({
 
   return (
     <>
-      <RightClickMenu
-        isVisible={isVisibleFolderMenu}
-        setIsVisible={setIsVisibleFolderMenu}
-        point={folderMousePoint}
-      >
-        <RightClickMenuItem icon={Pencil} onClick={handleFolderMenuRename} disabled={isDisabled}>
-          폴더 이름 변경
-        </RightClickMenuItem>
-        <RightClickMenuItem icon={Trash2} onClick={handleFolderMenuDelete} disabled={isDisabled}>
-          폴더 삭제
-        </RightClickMenuItem>
-      </RightClickMenu>
+      {!rightClickDisabled && (
+        <RightClickMenu
+          isVisible={isVisibleFolderMenu}
+          setIsVisible={setIsVisibleFolderMenu}
+          point={folderMousePoint}
+        >
+          <RightClickMenuItem icon={Pencil} onClick={handleFolderMenuRename} disabled={isDisabled}>
+            폴더 이름 변경
+          </RightClickMenuItem>
+          <RightClickMenuItem icon={Trash2} onClick={handleFolderMenuDelete} disabled={isDisabled}>
+            폴더 삭제
+          </RightClickMenuItem>
+        </RightClickMenu>
+      )}
       <FolderContainer>
         {folders &&
           folders.map((folder) => {
@@ -382,9 +388,11 @@ const FolderList = ({
             </FolderActionButton>
           </FolderInputContainer>
         ) : (
-          <AddFolderButton onClick={handleAddFolder}>
-            <Plus size={16} />
-          </AddFolderButton>
+          !addFolderDisabled && (
+            <AddFolderButton onClick={handleAddFolder}>
+              <Plus size={16} />
+            </AddFolderButton>
+          )
         )}
       </FolderContainer>
     </>

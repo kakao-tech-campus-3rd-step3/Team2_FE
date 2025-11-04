@@ -32,6 +32,11 @@ const CreateWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 1000px;
+
+  @media (max-width: 1050px) {
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 
 const CreateContainer = styled.div`
