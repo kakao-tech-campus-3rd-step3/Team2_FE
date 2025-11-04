@@ -14,7 +14,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray0};
 
   @media (max-width: 1050px) {
-    flex-direction: column; 
+    flex-direction: column;
   }
 `;
 
