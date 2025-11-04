@@ -33,9 +33,16 @@ const QuestionWrapper = styled.div``;
 
 const QuestionStem = styled.p`
   margin: ${({ theme }) => theme.spacing.spacing8} 0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
 `;
 
-const OptionList = styled.div``;
+const OptionList = styled.div`
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+`;
 
 const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
