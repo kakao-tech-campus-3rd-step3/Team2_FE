@@ -41,10 +41,10 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
 
   @media (max-width: 1050px) {
     margin-left: 0;
-    margin-top: 60px; 
+    margin-top: 60px;
     min-height: calc(100dvh - 60px);
     overflow-x: hidden;
-    width: 100%; 
+    width: 100%;
   }
 `;
 
@@ -58,9 +58,9 @@ const Main = styled.div`
   @media (max-width: 1050px) {
     min-width: unset;
     width: 100%;
-    height: 100%; 
+    height: 100%;
     overflow-x: hidden;
-    overflow-y: auto; 
+    overflow-y: auto;
   }
 `;
 

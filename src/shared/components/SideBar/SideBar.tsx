@@ -112,7 +112,7 @@ const SideBarDescription = styled.p`
 
 const ToggleButton = styled.div`
   cursor: pointer;
-  
+
   @media (max-width: 1050px) {
     display: none; /* 모바일에서 접기 버튼 숨김 */
   }
@@ -311,15 +311,15 @@ const DropdownItem = styled.div`
   &:hover {
     background: ${({ theme }) => theme.colors.gray.gray1};
   }
-  
+
   &:first-of-type {
     border-radius: 8px 8px 0 0;
   }
-  
+
   &:last-of-type {
     border-radius: 0 0 8px 8px;
   }
-  
+
   &.danger {
     color: ${({ theme }) => theme.colors.red.red4};
   }
@@ -438,10 +438,7 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
               <SideBarUserInfoEmail>{userInfo?.email || '로그인 필요'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
             <SettingsIconWrapper>
-              <Settings
-                size={16}
-                onClick={() => setOpen((prev) => !prev)}
-              />
+              <Settings size={16} onClick={() => setOpen((prev) => !prev)} />
             </SettingsIconWrapper>
           </SideBarUserInfoAvatarTextWrapper>
 

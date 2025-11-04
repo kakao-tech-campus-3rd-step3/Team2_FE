@@ -13,7 +13,7 @@ const PageHeaderWrapper = styled.header`
   justify-content: space-between;
 
   @media (max-width: 1050px) {
-    display: none; 
+    display: none;
   }
 `;
 
