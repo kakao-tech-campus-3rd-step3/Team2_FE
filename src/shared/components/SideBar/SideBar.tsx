@@ -33,6 +33,8 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   z-index: 100;
   transition: transform 0.4s ease;
 
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
+
   @media (max-width: 1050px) {
     width: 100%;
     height: 60px;
@@ -40,9 +42,9 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
     border-right: none;
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
     flex-direction: row;
-    transform: translateY(0); /* 항상 보이도록 */
+    transform: translateY(0);
     position: fixed;
-    background-color: white;
+    background-color: ${({ theme }) => theme.colors.gray.gray0};
   }
 `;
 
