@@ -52,7 +52,7 @@ const RetryBtnWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 const RetryBtn = styled.button`
   font-size: ${({ theme }) => theme.typography.label2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Bold.fontWeight};
@@ -105,7 +105,7 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
       <WrongCount>{item.incorrectCount}개</WrongCount>
       <QuestionSetType>{displayType}</QuestionSetType>
       <RetryBtnWrapper>
-          <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
+        <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
       </RetryBtnWrapper>
     </WrongNoteListItemWrapper>
   );
