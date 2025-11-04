@@ -19,6 +19,7 @@ import RightClickMenuItem from '@/features/library/components/RightClickMenu/Rig
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
 import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
+import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
 
@@ -236,7 +237,7 @@ interface QuestionSets {
   size: number;
 }
 interface QuestionSetApiResponse {
-  learningProgress: number;
+  learnStats: LearnStatsResponse;
   questionSets: QuestionSets;
 }
 
@@ -384,7 +385,7 @@ const Library = () => {
     queryFn: async () => {
       if (selectedFolderId === null) {
         return {
-          learningProgress: 0,
+          learnStats: { totalCorrectQuestionCount: 0, totalQuestionCount: 0 },
           questionSets: { content: [], nextCursor: 0, hasNext: false, size: 0 },
         };
       }
@@ -511,7 +512,16 @@ const Library = () => {
       <LibraryWrapper>
         <LibraryTitle />
         <Spacer height={'10px'} />
-        <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
+        <LibraryProgressSummary
+          percent={
+            data
+              ? Math.floor(
+                  (data.learnStats.totalCorrectQuestionCount / data.learnStats.totalQuestionCount) *
+                    100,
+                )
+              : 0
+          }
+        />
         <Spacer height="12px" />
         <FileListSearchInput
           placeholder="문제집 제목으로 검색"
