@@ -281,15 +281,7 @@ const FolderList = ({
     setIsVisibleFolderMenu(false);
 
     try {
-      const response = await api.get<{ questionSetCount: number }>(
-        `/common-folders/${selectedFolder.id}/delete-warning`,
-      );
-
-      const questionSetCount = response.data.questionSetCount;
-      const confirmMessage =
-        questionSetCount > 0
-          ? `'${selectedFolder.name}' 폴더에 ${questionSetCount}개의 문제집이 있습니다.\n정말로 삭제하시겠습니까?`
-          : `'${selectedFolder.name}' 폴더를 정말 삭제하시겠습니까?`;
+      const confirmMessage = `'${selectedFolder.name}' 폴더를 정말 삭제하시겠습니까?`;
 
       if (window.confirm(confirmMessage)) {
         deleteFolderMutation.mutate(selectedFolder.id);
