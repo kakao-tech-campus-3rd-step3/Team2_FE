@@ -79,9 +79,9 @@ const SearchBar = styled.input`
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
   padding: ${({ theme }) => theme.spacing.spacing4};
 
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray3};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-radius: ${({ theme }) => theme.radius.radius2};
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */
   &:focus {
     outline: none;
     border: 1px solid ${({ theme }) => theme.colors.semantic.primary};
