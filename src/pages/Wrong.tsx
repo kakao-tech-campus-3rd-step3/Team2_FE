@@ -57,8 +57,7 @@ const SearchBarWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: ${({ theme }) => theme.spacing.spacing7};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing7};
+  margin: ${({ theme }) => theme.spacing.spacing3} 0;
 `;
 
 const SearchBarDescription = styled.p`
@@ -104,13 +103,17 @@ const WrongNoteListHeader = styled.div`
   grid-template-columns: 3fr 1fr 1fr 1fr;
   align-items: center;
   width: 100%;
-  padding: 16px 24px;
+  padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing6};
   transition: background-color 0.2s ease-in-out;
 `;
 
 const WrongNoteListHeaderColumn = styled.span`
   font-weight: 600;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+
+  &:not(:first-child) {
+    text-align: center;
+  }
 `;
 
 // 폴더 관련 타입 + 인터페이스들
