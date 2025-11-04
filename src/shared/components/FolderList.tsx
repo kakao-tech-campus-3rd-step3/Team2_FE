@@ -7,10 +7,11 @@ import RightClickMenuItem from '@/features/library/components/RightClickMenu/Rig
 import { type QuestionSetContentType } from '@/features/library/types/questionSetResponse';
 import { Check, FolderIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
 
-interface Folder {
+export interface Folder {
   id: number;
   name: string;
   type: 'QUESTION_SET';
+  scope: 'ALL' | 'CUSTOM';
   sortOrder: number;
 }
 
@@ -307,6 +308,8 @@ const FolderList = ({
     });
   };
 
+  const isDisabled = selectedFolder?.scope === 'ALL';
+
   return (
     <>
       <RightClickMenu
@@ -314,18 +317,10 @@ const FolderList = ({
         setIsVisible={setIsVisibleFolderMenu}
         point={folderMousePoint}
       >
-        <RightClickMenuItem
-          icon={Pencil}
-          onClick={handleFolderMenuRename}
-          disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        >
+        <RightClickMenuItem icon={Pencil} onClick={handleFolderMenuRename} disabled={isDisabled}>
           폴더 이름 변경
         </RightClickMenuItem>
-        <RightClickMenuItem
-          icon={Trash2}
-          onClick={handleFolderMenuDelete}
-          disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        >
+        <RightClickMenuItem icon={Trash2} onClick={handleFolderMenuDelete} disabled={isDisabled}>
           폴더 삭제
         </RightClickMenuItem>
       </RightClickMenu>

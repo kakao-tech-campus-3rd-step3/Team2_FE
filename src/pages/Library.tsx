@@ -17,15 +17,8 @@ import Spinner from '@/shared/components/Spinner';
 import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
-import FolderList from '@/shared/components/FolderList';
+import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
 import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
-
-interface Folder {
-  id: number;
-  name: string;
-  type: 'QUESTION_SET';
-  sortOrder: number;
-}
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
 
@@ -371,8 +364,12 @@ const Library = () => {
   const { data: folders, isPending: isFoldersPending } = useQuery({
     queryKey: ['folders'],
     queryFn: async () => {
-      const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
-      return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
+      const res = await api.get<FolderRes[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
+      return res.data.sort((a, b) => {
+        if (a.scope === 'ALL' && b.scope !== 'ALL') return -1;
+        if (a.scope !== 'ALL' && b.scope === 'ALL') return 1;
+        return a.sortOrder - b.sortOrder;
+      });
     },
   });
 
