@@ -76,6 +76,15 @@ function Solve() {
 
       return res.data;
     },
+    retry: (failureCount, error) => {
+      const status = (error as any)?.response?.status;
+
+      // 문제집 번호가 없거나 해당 문제집에 대한 접근 권한이 없을 경우 바로 에러로 처리
+      if (status === 404) return false;
+
+      return failureCount < 3;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 8000),
   });
 
   // 로딩
