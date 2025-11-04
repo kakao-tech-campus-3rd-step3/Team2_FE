@@ -8,7 +8,6 @@ import Spacer from '@/shared/components/Spacer';
 
 import {
   type QuestionType,
-  type QuestionSetStatus,
   type QuestionSetContentType,
 } from '@/features/library/types/questionSetResponse';
 
@@ -18,6 +17,7 @@ import RightClickMenu from '@/features/library/components/RightClickMenu/RightCl
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
 import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
+import { getFolderColor } from '@/shared/constants/folderColors';
 import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 
@@ -70,9 +70,9 @@ const ListBox = styled.div`
   overflow: hidden;
 `;
 
-const ListRow = styled.div<{ isDragging?: boolean }>`
+const ListRow = styled.div<{ isDragging?: boolean; isDisabled?: boolean }>`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 0.8fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
@@ -89,17 +89,17 @@ const ListRow = styled.div<{ isDragging?: boolean }>`
   }
 
   &:not(:first-of-type) {
-    cursor: grab;
+    cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'grab')};
   }
 
   &:not(:first-of-type):active {
-    cursor: grabbing;
+    cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'grabbing')};
   }
 `;
 
-const ListCell = styled.div<{ align?: 'left' | 'center' | 'right' }>`
+const ListCell = styled.div<{ align?: 'left' | 'center' | 'right'; isDisabled?: boolean }>`
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
-  color: ${({ theme }) => theme.colors.text.default};
+  color: ${({ isDisabled, theme }) => (isDisabled ? '#999' : theme.colors.text.default)};
   text-align: ${({ align }) => align || 'center'};
   white-space: nowrap;
   overflow: hidden;
@@ -111,8 +111,40 @@ const HeaderCell = styled(ListCell)`
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
 `;
 
-const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
-  font-weight: 500;
+const FolderCellContent = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+`;
+
+const FolderColorDot = styled.span<{ color: string }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: ${({ color }) => color};
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+`;
+
+const DEFAULT_FOLDER_COLOR = '#d1d5db';
+
+const LoadingSpinner = styled.div`
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #666;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const ActionButton = styled.button`
@@ -236,12 +268,6 @@ const TYPE_MAP: Record<QuestionType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
   TRUE_FALSE: '참/거짓',
-};
-
-const STATUS_MAP: Record<QuestionSetStatus, string> = {
-  FAILED: '생성 실패',
-  PENDING: '생성 중',
-  COMPLETE: '생성완료',
 };
 
 interface QuestionSets {
@@ -559,25 +585,28 @@ const Library = () => {
             <HeaderCell>문제 수</HeaderCell>
             <HeaderCell>생성일</HeaderCell>
             <HeaderCell>유형</HeaderCell>
-            <HeaderCell>상태</HeaderCell>
+            <HeaderCell align="left">폴더</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
           </ListRow>
 
           {[...filteredQuestionSets]
+            .filter((item) => item.status !== 'FAILED')
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
+              const isPending = item.status === 'PENDING';
 
               return (
                 <ListRow
                   key={item.questionSetId}
                   draggable={item.status === 'COMPLETE'}
                   isDragging={draggedItem?.questionSetId === item.questionSetId}
+                  isDisabled={isPending}
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
                   onContextMenu={(e) => handleContextMenu(e, item)}
                 >
-                  <ListCell align="left">
+                  <ListCell align="left" isDisabled={isPending}>
                     {isEditing ? (
                       <TitleContainer>
                         <TitleEditInput
@@ -606,6 +635,7 @@ const Library = () => {
                       <div>
                         <TitleContainer>
                           <TitleText title={item.title}>{item.title}</TitleText>
+                          {isPending && <LoadingSpinner />}
                         </TitleContainer>
                         {item.sourceNames && item.sourceNames.length > 0 && (
                           <SourceNames title={item.sourceNames.join(', ')}>
@@ -615,15 +645,26 @@ const Library = () => {
                       </div>
                     )}
                   </ListCell>
-                  <ListCell>{item.questionCount}</ListCell>
-                  <ListCell>
+                  <ListCell isDisabled={isPending}>{item.questionCount}</ListCell>
+                  <ListCell isDisabled={isPending}>
                     {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
                   </ListCell>
-                  <ListCell>{TYPE_MAP[item.questionType] ?? '생성 실패'}</ListCell>
-                  <StatusCell status={item.status}>
-                    {STATUS_MAP[item.status] ?? '생성 실패'}
-                  </StatusCell>
-                  <ListCell>
+                  <ListCell isDisabled={isPending}>
+                    {TYPE_MAP[item.questionType] ?? '생성 실패'}
+                  </ListCell>
+                  <ListCell align="left" isDisabled={isPending}>
+                    <FolderCellContent>
+                      <FolderColorDot
+                        color={
+                          item.commonFolderId
+                            ? getFolderColor(item.commonFolderId).bg
+                            : DEFAULT_FOLDER_COLOR
+                        }
+                      />
+                      <span>{item.commonFolderName ?? '-'}</span>
+                    </FolderCellContent>
+                  </ListCell>
+                  <ListCell isDisabled={isPending}>
                     {item.status === 'COMPLETE' && (
                       <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
                         풀기
