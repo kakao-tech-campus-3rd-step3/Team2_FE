@@ -64,7 +64,7 @@ const ListBox = styled.div`
   overflow: hidden;
 `;
 
-const ListRow = styled.div<{ isDragging?: boolean }>`
+const ListRow = styled.div<{ isDragging?: boolean; isDisabled?: boolean }>`
   display: grid;
   grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
   align-items: center;
@@ -83,17 +83,17 @@ const ListRow = styled.div<{ isDragging?: boolean }>`
   }
 
   &:not(:first-of-type) {
-    cursor: grab;
+    cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'grab')};
   }
 
   &:not(:first-of-type):active {
-    cursor: grabbing;
+    cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'grabbing')};
   }
 `;
 
-const ListCell = styled.div<{ align?: 'left' | 'center' | 'right' }>`
+const ListCell = styled.div<{ align?: 'left' | 'center' | 'right'; isDisabled?: boolean }>`
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
-  color: ${({ theme }) => theme.colors.text.default};
+  color: ${({ isDisabled, theme }) => (isDisabled ? '#999' : theme.colors.text.default)};
   text-align: ${({ align }) => align || 'center'};
   white-space: nowrap;
   overflow: hidden;
@@ -107,6 +107,28 @@ const HeaderCell = styled(ListCell)`
 
 const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`;
+
+const LoadingSpinner = styled.div`
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #666;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const ActionButton = styled.button`
@@ -540,20 +562,23 @@ const Library = () => {
           </ListRow>
 
           {[...filteredQuestionSets]
+            .filter((item) => item.status !== 'FAILED')
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((item) => {
               const isEditing = editingItemId === item.questionSetId;
+              const isPending = item.status === 'PENDING';
 
               return (
                 <ListRow
                   key={item.questionSetId}
                   draggable={item.status === 'COMPLETE'}
                   isDragging={draggedItem?.questionSetId === item.questionSetId}
+                  isDisabled={isPending}
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
                   onContextMenu={(e) => handleContextMenu(e, item)}
                 >
-                  <ListCell align="left">
+                  <ListCell align="left" isDisabled={isPending}>
                     {isEditing ? (
                       <TitleContainer>
                         <TitleEditInput
@@ -581,18 +606,21 @@ const Library = () => {
                     ) : (
                       <TitleContainer>
                         <TitleText title={item.title}>{item.title}</TitleText>
+                        {isPending && <LoadingSpinner />}
                       </TitleContainer>
                     )}
                   </ListCell>
-                  <ListCell>{item.questionCount}</ListCell>
-                  <ListCell>
+                  <ListCell isDisabled={isPending}>{item.questionCount}</ListCell>
+                  <ListCell isDisabled={isPending}>
                     {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
                   </ListCell>
-                  <ListCell>{TYPE_MAP[item.questionType] ?? '생성 실패'}</ListCell>
-                  <StatusCell status={item.status}>
+                  <ListCell isDisabled={isPending}>
+                    {TYPE_MAP[item.questionType] ?? '생성 실패'}
+                  </ListCell>
+                  <StatusCell status={item.status} isDisabled={isPending}>
                     {STATUS_MAP[item.status] ?? '생성 실패'}
                   </StatusCell>
-                  <ListCell>
+                  <ListCell isDisabled={isPending}>
                     {item.status === 'COMPLETE' && (
                       <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
                         풀기
