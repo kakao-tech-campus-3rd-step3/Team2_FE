@@ -139,7 +139,11 @@ function Wrong() {
     queryKey: ['folders', 'all'],
     queryFn: async () => {
       const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
-      return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
+      return res.data.sort((a, b) => {
+        if (a.scope === 'ALL' && b.scope !== 'ALL') return -1;
+        if (a.scope !== 'ALL' && b.scope === 'ALL') return 1;
+        return a.sortOrder - b.sortOrder;
+      });
     },
   });
 
@@ -214,6 +218,8 @@ function Wrong() {
           onItemDrop={() => {
             /* noop */
           }}
+          addFolderDisabled={true}
+          rightClickDisabled={true}
         />
         <WrongNoteList>
           <WrongNoteListHeader>
