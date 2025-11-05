@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { GraduationCap } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
 import type { QuestionSet } from '@/features/solve/types/question';
 import { useNavigate } from 'react-router-dom';
@@ -53,15 +52,6 @@ const SolveDescription = styled.p`
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
 `;
 
-const QuestionIndexViewWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.colors.gray.gray7};
-`;
-const QuestionIndexViewTxt = styled.span`
-  margin-left: ${({ theme }) => theme.spacing.spacing2};
-`;
-
 type SolveHeaderProps = {
   currentQuestionIndex: number;
   title: string;
@@ -69,7 +59,7 @@ type SolveHeaderProps = {
   questions: QuestionSet;
 };
 
-function SolveHeader({ currentQuestionIndex, title, questionLength, questions }: SolveHeaderProps) {
+function SolveHeader({ title, questionLength, questions }: SolveHeaderProps) {
   const navigate = useNavigate();
 
   const getQuestionTypeLabel = (type: string) => {
@@ -99,12 +89,6 @@ function SolveHeader({ currentQuestionIndex, title, questionLength, questions }:
           </SolveDescription>
         </TitleDescriptionWrapper>
       </BackBtnTitleWrapper>
-      <QuestionIndexViewWrapper>
-        <GraduationCap size={16} />
-        <QuestionIndexViewTxt>
-          {currentQuestionIndex}/{questionLength}
-        </QuestionIndexViewTxt>
-      </QuestionIndexViewWrapper>
     </SolveHeaderWrapper>
   );
 }
