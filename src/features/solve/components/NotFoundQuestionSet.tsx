@@ -91,11 +91,11 @@ function NotFoundQuestionSet() {
       <LottieWrapper>
         <DotLottiePlayer src={ErrorLottie} loop autoplay subframe={true} />
       </LottieWrapper>
-      <ErrorTitle>문제집을 찾을 수 없습니다</ErrorTitle>
+      <ErrorTitle>문제집을 열람할 수 없습니다</ErrorTitle>
       <ErrorDescription>
         요청하신 문제집이 존재하지 않거나
         <br />
-        삭제되었을 수 있습니다.
+        접근 권한이 없을 수 있습니다.
       </ErrorDescription>
       <ButtonGroup>
         <Button variant="secondary" onClick={handleGoBack}>

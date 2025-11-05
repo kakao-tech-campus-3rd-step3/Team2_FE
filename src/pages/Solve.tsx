@@ -98,8 +98,11 @@ function Solve() {
     retry: (failureCount, error) => {
       const status = error.response?.status;
 
-      // 문제집 번호가 없거나 해당 문제집에 대한 접근 권한이 없을 경우 바로 에러로 처리
+      // 문제집 번호가 없는 경우 바로 에러로 처리
       if (status === 404) return false;
+
+      // 해당 문제집에 대한 접근 권한이 없을 경우 바로 에러로 처리
+      if (status === 400) return false;
 
       return failureCount < 3;
     },
