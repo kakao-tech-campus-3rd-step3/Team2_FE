@@ -4,7 +4,7 @@ import { CloudUpload } from 'lucide-react';
 import Spacer from '@/shared/components/Spacer';
 import useDragAndDrop from '@/features/create/hooks/useDragAndDrop';
 
-const MAX_FILE_SIZE_MB = 40;
+const MAX_FILE_SIZE_MB = 30;
 
 const IconWrapper = styled.div`
   width: 50px;
@@ -208,7 +208,7 @@ const UploadModal = ({ onClose, onFileUpload }: UploadModalProps) => {
             <StyledCloudUpload size={25} />
           </IconWrapper>
           <DropZoneText>파일을 여기로 드래그하거나 클릭하세요</DropZoneText>
-          <DropZoneSubText>PDF 파일만 지원 · 최대 1개</DropZoneSubText>
+          <DropZoneSubText>PDF 파일만 지원 · 최대 1개 · 최대 30MB</DropZoneSubText>
           <HiddenInput
             ref={inputRef}
             type="file"
