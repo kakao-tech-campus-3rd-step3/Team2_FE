@@ -111,7 +111,7 @@ const WrongNoteListHeaderColumn = styled.span`
   font-weight: 600;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
 
-  &:not(:first-child) {
+  &:not(:first-of-type) {
     text-align: center;
   }
 `;

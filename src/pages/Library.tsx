@@ -365,6 +365,7 @@ const Library = () => {
   const [selectedCell, setSelectedCell] = useState<QuestionSetContentType | null>(null);
   const [draggedItem, setDraggedItem] = useState<QuestionSetContentType | null>(null);
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   const [mousePoint, setMousePoint] = useState<{
     x: number;
@@ -383,6 +384,34 @@ const Library = () => {
     setSelectedCell(item);
     setIsVisibleMenu(true);
     setMousePoint({ x: e.clientX, y: e.clientY });
+  };
+
+  // 모바일 길게 누르기 이벤트 핸들러
+  const handleTouchStart = (
+    e: React.TouchEvent<HTMLDivElement>,
+    item: QuestionSetContentType,
+  ) => {
+    const touch = e.touches[0];
+    const timer = setTimeout(() => {
+      setSelectedCell(item);
+      setIsVisibleMenu(true);
+      setMousePoint({ x: touch.clientX, y: touch.clientY });
+    }, 500); // 500ms 길게 누르기
+    setLongPressTimer(timer);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleTouchMove = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
   };
 
   const updateTitleMutation = useMutation({
@@ -680,6 +709,9 @@ const Library = () => {
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
                   onContextMenu={(e) => handleContextMenu(e, item)}
+                  onTouchStart={(e) => handleTouchStart(e, item)}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchMove={handleTouchMove}
                 >
                   <ListCell align="left" isDisabled={isPending}>
                     {isEditing ? (
