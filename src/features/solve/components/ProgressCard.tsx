@@ -20,42 +20,58 @@ const CardTitle = styled.h6`
   font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
+  padding-bottom: ${({ theme }) => theme.spacing.spacing3};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 `;
 
 const ProgressStats = styled.div`
   display: flex;
   flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.spacing3};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing5};
 `;
 
 const ProgressStatItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+  padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing3};
+  background-color: ${({ theme }) => theme.colors.gray.gray1};
+  border-radius: ${({ theme }) => theme.radius.radius2};
 `;
 
 const ProgressStatLabel = styled.span`
-  font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray.gray8};
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
 const ProgressStatValue = styled.span`
   font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray.gray8};
+  color: ${({ theme }) => theme.colors.gray.gray10};
 `;
 
 const SubmitBtn = styled.button`
-  font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
+  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray0};
   background-color: ${({ theme }) => theme.colors.semantic.primary};
-  padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing4};
+  padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius2};
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.green.green7};
+  }
+
+  &:active {
+    background-color: ${({ theme }) => theme.colors.green.green6};
+  }
 `;
 type ProgressCardProps = {
   questionLength: number;
