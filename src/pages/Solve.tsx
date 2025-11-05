@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import { useParams, useSearchParams } from 'react-router-dom';
 import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
+import { AxiosError } from 'axios';
 
 import Spinner from '@/shared/components/Spinner';
 
@@ -84,7 +85,7 @@ function Solve() {
   const isReviewing = searchParams.get('isReviewing') === 'true';
 
   // 1. 서버로부터 문제조회를 하는 부분 questionSetId로 문제집 조회
-  const { isPending, error, data } = useQuery({
+  const { isPending, error, data } = useQuery<QuestionSet, AxiosError>({
     queryKey: ['questionSet', 'detail', questionSetId, isReviewing],
     queryFn: async () => {
       const url = isReviewing
@@ -94,6 +95,15 @@ function Solve() {
 
       return res.data;
     },
+    retry: (failureCount, error) => {
+      const status = error.response?.status;
+
+      // 문제집 번호가 없거나 해당 문제집에 대한 접근 권한이 없을 경우 바로 에러로 처리
+      if (status === 404) return false;
+
+      return failureCount < 3;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 8000),
   });
 
   // 로딩
