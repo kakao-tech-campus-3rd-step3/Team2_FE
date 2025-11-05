@@ -148,6 +148,7 @@ const FolderList = ({
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [editingFolderId, setEditingFolderId] = useState<number | null>(null);
   const [editingFolderName, setEditingFolderName] = useState('');
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   const [folderMousePoint, setFolderMousePoint] = useState<{
     x: number;
@@ -166,6 +167,31 @@ const FolderList = ({
     setSelectedFolder(folder);
     setIsVisibleFolderMenu(true);
     setFolderMousePoint({ x: e.clientX, y: e.clientY });
+  };
+
+  // 모바일 길게 누르기 이벤트 핸들러
+  const handleFolderTouchStart = (e: React.TouchEvent<HTMLDivElement>, folder: Folder) => {
+    const touch = e.touches[0];
+    const timer = setTimeout(() => {
+      setSelectedFolder(folder);
+      setIsVisibleFolderMenu(true);
+      setFolderMousePoint({ x: touch.clientX, y: touch.clientY });
+    }, 500); // 500ms 길게 누르기
+    setLongPressTimer(timer);
+  };
+
+  const handleFolderTouchEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleFolderTouchMove = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
   };
 
   const createFolderMutation = useMutation({
@@ -319,6 +345,9 @@ const FolderList = ({
                 folderHoverColor={colors.hover}
                 onClick={() => onFolderSelect(folder.id)}
                 onContextMenu={(e) => handleFolderContextMenu(e, folder)}
+                onTouchStart={(e) => handleFolderTouchStart(e, folder)}
+                onTouchEnd={handleFolderTouchEnd}
+                onTouchMove={handleFolderTouchMove}
                 onDragOver={(e) => handleDragOver(e, folder.id)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, folder)}
