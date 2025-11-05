@@ -23,7 +23,7 @@ createRoot(document.getElementById('root')!).render(
         <ErrorBoundary>
           <App />
         </ErrorBoundary>
-        <ToastContainer position="bottom-center" hideProgressBar={true} />
+        <ToastContainer position="top-right" hideProgressBar={true} closeOnClick={true} />
       </QueryClientProvider>
     </ChakraProvider>
   </BrowserRouter>,

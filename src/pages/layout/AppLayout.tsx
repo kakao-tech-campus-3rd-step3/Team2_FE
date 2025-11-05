@@ -14,7 +14,7 @@ import { MIN_HEIGHT } from '@/shared/config/constants';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
-  height: 100dvh;
+  height: 100vh;
   min-height: ${MIN_HEIGHT};
   min-width: 1050px;
   display: flex;
@@ -22,6 +22,7 @@ const AppLayoutWrapper = styled.div`
 
   @media (max-width: 1050px) {
     min-width: 100%;
+    height: 100vh;
     flex-direction: column;
     overflow-x: hidden;
   }
@@ -41,8 +42,9 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
 
   @media (max-width: 1050px) {
     margin-left: 0;
-    margin-top: 60px;
-    min-height: calc(100dvh - 60px);
+    margin-top: 0;
+    margin-bottom: 64px;
+    min-height: calc(100vh - 64px);
     overflow-x: hidden;
     width: 100%;
   }

@@ -21,7 +21,7 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   top: 0;
   left: 0;
   width: 240px;
-  height: 100dvh;
+  height: 100vh;
   min-height: ${MIN_HEIGHT};
 
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
@@ -37,13 +37,18 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
 
   @media (max-width: 1050px) {
     width: 100%;
-    height: 60px;
-    min-height: auto;
+    height: 64px;
+    min-height: 64px;
     border-right: none;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    border-top: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    border-bottom: none;
     flex-direction: row;
     transform: translateY(0);
     position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
     background-color: ${({ theme }) => theme.colors.gray.gray0};
   }
 `;
@@ -171,9 +176,12 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
 
   @media (max-width: 1050px) {
     margin-bottom: 0;
-    padding: ${({ theme }) => theme.spacing.spacing2};
+    padding: ${({ theme }) => theme.spacing.spacing1};
     flex-direction: column;
     gap: 2px;
+    justify-content: center;
+    min-width: 60px;
+    flex-shrink: 0;
   }
 `;
 
@@ -187,7 +195,9 @@ const SideBarNavTxt = styled.p`
   @media (max-width: 1050px) {
     margin-left: 0;
     font-size: 10px;
+    line-height: 1.2;
     text-align: center;
+    white-space: nowrap;
   }
 `;
 
@@ -242,9 +252,20 @@ const SideBarUserInfoAvatar = styled.div`
   border-radius: ${({ theme }) => theme.radius.radiusFull};
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+
+  @media (max-width: 1050px) {
+    cursor: pointer;
+  }
+
+  @media (min-width: 1051px) {
+    pointer-events: none;
+  }
 `;
 
 const SideBarUserInfoTextWrapper = styled.div`
@@ -293,10 +314,10 @@ const DropdownWrapper = styled.div`
   z-index: 1000;
 
   @media (max-width: 1050px) {
-    bottom: auto;
-    top: 100%;
-    margin-bottom: 0;
-    margin-top: 8px;
+    bottom: 100%;
+    top: auto;
+    margin-bottom: 8px;
+    margin-top: 0;
     right: 0;
   }
 `;
@@ -336,7 +357,7 @@ const SettingsIconWrapper = styled.div`
   justify-content: center;
 
   @media (max-width: 1050px) {
-    /* 모바일에서도 표시 */
+    display: none;
   }
 `;
 
@@ -432,7 +453,7 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
       <SideBarUserInfo>
         <SideBarUserInfoItemWrapper style={{ position: 'relative' }}>
           <SideBarUserInfoAvatarTextWrapper>
-            <SideBarUserInfoAvatar>
+            <SideBarUserInfoAvatar onClick={() => setOpen((prev) => !prev)}>
               {userInfo?.name ? userInfo.name.charAt(0) : '?'}
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
