@@ -387,10 +387,7 @@ const Library = () => {
   };
 
   // 모바일 길게 누르기 이벤트 핸들러
-  const handleTouchStart = (
-    e: React.TouchEvent<HTMLDivElement>,
-    item: QuestionSetContentType,
-  ) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, item: QuestionSetContentType) => {
     const touch = e.touches[0];
     const timer = setTimeout(() => {
       setSelectedCell(item);
