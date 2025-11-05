@@ -65,7 +65,7 @@ const SideBarHeader = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 
   @media (max-width: 1050px) {
-    display: none; /* 모바일에서 헤더(로고) 숨김 */
+    display: none;
   }
 `;
 
