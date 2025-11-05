@@ -40,10 +40,13 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
     height: 60px;
     min-height: auto;
     border-right: none;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    border-top: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    border-bottom: none;
     flex-direction: row;
     transform: translateY(0);
     position: fixed;
+    bottom: 0;
+    top: auto;
     background-color: ${({ theme }) => theme.colors.gray.gray0};
   }
 `;

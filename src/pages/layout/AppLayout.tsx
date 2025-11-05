@@ -41,7 +41,8 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
 
   @media (max-width: 1050px) {
     margin-left: 0;
-    margin-top: 60px;
+    margin-top: 0;
+    margin-bottom: 60px;
     min-height: calc(100dvh - 60px);
     overflow-x: hidden;
     width: 100%;
