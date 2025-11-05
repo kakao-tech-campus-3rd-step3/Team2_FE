@@ -46,18 +46,22 @@ const FolderTag = styled.div<{
   align-items: center;
   padding: 6px 12px;
   border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ isDragOver, folderColor, folderHoverColor, isActive }) =>
-    isDragOver || isActive ? folderHoverColor : folderColor};
-  border: 1px solid
-    ${({ isDragOver, folderHoverColor, isActive }) =>
-      isDragOver || isActive ? folderHoverColor : 'transparent'};
+  background-color: ${({ isDragOver, folderColor, folderHoverColor }) =>
+    isDragOver ? folderHoverColor : folderColor};
+  border: 1px solid transparent;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
   color: white;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   user-select: none;
   font-weight: ${({ isActive }) => (isActive ? '700' : '500')};
-  box-shadow: ${({ isActive }) => (isActive ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none')};
+  box-shadow: ${({ isActive }) => (isActive ? '0 2px 8px rgba(0, 0, 0, 0.25)' : 'none')};
+
+  ${({ isActive }) =>
+    isActive &&
+    `
+      filter: brightness(0.7);
+    `}
 
   &:hover {
     background-color: ${({ folderHoverColor }) => folderHoverColor};
