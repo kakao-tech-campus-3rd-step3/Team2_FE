@@ -43,6 +43,8 @@ const WrongNoteFileName = styled.span`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray6};
+  margin-top: 4px;
 `;
 
 const WrongCount = styled.span`
@@ -101,9 +103,18 @@ const MobileInfoRow = styled.div`
 
   @media (max-width: 1050px) {
     display: flex;
-    gap: ${({ theme }) => theme.spacing.spacing4};
+    flex-wrap: wrap;
+    gap: ${({ theme }) => theme.spacing.spacing3};
     width: 100%;
+    font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+    color: ${({ theme }) => theme.colors.gray.gray7};
   }
+`;
+
+const MobileInfoItem = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 interface WrongNoteListItemProps {
@@ -146,8 +157,8 @@ function WrongNoteListItem({ item }: WrongNoteListItemProps) {
       <WrongCount>{item.incorrectCount}개</WrongCount>
       <QuestionSetType>{displayType}</QuestionSetType>
       <MobileInfoRow>
-        <span>오답 수: {item.incorrectCount}개</span>
-        <span>유형: {displayType}</span>
+        <MobileInfoItem>오답 수: {item.incorrectCount}개</MobileInfoItem>
+        <MobileInfoItem>유형: {displayType}</MobileInfoItem>
       </MobileInfoRow>
       <RetryBtnWrapper>
         <RetryBtn onClick={handleReviewNavigate}>복습하기</RetryBtn>
