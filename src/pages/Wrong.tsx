@@ -101,6 +101,10 @@ const WrongNoteListHeader = styled.div`
   width: 100%;
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing6};
   transition: background-color 0.2s ease-in-out;
+
+  @media (max-width: 1050px) {
+    display: none; /* 모바일에서 헤더 숨김 */
+  }
 `;
 
 const WrongNoteListHeaderColumn = styled.span`

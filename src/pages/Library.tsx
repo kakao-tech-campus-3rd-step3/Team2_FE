@@ -95,6 +95,26 @@ const ListRow = styled.div<{ isDragging?: boolean; isDisabled?: boolean }>`
   &:not(:first-of-type):active {
     cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'grabbing')};
   }
+
+  @media (max-width: 1050px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.spacing.spacing3};
+    padding: ${({ theme }) => theme.spacing.spacing4};
+
+    &:first-of-type {
+      display: none; /* 헤더 숨김 */
+    }
+
+    &:not(:first-of-type) {
+      cursor: default;
+    }
+
+    &:not(:first-of-type):active {
+      cursor: default;
+    }
+  }
 `;
 
 const ListCell = styled.div<{ align?: 'left' | 'center' | 'right'; isDisabled?: boolean }>`
@@ -104,6 +124,12 @@ const ListCell = styled.div<{ align?: 'left' | 'center' | 'right'; isDisabled?: 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: 1050px) {
+    text-align: left;
+    white-space: normal;
+    width: 100%;
+  }
 `;
 
 const HeaderCell = styled(ListCell)`
@@ -169,6 +195,11 @@ const PrimaryButton = styled(ActionButton)`
   border-color: ${({ theme }) => theme.colors.semantic.primary};
   color: white;
   font-weight: 600;
+
+  @media (max-width: 1050px) {
+    width: 100%;
+    padding: 10px 16px;
+  }
 `;
 
 const TitleContainer = styled.div`
@@ -176,6 +207,10 @@ const TitleContainer = styled.div`
   align-items: center;
   gap: 8px;
   max-width: 100%;
+
+  @media (max-width: 1050px) {
+    width: 100%;
+  }
 `;
 
 const TitleText = styled.span`
@@ -261,6 +296,46 @@ const FolderSelect = styled.select`
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
+  }
+`;
+
+const MobileInfoRow = styled.div`
+  display: none;
+
+  @media (max-width: 1050px) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${({ theme }) => theme.spacing.spacing3};
+    width: 100%;
+    font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+    color: ${({ theme }) => theme.colors.gray.gray7};
+  }
+`;
+
+const MobileInfoItem = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const MobileFolderInfo = styled.div`
+  display: none;
+
+  @media (max-width: 1050px) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: ${({ theme }) => theme.spacing.spacing2};
+    background-color: ${({ theme }) => theme.colors.gray.gray1};
+    border-radius: ${({ theme }) => theme.radius.radius2};
+    font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+  }
+`;
+
+const DesktopOnly = styled(ListCell)`
+  @media (max-width: 1050px) {
+    display: none;
   }
 `;
 
@@ -645,14 +720,16 @@ const Library = () => {
                       </div>
                     )}
                   </ListCell>
-                  <ListCell isDisabled={isPending}>{item.questionCount}</ListCell>
-                  <ListCell isDisabled={isPending}>
+
+                  {/* 데스크톱 전용 셀들 */}
+                  <DesktopOnly isDisabled={isPending}>{item.questionCount}</DesktopOnly>
+                  <DesktopOnly isDisabled={isPending}>
                     {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
-                  </ListCell>
-                  <ListCell isDisabled={isPending}>
+                  </DesktopOnly>
+                  <DesktopOnly isDisabled={isPending}>
                     {TYPE_MAP[item.questionType] ?? '생성 실패'}
-                  </ListCell>
-                  <ListCell align="left" isDisabled={isPending}>
+                  </DesktopOnly>
+                  <DesktopOnly align="left" isDisabled={isPending}>
                     <FolderCellContent>
                       <FolderColorDot
                         color={
@@ -663,7 +740,30 @@ const Library = () => {
                       />
                       <span>{item.commonFolderName ?? '-'}</span>
                     </FolderCellContent>
-                  </ListCell>
+                  </DesktopOnly>
+
+                  {/* 모바일 전용 정보 */}
+                  <MobileInfoRow>
+                    <MobileInfoItem>문제 수: {item.questionCount}개</MobileInfoItem>
+                    <MobileInfoItem>
+                      유형: {TYPE_MAP[item.questionType] ?? '생성 실패'}
+                    </MobileInfoItem>
+                    <MobileInfoItem>
+                      생성일: {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
+                    </MobileInfoItem>
+                  </MobileInfoRow>
+
+                  <MobileFolderInfo>
+                    <FolderColorDot
+                      color={
+                        item.commonFolderId
+                          ? getFolderColor(item.commonFolderId).bg
+                          : DEFAULT_FOLDER_COLOR
+                      }
+                    />
+                    <span>폴더: {item.commonFolderName ?? '-'}</span>
+                  </MobileFolderInfo>
+
                   <ListCell isDisabled={isPending}>
                     {item.status === 'COMPLETE' && (
                       <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
