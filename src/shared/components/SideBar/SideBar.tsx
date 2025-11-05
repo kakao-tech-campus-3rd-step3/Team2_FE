@@ -262,7 +262,7 @@ const SideBarUserInfoAvatar = styled.div`
   @media (max-width: 1050px) {
     cursor: pointer;
   }
-  
+
   @media (min-width: 1051px) {
     pointer-events: none;
   }
