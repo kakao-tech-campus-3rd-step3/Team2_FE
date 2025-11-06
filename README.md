@@ -300,6 +300,10 @@ src/
 
 ### Commit
 
+<table>
+<tr>
+<td width="50%" valign="top">
+
 #### 작업태그
 
 | 접두사       | 설명                                |
@@ -313,73 +317,122 @@ src/
 | **hotfix**   | 핫픽스                              |
 | **chore**    | 기타 작업                           |
 
-#### Commit message 형태
+</td>
+<td width="50%" valign="top">
 
-- `작업태그(키워드): 작업내용 (#이슈번호)`
-- 작업태그: [작업태그](#작업태그) 확인
-- 키워드 (생략 가능): 작업 키워드
-- 작업내용: 한국어 또는 영어로 작성하며, 영어로 작성 시에는 동사원형으로 시작
-- 이슈번호 (생략 가능): Github issue 번호
-- e.g
-  - `feat(nav_bar): 네비게이션 바를 생성 (#1)`
-  - `fix(user_name): 유저 이름 데이터를 수정 (#5)`
+#### Commit Message 형태
+
+**형식**
+```
+작업태그: 작업내용
+```
+
+**규칙**
+- 작업태그: 좌측 표 참고
+- 작업내용: 한국어 또는 영어 동사원형
+
+**예시**
+```
+feat: 네비게이션 바를 생성
+fix: 유저 이름 데이터를 수정
+```
+
+</td>
+</tr>
+</table>
+
+---
 
 ### Branch
 
-- main
-  - 최종 배포 branch
+<table>
+<tr>
+<td width="33%" valign="top">
 
-- develop
-  - 개발 메인 branch
-  - develop branch로 merge시 PR 작성
-  - PR Approve 2명 이상 필요
+#### main
+```
+최종 배포 브랜치
+```
+프로덕션 환경에 배포되는 안정화된 코드
 
-- feat/\*\*
-  - 기능 구현 시 branch 이름을 `feat/featureName`로 분기
-  - e.g
-    - `feat/main-page`
+</td>
+<td width="33%" valign="top">
 
-- fix/\*\*
-  - 오류 수정시 branch 이름을 `fix/bugName`로 분기
-  - e.g
-    - `fix/booth-page-ui`
+#### develop
+```
+개발 메인 브랜치
+```
+- develop으로 merge 시 PR 작성 필수
+- PR Approve 2명 이상 필요
 
-### PR
+</td>
+<td width="34%" valign="top">
 
-제목 템플릿
+#### feat/fix
+```
+feat/featureName
+fix/bugName
+```
+**예시**
+- `feat/main-page`
+- `fix/booth-page-ui`
+
+</td>
+</tr>
+</table>
+
+---
+
+### Pull Request
+
+<table>
+<tr>
+<td width="50%">
+
+#### 제목 템플릿
 
 ```
 [작업번호]: 제목
 ```
 
-예시
-
+**예시**
 ```
-FTSK-1: ts 기반 리액트 프로젝트를 세팅하고 추가 라이브러리 설치와 github action을 설정
+FTSK-1: ts 기반 리액트 프로젝트 세팅 및 
+추가 라이브러리 설치와 github action 설정
 ```
 
-본문 템플릿
+</td>
+<td width="50%">
 
-```
-PR 설명
+#### 본문 템플릿
+
+```markdown
+## PR 설명
 - [PR 설명]
 - [PR 설명]
-작업 상세 내용
+
+## 작업 상세 내용
 - [작업 상세 내용]
 - [작업 상세 내용]
-기타사항 / 참고사항
+
+## 기타사항 / 참고사항
 - [기타사항 / 참고사항]
 ```
 
-예시
+</td>
+</tr>
+</table>
 
-```
+<details>
+<summary><b>PR 본문 예시 보기</b></summary>
+
+```markdown
 ## PR 설명
 
--  ts 기반 리액트 프로젝트를 세팅
+- ts 기반 리액트 프로젝트를 세팅
 - 추가 라이브러리 설치
 - airbnb 컨벤션으로 eslint 설정, prettier 설정
-- github action으로  prettier, eslint, ts check를 자동화 했습니다
+- github action으로 prettier, eslint, ts check를 자동화 했습니다
 
 ## 작업 상세 내용
 - ts기반 리액트 프로젝트를 VITE로 세팅
@@ -390,18 +443,52 @@ PR 설명
 - eslint 9.34.0 설치
 - airbnb 컨벤션 반영
 - prettier 3.6.2 설치
-
 - github action으로 prettier, eslint, ts check 자동화
 
 ## 기타사항 / 참고사항
 
-- LGTM 해주세용 😀😀😀😀
+- 리뷰 부탁드립니다
 ```
+
+</details>
 
 ## 코드 컨벤션
 
-Air bnb Style</br>
-출처: https://github.com/airbnb/javascript<br/>
+### Airbnb JavaScript Style Guide
+
+> 본 프로젝트는 **Airbnb JavaScript Style Guide**를 기반으로 코드 품질을 관리합니다.
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### 주요 규칙
+
+- **Naming**: 컴포넌트명은 PascalCase, 변수/state는 camelCase 사용
+- **Quotes**: Single quotes 사용
+- **Semicolons**: 세미콜론 사용 필수
+- **Arrow Functions**: 간결한 화살표 함수 선호
+- **Destructuring**: 구조 분해 할당 적극 활용
+- **Template Literals**: 문자열 결합 시 템플릿 리터럴 사용
+
+</td>
+<td width="50%" valign="top">
+
+#### 적용 도구
+
+| 도구 | 역할 |
+|------|------|
+| **ESLint** | 코드 린팅 및 스타일 검사 |
+| **Prettier** | 코드 포맷팅 자동화 |
+| **Husky** | Git hook을 통한 자동 검증 |
+| **TypeScript** | 타입 안정성 보장 |
+
+</td>
+</tr>
+</table>
+
+**참고 문서**  
+[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
 
 ---
 
