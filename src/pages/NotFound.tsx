@@ -1,9 +1,12 @@
+// External libraries
 import styled from '@emotion/styled';
-import SampleLottie from '@/shared/assets/lotties/404 error.lottie';
-import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
 import { Link, useNavigate } from 'react-router-dom';
+import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
+
+// Shared components & assets
 import PullItLogo from '@/shared/components/PullItIntroLogo';
 import Spacer from '@/shared/components/Spacer';
+import SampleLottie from '@/shared/assets/lotties/404 error.lottie';
 
 const Container = styled.div`
   display: flex;
