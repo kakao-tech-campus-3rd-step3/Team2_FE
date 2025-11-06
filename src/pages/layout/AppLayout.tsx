@@ -1,14 +1,13 @@
-// 필수 라이브러리
-import styled from '@emotion/styled';
+// External libraries
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-// UI 컴포넌트
+import styled from '@emotion/styled';
+
+// Shared components & hooks
 import SideBar from '@/shared/components/SideBar/SideBar';
 import PageHeader from '@/shared/components/PageHeader/PageHeader';
-// SSE Hook
-import { useSSEConnection } from '@/shared/hooks/useSSEConnection';
-// 에러 바운더리
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { useSSEConnection } from '@/shared/hooks/useSSEConnection';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
