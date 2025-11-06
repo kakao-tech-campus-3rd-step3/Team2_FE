@@ -208,6 +208,7 @@ function Solve() {
                   solvedCheck={solvedCheck}
                   questions={data}
                   setIsAllSolved={setIsAllSolved}
+                  isExplanationPage={isExplanationPage}
                 />
               </RightSidebar>
             </SolveContentWrapper>

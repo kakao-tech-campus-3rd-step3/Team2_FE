@@ -78,6 +78,7 @@ type ProgressCardProps = {
   solvedCheck: MarkingRequest[];
   questions: QuestionSet;
   setIsAllSolved: React.Dispatch<React.SetStateAction<boolean>>;
+  isExplanationPage: boolean;
 };
 
 function ProgressCard({
@@ -85,6 +86,7 @@ function ProgressCard({
   solvedCheck,
   questions,
   setIsAllSolved,
+  isExplanationPage,
 }: ProgressCardProps) {
   const goResult = () => {
     if (solvedCheck.length === questions.questions.length) {
@@ -110,7 +112,7 @@ function ProgressCard({
           <ProgressStatValue>{questionLength - solvedCheck.length}</ProgressStatValue>
         </ProgressStatItem>
       </ProgressStats>
-      <SubmitBtn onClick={goResult}>제출하기</SubmitBtn>
+      {!isExplanationPage && <SubmitBtn onClick={goResult}>제출하기</SubmitBtn>}
     </ProgressCardWrapper>
   );
 }
