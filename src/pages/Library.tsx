@@ -152,12 +152,14 @@ const FolderColorDot = styled.span<{ color: string }>`
   background-color: ${({ color }) => color};
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
+  margin-left: 2px;
 `;
 
 const FolderText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 `;
 
 const DEFAULT_FOLDER_COLOR = '#d1d5db';
