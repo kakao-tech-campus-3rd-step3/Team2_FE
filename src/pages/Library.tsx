@@ -1,25 +1,28 @@
+// External libraries
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
 import styled from '@emotion/styled';
+
+// Feature components & types
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '@/shared/api/axiosClient';
-import Spacer from '@/shared/components/Spacer';
-
+import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
+import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
+import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
 import {
   type QuestionType,
   type QuestionSetContentType,
 } from '@/features/library/types/questionSetResponse';
-
-import { useNavigate } from 'react-router-dom';
-import Spinner from '@/shared/components/Spinner';
-import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
-import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
-import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
-import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
-import { getFolderColor } from '@/shared/constants/folderColors';
-import { Pencil, Trash2, FileEdit, Folder, Check, X } from 'lucide-react';
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
+
+// Shared components & utils
+import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
+import Spacer from '@/shared/components/Spacer';
+import Spinner from '@/shared/components/Spinner';
+import api from '@/shared/api/axiosClient';
+import { getFolderColor } from '@/shared/constants/folderColors';
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
 
