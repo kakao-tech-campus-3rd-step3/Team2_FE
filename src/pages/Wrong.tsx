@@ -1,14 +1,11 @@
 import styled from '@emotion/styled';
 import WrongNoteListItem from '@/features/wrong/components/WrongNoteListItem';
+import SearchBar from '@/features/wrong/components/SearchBar';
+import { useWrongNoteFilter } from '@/features/wrong/hooks/useWrongNoteFilter';
 
-import api from '@/shared/api/axiosClient';
-import { useQuery } from '@tanstack/react-query';
-import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
-import { useState, useEffect } from 'react';
 import Spinner from '@/shared/components/Spinner';
-import FolderList, { type Folder } from '@/shared/components/FolderList';
+import FolderList from '@/shared/components/FolderList';
 
-// prettier 돌려줘
 const WrongWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -57,33 +54,6 @@ const WrongPageDescription = styled.p`
   text-align: left;
 `;
 
-// 검색바 부분
-const SearchBarWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: ${({ theme }) => theme.spacing.spacing3} 0;
-`;
-
-const SearchBar = styled.input`
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.colors.border.border1};
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ theme }) => theme.colors.gray.gray0};
-  font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
-  padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
-
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-  border-radius: ${({ theme }) => theme.radius.radius3};
-  &:focus {
-    outline: none;
-    border: 1px solid ${({ theme }) => theme.colors.semantic.primary};
-    border-radius: ${({ theme }) => theme.radius.radius2};
-  }
-`;
-
 // 오답노트 리스트 부분
 const WrongNoteList = styled.div`
   display: flex;
@@ -103,7 +73,7 @@ const WrongNoteListHeader = styled.div`
   transition: background-color 0.2s ease-in-out;
 
   @media (max-width: 1050px), (max-height: 400px) {
-    display: none; /* 모바일에서 헤더 숨김 */
+    display: none;
   }
 `;
 
@@ -116,81 +86,18 @@ const WrongNoteListHeaderColumn = styled.span`
   }
 `;
 
-// 폴더 관련 타입 + 인터페이스들
-const QUESTION_SET_TYPE = 'QUESTION_SET';
-const ALL_FOLDER_ID = 1;
-
-interface QuestionSetContent {
-  questionSetId: number;
-}
-
 function Wrong() {
-  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState(''); // 검색 버퍼
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // 검색 값 저장
-  // 오답노트 조회
-  const { isPending, error, data } = useQuery({
-    queryKey: ['wrongNotes', 'list'],
-    queryFn: async () => {
-      const res = await api.get<WrongNoteSetResponse>(`/wrong-answers/all`);
-      return res.data;
-    },
-  });
+  const {
+    searchTerm,
+    selectedFolderId,
+    setSearchTerm,
+    setSelectedFolderId,
+    folders,
+    filteredQuestionSets,
+    isPending,
+  } = useWrongNoteFilter();
 
-  // 폴더 목록 조회
-  const { data: folders } = useQuery({
-    queryKey: ['folders', 'all'],
-    queryFn: async () => {
-      const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
-      return res.data.sort((a, b) => {
-        if (a.scope === 'ALL' && b.scope !== 'ALL') return -1;
-        if (a.scope !== 'ALL' && b.scope === 'ALL') return 1;
-        return a.sortOrder - b.sortOrder;
-      });
-    },
-  });
-
-  useEffect(() => {
-    if (folders && folders.length > 0 && selectedFolderId === null) {
-      setSelectedFolderId(folders[0].id);
-    }
-  }, [folders, selectedFolderId]);
-
-  // 선택된 폴더에 포함된 문제집 목록 조회 (ID만 필요) 이 부분 좀 이상함
-  const { data: questionSetsData } = useQuery({
-    queryKey: ['questionSets', 'forFolder', selectedFolderId],
-    queryFn: async () => {
-      const res = await api.get(`/question-set?size=9999&folderId=${selectedFolderId}`);
-      return res.data as { questionSets: { content: QuestionSetContent[] } };
-    },
-    enabled: selectedFolderId !== null,
-  });
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [searchTerm]);
-
-  const normalize = (str: string) => str.toLowerCase().normalize('NFC').replace(/\s+/g, '');
-
-  const filteredQuestionSets = data?.filter(
-    (item) =>
-      normalize(item.questionSetTitle).includes(normalize(debouncedSearchTerm)) &&
-      (selectedFolderId === null || selectedFolderId === ALL_FOLDER_ID
-        ? true
-        : (questionSetsData?.questionSets?.content || []).some(
-            (qs: { questionSetId: number }) => qs.questionSetId === item.questionSetId,
-          )),
-  );
-
-  // TODO: 나중에 에러 바운더리랑 서스팬스 적용되면 지울수도???
   if (isPending) return <Spinner />;
-  if (error) return <h1>Error</h1>;
 
   return (
     <WrongWrapper>
@@ -201,18 +108,15 @@ function Wrong() {
         <WrongPageDescription>
           문제집별로 틀린 문제를 분석하고 완벽히 이해할 때까지 학습하세요
         </WrongPageDescription>
-        <SearchBarWrapper>
-          <SearchBar
-            placeholder="오답노트 제목으로 검색"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </SearchBarWrapper>
+        <SearchBar
+          placeholder="오답노트 제목으로 검색"
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
         <FolderList
           folders={folders}
           selectedFolderId={selectedFolderId}
           onFolderSelect={setSelectedFolderId}
-          // Wrong 페이지에서는 드래그로 문제집을 이동시키는 기능을 아직 사용하지 않으므로 null/noop 전달
           draggedItem={null}
           onItemDrop={() => {
             /* noop */
