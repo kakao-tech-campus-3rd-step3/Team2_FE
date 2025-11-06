@@ -142,6 +142,7 @@ const FolderCellContent = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
+  max-width: 100%;
 `;
 
 const FolderColorDot = styled.span<{ color: string }>`
@@ -151,6 +152,12 @@ const FolderColorDot = styled.span<{ color: string }>`
   background-color: ${({ color }) => color};
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
+`;
+
+const FolderText = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const DEFAULT_FOLDER_COLOR = '#d1d5db';
@@ -695,11 +702,11 @@ const Library = () => {
         <Spacer height="12px" />
         <ListBox>
           <ListRow>
-            <HeaderCell align="left">문제집</HeaderCell>
+            <HeaderCell>문제집</HeaderCell>
             <HeaderCell>문제 수</HeaderCell>
             <HeaderCell>생성일</HeaderCell>
             <HeaderCell>유형</HeaderCell>
-            <HeaderCell align="left">폴더</HeaderCell>
+            <HeaderCell>폴더</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
           </ListRow>
 
@@ -774,7 +781,11 @@ const Library = () => {
                   <DesktopOnly isDisabled={isPending}>
                     {TYPE_MAP[item.questionType] ?? '생성 실패'}
                   </DesktopOnly>
-                  <DesktopOnly align="left" isDisabled={isPending}>
+                  <DesktopOnly
+                    align="left"
+                    isDisabled={isPending}
+                    title={item.commonFolderName ?? undefined}
+                  >
                     <FolderCellContent>
                       <FolderColorDot
                         color={
@@ -783,7 +794,7 @@ const Library = () => {
                             : DEFAULT_FOLDER_COLOR
                         }
                       />
-                      <span>{item.commonFolderName ?? '-'}</span>
+                      <FolderText>{item.commonFolderName ?? '-'}</FolderText>
                     </FolderCellContent>
                   </DesktopOnly>
 
@@ -806,7 +817,9 @@ const Library = () => {
                           : DEFAULT_FOLDER_COLOR
                       }
                     />
-                    <span>폴더: {item.commonFolderName ?? '-'}</span>
+                    <span title={item.commonFolderName ?? undefined}>
+                      폴더: {item.commonFolderName ?? '-'}
+                    </span>
                   </MobileFolderInfo>
 
                   <ListCell isDisabled={isPending}>
