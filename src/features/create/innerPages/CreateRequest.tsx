@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import Spinner from '@/features/create/components/Spinner';
 import Spacer from '@/shared/components/Spacer';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Complete from '@/features/create/components/Complete';
 import api from '@/shared/api/axiosClient';
 import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
@@ -100,6 +101,9 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
 }) => {
   const [status, setStatus] = useState<'requesting' | 'error'>('requesting');
   const [error, setError] = useState<string | null>(null);
+  const requestSent = useRef(false);
+  const [idempotencyKey] = useState(() => uuidv4());
+
   const createQuestionSet = useCallback(async () => {
     if (!selectedFile || !questionType) return;
 
@@ -109,13 +113,21 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
     setError(null);
 
     try {
-      await api.post('/question-set', {
-        title: selectedFile.name,
-        difficulty: 'EASY',
-        questionCount: 10,
-        type: questionType,
-        sourceIds: [parseInt(selectedFile.id)],
-      });
+      await api.post(
+        '/question-set',
+        {
+          title: selectedFile.name,
+          difficulty: 'EASY',
+          questionCount: 10,
+          type: questionType,
+          sourceIds: [parseInt(selectedFile.id)],
+        },
+        {
+          headers: {
+            'Idempotency-Key': idempotencyKey,
+          },
+        },
+      );
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(`문제집 생성 중 오류: ${err.message}`);
@@ -124,9 +136,13 @@ const CreateRequest: React.FC<CreateRequestProps> = ({
       }
       setStatus('error');
     }
-  }, [selectedFile, questionType, setQuestionSetId, setQuestionSetReady]);
+  }, [selectedFile, questionType, setQuestionSetId, setQuestionSetReady, idempotencyKey]);
 
   useEffect(() => {
+    if (requestSent.current) {
+      return;
+    }
+    requestSent.current = true;
     createQuestionSet();
   }, [createQuestionSet]);
 
