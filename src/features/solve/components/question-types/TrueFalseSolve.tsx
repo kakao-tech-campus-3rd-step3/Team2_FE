@@ -15,6 +15,10 @@ const QuestionAreaWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius2};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    margin-right: 0;
+  }
 `;
 
 const QuestionAreaHeader = styled.div`
