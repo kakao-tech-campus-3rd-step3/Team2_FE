@@ -1,11 +1,18 @@
+// External libraries
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { BookOpen, CheckCircle, Target, Flame } from 'lucide-react';
-import api from '@/shared/api/axiosClient';
+
+// Auth
 import { useAuth } from '@/app/auth/useAuth';
+
+// Feature components & types
 import CalendarHeatmapCompo from '@/features/dashboard/components/CalendarHeatmapCompo';
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 import type { DailyStatsResponse } from '@/features/dashboard/types/dailyStats';
+
+// Shared components & utils
+import api from '@/shared/api/axiosClient';
 
 const Container = styled.div`
   display: flex;
