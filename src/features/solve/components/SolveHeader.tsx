@@ -13,12 +13,13 @@ const SolveHeaderWrapper = styled.div`
 
 const BackBtnTitleWrapper = styled.div`
   display: flex;
+  align-items: flex-start;
 `;
 
 const SolveHeaderBackBtn = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-radius: ${({ theme }) => theme.radius.radius2};
-  padding: ${({ theme }) => theme.spacing.spacing1};
+  padding: ${({ theme }) => `${theme.spacing.spacing2} ${theme.spacing.spacing3}`};
   color: ${({ theme }) => theme.colors.gray.gray10};
 
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
@@ -28,6 +29,8 @@ const SolveHeaderBackBtn = styled.button`
   color: ${({ theme }) => theme.colors.gray.gray10};
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  height: fit-content;
 `;
 
 const SolveHeaderBackBtnTxt = styled.span`
