@@ -323,15 +323,18 @@ src/
 #### Commit Message 형태
 
 **형식**
+
 ```
 작업태그: 작업내용
 ```
 
 **규칙**
+
 - 작업태그: 좌측 표 참고
 - 작업내용: 한국어 또는 영어 동사원형
 
 **예시**
+
 ```
 feat: 네비게이션 바를 생성
 fix: 유저 이름 데이터를 수정
@@ -350,18 +353,22 @@ fix: 유저 이름 데이터를 수정
 <td width="33%" valign="top">
 
 #### main
+
 ```
 최종 배포 브랜치
 ```
+
 프로덕션 환경에 배포되는 안정화된 코드
 
 </td>
 <td width="33%" valign="top">
 
 #### develop
+
 ```
 개발 메인 브랜치
 ```
+
 - develop으로 merge 시 PR 작성 필수
 - PR Approve 2명 이상 필요
 
@@ -369,11 +376,14 @@ fix: 유저 이름 데이터를 수정
 <td width="34%" valign="top">
 
 #### feat/fix
+
 ```
 feat/featureName
 fix/bugName
 ```
+
 **예시**
+
 - `feat/main-page`
 - `fix/booth-page-ui`
 
@@ -387,7 +397,7 @@ fix/bugName
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 #### 제목 템플릿
 
@@ -396,26 +406,30 @@ fix/bugName
 ```
 
 **예시**
+
 ```
-FTSK-1: ts 기반 리액트 프로젝트 세팅 및 
+FTSK-1: ts 기반 리액트 프로젝트 세팅 및
 추가 라이브러리 설치와 github action 설정
 ```
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 #### 본문 템플릿
 
 ```markdown
 ## PR 설명
+
 - [PR 설명]
 - [PR 설명]
 
 ## 작업 상세 내용
+
 - [작업 상세 내용]
 - [작업 상세 내용]
 
 ## 기타사항 / 참고사항
+
 - [기타사항 / 참고사항]
 ```
 
@@ -435,6 +449,7 @@ FTSK-1: ts 기반 리액트 프로젝트 세팅 및
 - github action으로 prettier, eslint, ts check를 자동화 했습니다
 
 ## 작업 상세 내용
+
 - ts기반 리액트 프로젝트를 VITE로 세팅
 - Tailwind CSS 4.1.12 설치
 - React Router Dom 7.8.2 설치
@@ -476,12 +491,12 @@ FTSK-1: ts 기반 리액트 프로젝트 세팅 및
 
 #### 적용 도구
 
-| 도구 | 역할 |
-|------|------|
-| **ESLint** | 코드 린팅 및 스타일 검사 |
-| **Prettier** | 코드 포맷팅 자동화 |
-| **Husky** | Git hook을 통한 자동 검증 |
-| **TypeScript** | 타입 안정성 보장 |
+| 도구           | 역할                      |
+| -------------- | ------------------------- |
+| **ESLint**     | 코드 린팅 및 스타일 검사  |
+| **Prettier**   | 코드 포맷팅 자동화        |
+| **Husky**      | Git hook을 통한 자동 검증 |
+| **TypeScript** | 타입 안정성 보장          |
 
 </td>
 </tr>
