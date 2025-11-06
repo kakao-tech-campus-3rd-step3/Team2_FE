@@ -1,7 +1,10 @@
+// External libraries
 import styled from '@emotion/styled';
+
+// Auth
 import { useAuth } from '@/app/auth/useAuth';
-import { clearToken } from '@/shared/utils/tokenManager';
-import { administratorApi } from '@/shared/api/axiosClient';
+
+// Shared components & utils
 import Spacer from '@/shared/components/Spacer';
 import PullItLogo from '@/shared/components/PullItIntroLogo';
 
@@ -24,34 +27,36 @@ const InfoBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 500px;
-  padding: ${({ theme }) => theme.spacing.spacing4};
+  width: 600px;
+  padding: ${({ theme }) => theme.spacing.spacing6};
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
-  border-radius: ${({ theme }) => theme.radius.radius2};
+  border-radius: ${({ theme }) => theme.radius.radius3};
   background-color: ${({ theme }) => theme.colors.gray.gray1};
 
   @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
-    max-width: 500px;
-    padding: ${({ theme }) => theme.spacing.spacing3};
+    max-width: 600px;
+    padding: ${({ theme }) => theme.spacing.spacing4};
   }
 `;
 
 const InfoTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
+  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing5};
+  color: ${({ theme }) => theme.colors.gray.gray10};
 `;
 
 const InfoRow = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const InfoLabel = styled.span`
-  width: 50px;
+  min-width: 80px;
+  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
   color: ${({ theme }) => theme.colors.gray.gray8};
 `;
@@ -59,26 +64,12 @@ const InfoLabel = styled.span`
 const InfoValue = styled.span`
   flex: 1;
   font-size: ${({ theme }) => theme.typography.label1Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray.gray10};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
 
-const LogoutButton = styled.button`
-  margin-top: ${({ theme }) => theme.spacing.spacing3};
-  padding: ${({ theme }) => `${theme.spacing.spacing1} ${theme.spacing.spacing3}`};
-  border: none;
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ theme }) => theme.colors.red.red4};
-  color: white;
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.red.red4};
-  }
-`;
 const LogoContainer = styled.div`
   width: 100%;
   display: flex;
@@ -93,16 +84,6 @@ const Copyright = styled.p`
 
 const Settings = () => {
   const { userInfo } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await administratorApi.post('/auth/logout');
-      clearToken();
-      window.location.href = '/login';
-    } catch (error) {
-      console.error('로그아웃 실패:', error);
-    }
-  };
 
   return (
     <Container>
@@ -123,13 +104,12 @@ const Settings = () => {
           </InfoValue>
         </InfoRow>
 
-        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-        <Spacer height={'20px'} />
+        <Spacer height={'30px'} />
         <LogoContainer>
           <PullItLogo />
           <Spacer width={'10px'} />
         </LogoContainer>
-        <Copyright>&copy; {new Date().getFullYear()} 강원대 2팀. All rights reserved.</Copyright>
+        <Copyright>&copy; {new Date().getFullYear()} FULL IT. All rights reserved.</Copyright>
       </InfoBox>
     </Container>
   );
