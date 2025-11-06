@@ -13,7 +13,6 @@ const ProgressCardWrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const CardTitle = styled.h6`
@@ -64,6 +63,7 @@ const SubmitBtn = styled.button`
   padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius2};
   transition: background-color 0.2s ease;
+  margin-top: auto;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.green.green7};
