@@ -132,39 +132,46 @@
 
 ### 시스템 구조
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Frontend Application                    │
-│                    React + TypeScript                       │
-│                                                             │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐           │
-│  │ AppLayout  │  │  Create    │  │   Solve    │           │
-│  │            │  │            │  │            │           │
-│  │ SSE 연결   │  │ PDF → S3   │  │ 문제 풀이  │           │
-│  │ 문제생성   │  │ 문제생성   │  │ 자동 채점  │           │
-│  │ 완료 알림  │  │ 요청       │  │ 정답/해설  │           │
-│  └────────────┘  └────────────┘  └────────────┘           │
-│                                                             │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐           │
-│  │  Library   │  │   Wrong    │  │ Dashboard  │           │
-│  │            │  │            │  │            │           │
-│  │ 문제집     │  │ 오답       │  │ 학습 통계  │           │
-│  │ 목록 조회  │  │ 목록 조회  │  │ 히트맵     │           │
-│  │ qid→Solve  │  │ qid→Solve  │  │            │           │
-│  └────────────┘  └────────────┘  └────────────┘           │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                   HTTPS / SSE / S3 Upload
-                              │
-                              ▼
-        ┌──────────────────────────────────────────┐
-        │         Backend (Spring Server)          │
-        │                                          │
-        │  • PDF 기반 문제 생성 (Gemini API)       │
-        │  • 문제 채점 및 해설 제공               │
-        │  • 문제집/오답 관리                     │
-        │  • 학습 통계 데이터                     │
-        └──────────────────────────────────────────┘
+```mermaid
+graph LR
+  Browser["브라우저(index)"] --> Main["src/main.tsx(React root)"]
+  Main --> Providers["Providers(AuthProvider, QueryClientProvider,SseProvider 등)"]
+  Providers --> AppRoutes["src/app/routes/AppRoutes.tsx(Router)"]
+  AppRoutes --> Public["Public Routes(Login, LoginSuccess)"]
+  AppRoutes --> Protected["ProtectedRoute"]
+  Protected --> AppLayout["src/pages/layout/AppLayout.tsx(공통 레이아웃)"]
+
+  subgraph LayoutChildren [AppLayout 내부]
+    AppLayout --> Header["Header"]
+    AppLayout --> SideBar["SideBar"]
+    AppLayout --> SSE["SSE (NotificationSse)"]
+    AppLayout --> Outlet["Outlet (페이지 렌더)"]
+  end
+
+  Outlet --> Dashboard["/dashboard"]
+  Outlet --> Create["/create"]
+  Outlet --> Solve["/solve"]
+  Outlet --> Library["/library"]
+  Outlet --> Wrong["/wrong"]
+  Outlet --> Settings["/settings"]
+
+  subgraph FrontFeatures [src/features & src/shared]
+    WrongFeature["features/wrong- WrongNoteListItem- types/wrongNote.ts"]
+    LibraryFeature["features/library/QuestionSet"]
+    SharedComp["shared/components- FolderList, SideBar, Toast 등"]
+    Styles["shared/styles/global.css"]
+  end
+
+  Library --> LibraryFeature
+  Wrong --> WrongFeature
+  AppLayout --> SharedComp
+
+  AppLayout ---|API 호출| API["Backend API(REST endpoints)"]
+  Create ---|PDF 업로드| S3["AWS S3(PDF 저장소)"]
+  SSE ---|EventSource| Notifications["SSE API(Notifications)"]
+  API --> Server["Spring Boot Server"]
+  Notifications --> Server
+  S3 --> Server
 ```
 
 ### 페이지별 주요 기능
