@@ -170,8 +170,8 @@ function Solve() {
           <SolveResult
             questionLength={data.questions.length}
             solvedCheck={solvedCheck}
-            questions={data} 
-            isReviewing={isReviewing} 
+            questions={data}
+            isReviewing={isReviewing}
             goExplanationPage={goExplanationPage}
           />
         ) : (

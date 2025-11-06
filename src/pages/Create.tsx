@@ -1,8 +1,6 @@
-// 필수 라이브러리
 import { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import { useOutletContext } from 'react-router-dom';
-// UI 컴포넌트
 import PageLayout from '@/shared/components/Layout/PageLayout';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
 import SelectPdf from '@/features/create/innerPages/SelectPdf';
@@ -11,7 +9,6 @@ import NavigationButtons from '@/features/create/components/NavigationButtons';
 import CreateRequest from '@/features/create/innerPages/CreateRequest';
 import Spacer from '@/shared/components/Spacer';
 import ChooseType from '@/features/create/innerPages/ChooseType';
-// 타입
 import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
 const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
