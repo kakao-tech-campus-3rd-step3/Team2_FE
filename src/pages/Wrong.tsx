@@ -181,14 +181,13 @@ function Wrong() {
   const filteredQuestionSets = data?.filter(
     (item) =>
       normalize(item.questionSetTitle).includes(normalize(debouncedSearchTerm)) &&
-      // 폴더 필터 적용: 선택된 폴더가 없거나 ALL_FOLDER_ID이면 전체 표시
       (selectedFolderId === null || selectedFolderId === ALL_FOLDER_ID
         ? true
-        : // 선택된 폴더에 포함된 questionSetId인지 확인
-          (questionSetsData?.questionSets?.content || []).some(
+        : (questionSetsData?.questionSets?.content || []).some(
             (qs: { questionSetId: number }) => qs.questionSetId === item.questionSetId,
           )),
   );
+
   // TODO: 나중에 에러 바운더리랑 서스팬스 적용되면 지울수도???
   if (isPending) return <Spinner />;
   if (error) return <h1>Error</h1>;

@@ -610,7 +610,10 @@ const Library = () => {
 
   const filteredQuestionSets =
     data?.questionSets.content.filter((item) =>
-      item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+      item.title
+        ?.normalize('NFC') // macOS NFD → NFC 변환
+        .toLowerCase()
+        .includes(debouncedSearchTerm.trim().normalize('NFC').toLowerCase()),
     ) ?? [];
 
   const isSelectedCellPending = selectedCell?.status === 'PENDING';

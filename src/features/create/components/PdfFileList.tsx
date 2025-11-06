@@ -90,7 +90,10 @@ const PdfFileList = ({
 
   const filteredFiles = debouncedSearchText
     ? fileList.filter((file) =>
-        file.name.toLowerCase().includes(debouncedSearchText.trim().toLowerCase()),
+        file.name
+          .normalize('NFC') // 한글 분해형 → 완성형으로 변환(맥의 NFD 방식->NFC 전환)
+          .toLowerCase()
+          .includes(debouncedSearchText.trim().normalize('NFC').toLowerCase()),
       )
     : fileList;
 
