@@ -134,19 +134,17 @@
 
 ```mermaid
 graph LR
-  Browser["브라우저(index)"] --> Main["src/main.tsx(React root)"]
-  Main --> Providers["Providers(AuthProvider, QueryClientProvider,SseProvider 등)"]
-  Providers --> AppRoutes["src/app/routes/AppRoutes.tsx(Router)"]
-  AppRoutes --> Public["Public Routes(Login, LoginSuccess)"]
-  AppRoutes --> Protected["ProtectedRoute"]
-  Protected --> AppLayout["src/pages/layout/AppLayout.tsx(공통 레이아웃)"]
+  Main["React root"]
+  Main --> AppRoutes["Router"]
+  AppRoutes --> Public["Public Routes"]
+  Public --> Login["/Login"]
+  AppRoutes --> Protected["ProtectedRoutes"]
+  Protected --> AppLayout["Root Component"]
 
-  subgraph LayoutChildren [AppLayout 내부]
-    AppLayout --> Header["Header"]
-    AppLayout --> SideBar["SideBar"]
-    AppLayout --> SSE["SSE (NotificationSse)"]
-    AppLayout --> Outlet["Outlet (페이지 렌더)"]
-  end
+  AppLayout --> Header["Header"]
+  AppLayout --> SideBar["SideBar"]
+  AppLayout --> SSE["SSE (NotificationSse)"]
+  AppLayout --> Outlet["Page Render"]
 
   Outlet --> Dashboard["/dashboard"]
   Outlet --> Create["/create"]
@@ -155,23 +153,21 @@ graph LR
   Outlet --> Wrong["/wrong"]
   Outlet --> Settings["/settings"]
 
-  subgraph FrontFeatures [src/features & src/shared]
-    WrongFeature["features/wrong- WrongNoteListItem- types/wrongNote.ts"]
-    LibraryFeature["features/library/QuestionSet"]
-    SharedComp["shared/components- FolderList, SideBar, Toast 등"]
-    Styles["shared/styles/global.css"]
-  end
+  Library ---|"qid 전달"| Solve
+  Wrong ---|"qid 전달"| Solve
+  Create ---|"qid 전달"| Solve
 
-  Library --> LibraryFeature
-  Wrong --> WrongFeature
-  AppLayout --> SharedComp
+  Login -->|"카카오 소셜 로그인"| Server
+  Login -->|"Refresh Token으로 Access Token 요청"| Server
 
-  AppLayout ---|API 호출| API["Backend API(REST endpoints)"]
-  Create ---|PDF 업로드| S3["AWS S3(PDF 저장소)"]
-  SSE ---|EventSource| Notifications["SSE API(Notifications)"]
-  API --> Server["Spring Boot Server"]
-  Notifications --> Server
-  S3 --> Server
+  Dashboard -->|"학습 통계 조회"| Server["Spring Boot Server"]
+  Library -->|"문제집 목록 조회"| Server
+  Wrong -->|"오답 목록 조회"| Server
+  Solve -->|"문제 조회/채점"| Server
+  Settings -->|"유저 정보 조회"| Server
+  Create -->|"PDF 업로드"| S3["AWS S3(PDF 저장소)"]
+  SSE -->|"EventSource"| Server
+  Server -->|"PDF 조회"| S3
 ```
 
 ### 페이지별 주요 기능
