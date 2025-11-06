@@ -9,18 +9,15 @@ import PageHeader from '@/shared/components/PageHeader/PageHeader';
 import { useSSEConnection } from '@/shared/hooks/useSSEConnection';
 // 에러 바운더리
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
-// 상수 값
-import { MIN_HEIGHT } from '@/shared/config/constants';
 
 const AppLayoutWrapper = styled.div`
   width: 100%;
   height: 100vh;
-  min-height: ${MIN_HEIGHT};
   min-width: 1050px;
   display: flex;
   overflow: hidden;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     min-width: 100%;
     height: 100vh;
     flex-direction: column;
@@ -32,7 +29,6 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: ${MIN_HEIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   overflow-x: auto;
 
@@ -40,7 +36,7 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
   transition: margin-left 0.4s ease;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     margin-left: 0;
     margin-top: 0;
     margin-bottom: 64px;
@@ -57,7 +53,7 @@ const Main = styled.div`
   flex: 1;
   height: calc(100% - 76px);
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     min-width: unset;
     width: 100%;
     height: 100%;

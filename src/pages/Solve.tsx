@@ -38,7 +38,7 @@ const SolveWrapper = styled.div`
   padding: 0px 20px;
   background-color: ${({ theme }) => theme.colors.gray.gray2};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     margin-top: ${({ theme }) => theme.spacing.spacing3};
     min-width: unset;
     width: 100%;
@@ -51,7 +51,7 @@ const SolveContentWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing3};
   display: flex;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     flex-direction: column;
     gap: ${({ theme }) => theme.spacing.spacing3};
   }
@@ -63,7 +63,7 @@ const RightSidebar = styled.div`
   flex-direction: column;
   min-width: 180px;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     min-width: unset;
     width: 100%;
   }

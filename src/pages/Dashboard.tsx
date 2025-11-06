@@ -34,7 +34,7 @@ const DashboardWrapper = styled.div`
   box-sizing: border-box;
   justify-content: flex-start;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     max-width: 100%;
     padding: ${({ theme }) => theme.spacing.spacing3};
     overflow-x: hidden;
@@ -65,7 +65,7 @@ const DashboardStatCardWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing5};
   justify-content: space-between;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     flex-wrap: wrap;
     gap: ${({ theme }) => theme.spacing.spacing3};
   }
@@ -81,7 +81,7 @@ const DashboardStatCard = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.spacing4};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: calc(50% - ${({ theme }) => theme.spacing.spacing3} / 2);
     min-width: 0;
   }

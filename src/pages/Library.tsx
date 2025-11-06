@@ -41,7 +41,7 @@ const LibraryWrapper = styled.div`
   width: 100%;
   max-width: 1000px;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     max-width: 100%;
     padding: 0 ${({ theme }) => theme.spacing.spacing3};
   }
@@ -96,7 +96,7 @@ const ListRow = styled.div<{ isDragging?: boolean; isDisabled?: boolean }>`
     cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'grabbing')};
   }
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -125,7 +125,7 @@ const ListCell = styled.div<{ align?: 'left' | 'center' | 'right'; isDisabled?: 
   overflow: hidden;
   text-overflow: ellipsis;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     text-align: left;
     white-space: normal;
     width: 100%;
@@ -203,7 +203,7 @@ const PrimaryButton = styled(ActionButton)`
   color: white;
   font-weight: 600;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: 100%;
     padding: 10px 16px;
   }
@@ -319,7 +319,7 @@ const FolderSelect = styled.select`
 const MobileInfoRow = styled.div`
   display: none;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: flex;
     flex-wrap: wrap;
     gap: ${({ theme }) => theme.spacing.spacing3};
@@ -338,7 +338,7 @@ const MobileInfoItem = styled.span`
 const MobileFolderInfo = styled.div`
   display: none;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -351,7 +351,7 @@ const MobileFolderInfo = styled.div`
 `;
 
 const DesktopOnly = styled(ListCell)`
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none;
   }
 `;

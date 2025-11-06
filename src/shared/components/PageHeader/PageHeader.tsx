@@ -12,7 +12,7 @@ const PageHeaderWrapper = styled.header`
   align-items: center;
   justify-content: space-between;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none;
   }
 `;

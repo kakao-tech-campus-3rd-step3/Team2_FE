@@ -30,7 +30,7 @@ const CalendarHeatmapWrapper = styled.div`
 `;
 
 const HeatmapScrollWrapper = styled.div`
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     overflow-x: auto;
 
     .react-calendar-heatmap {

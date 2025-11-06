@@ -27,7 +27,7 @@ const ContentWrapper = styled.div`
   width: 100%;
   max-width: 1000px;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     max-width: 100%;
     padding: 0 ${({ theme }) => theme.spacing.spacing3};
   }
@@ -102,7 +102,7 @@ const WrongNoteListHeader = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing6};
   transition: background-color 0.2s ease-in-out;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none; /* 모바일에서 헤더 숨김 */
   }
 `;

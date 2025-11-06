@@ -10,8 +10,6 @@ import { clearToken } from '@/shared/utils/tokenManager';
 import { administratorApi } from '@/shared/api/axiosClient';
 // 에셋
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
-// 상수
-import { MIN_HEIGHT } from '@/shared/config/constants';
 import { MENUS } from '@/shared/config/constants';
 import { ROUTES } from '@/app/routePaths';
 
@@ -22,7 +20,6 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   left: 0;
   width: 240px;
   height: 100vh;
-  min-height: ${MIN_HEIGHT};
 
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
@@ -35,7 +32,7 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
 
   background-color: ${({ theme }) => theme.colors.gray.gray0};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: 100%;
     height: 64px;
     min-height: 64px;
@@ -64,7 +61,7 @@ const SideBarHeader = styled.header`
   align-items: center;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none;
   }
 `;
@@ -75,7 +72,7 @@ const SideBarHeaderItemWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     flex-direction: column;
     gap: ${({ theme }) => theme.spacing.spacing1};
   }
@@ -84,7 +81,7 @@ const SideBarHeaderItemWrapper = styled.div`
 const IconTitleWrapper = styled.div`
   display: flex;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     align-items: center;
   }
 `;
@@ -95,7 +92,7 @@ const ItemTitleWrapper = styled.div`
   flex-direction: column;
   margin-left: ${({ theme }) => theme.spacing.spacing1};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none; /* 모바일에서 텍스트 숨김 */
   }
 `;
@@ -116,7 +113,7 @@ const SideBarDescription = styled.p`
 const ToggleButton = styled.div`
   cursor: pointer;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none; /* 모바일에서 접기 버튼 숨김 */
   }
 `;
@@ -127,7 +124,7 @@ const SideBarMain = styled.div`
   flex: 1;
   padding: ${({ theme }) => theme.spacing.spacing5};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: auto;
     height: 100%;
     flex: 1;
@@ -144,7 +141,7 @@ const SideBarNav = styled.nav`
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     flex-direction: row;
     gap: ${({ theme }) => theme.spacing.spacing1};
     width: 100%;
@@ -170,7 +167,7 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
       active ? theme.colors.gray.gray3 : theme.colors.gray.gray1};
   }
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     margin-bottom: 0;
     padding: ${({ theme }) => theme.spacing.spacing1};
     flex-direction: column;
@@ -188,7 +185,7 @@ const SideBarNavTxt = styled.p`
 
   margin-left: ${({ theme }) => theme.spacing.spacing2};
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     margin-left: 0;
     font-size: 10px;
     line-height: 1.2;
@@ -206,7 +203,7 @@ const SideBarUserInfo = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: auto;
     height: 100%;
     border-top: none;
@@ -222,7 +219,7 @@ const SideBarUserInfoItemWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     flex-direction: column;
     justify-content: center;
     gap: ${({ theme }) => theme.spacing.spacing2};
@@ -233,7 +230,7 @@ const SideBarUserInfoAvatarTextWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     flex-direction: column;
     gap: ${({ theme }) => theme.spacing.spacing2};
   }
@@ -254,13 +251,10 @@ const SideBarUserInfoAvatar = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-
-  @media (max-width: 1050px) {
+  pointer-events: none;
+  @media (max-width: 1050px), (max-height: 800px) {
     cursor: pointer;
-  }
-
-  @media (min-width: 1051px) {
-    pointer-events: none;
+    pointer-events: auto;
   }
 `;
 
@@ -270,7 +264,7 @@ const SideBarUserInfoTextWrapper = styled.div`
   margin-left: ${({ theme }) => theme.spacing.spacing2};
   width: 145px;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none;
     margin-left: 0;
     width: auto;
@@ -309,7 +303,7 @@ const DropdownWrapper = styled.div`
   min-width: 120px;
   z-index: 1000;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     bottom: 100%;
     top: auto;
     margin-bottom: 8px;
@@ -352,7 +346,7 @@ const SettingsIconWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     display: none;
   }
 `;

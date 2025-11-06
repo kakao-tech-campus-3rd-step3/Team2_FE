@@ -12,7 +12,7 @@ const RightSide = styled.div`
   justify-content: center;
   padding: 2rem;
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: 100%;
     min-height: 100vh;
     padding: 2rem 1.5rem;
@@ -25,7 +25,7 @@ const Card = styled.div`
   padding: 2rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 
-  @media (max-width: 1050px) {
+  @media (max-width: 1050px), (max-height: 800px) {
     width: 100%;
     max-width: 500px;
     padding: 1.5rem;
