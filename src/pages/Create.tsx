@@ -1,15 +1,20 @@
+// External libraries
 import { useState, useCallback } from 'react';
-import styled from '@emotion/styled';
 import { useOutletContext } from 'react-router-dom';
+import styled from '@emotion/styled';
+
+// Feature components & types
+import SelectPdf from '@/features/create/innerPages/SelectPdf';
+import ChooseType from '@/features/create/innerPages/ChooseType';
+import CreateSummary from '@/features/create/innerPages/CreateSummary';
+import CreateRequest from '@/features/create/innerPages/CreateRequest';
+import NavigationButtons from '@/features/create/components/NavigationButtons';
+import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
+
+// Shared components
 import PageLayout from '@/shared/components/Layout/PageLayout';
 import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
-import SelectPdf from '@/features/create/innerPages/SelectPdf';
-import CreateSummary from '@/features/create/innerPages/CreateSummary';
-import NavigationButtons from '@/features/create/components/NavigationButtons';
-import CreateRequest from '@/features/create/innerPages/CreateRequest';
 import Spacer from '@/shared/components/Spacer';
-import ChooseType from '@/features/create/innerPages/ChooseType';
-import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
 
 const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
 const Container = styled.div`
