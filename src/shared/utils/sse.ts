@@ -24,10 +24,9 @@ export class NotificationSse {
       throw new Error('[SSE] 인증 토큰이 없어 SSE 연결을 생성할 수 없습니다.');
     }
 
-    this.eventSource = new EventSourcePolyfill(SSE_SUB_URL, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const urlWithToken = `${SSE_SUB_URL}?token=${token}`;
+
+    this.eventSource = new EventSourcePolyfill(urlWithToken, {
       withCredentials: true,
       heartbeatTimeout: 120000,
     });

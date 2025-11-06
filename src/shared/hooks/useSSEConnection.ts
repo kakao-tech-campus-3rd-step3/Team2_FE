@@ -1,19 +1,28 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NotificationSse } from '@/shared/utils/sse';
-import { getToken } from '@/shared/utils/tokenManager';
 import { showToast } from '../utils/toast';
+import { useAuth } from '@/app/auth/useAuth';
 
 export const useSSEConnection = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const esRef = useRef<NotificationSse | null>(null);
   const [questionSetReady, setQuestionSetReady] = useState<boolean>(false);
   const [questionSetId, setQuestionSetId] = useState<number>(0);
 
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      // 토큰이 없으면 SSE 연결을 시도하지 않음
+    // 1. 인증되지 않았으면 아무것도 하지 않고, 기존 연결이 있다면 정리한다.
+    if (!isAuthenticated) {
+      if (esRef.current) {
+        esRef.current.close();
+        esRef.current = null;
+      }
+      return;
+    }
+
+    // 2. 이미 연결이 존재하면 중복 생성을 방지한다.
+    if (esRef.current) {
       return;
     }
 
@@ -63,7 +72,7 @@ export const useSSEConnection = () => {
       console.error = originalError; // console.error 원래대로 복원
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthenticated]);
 
   const closeConnection = () => {
     if (esRef.current) {
