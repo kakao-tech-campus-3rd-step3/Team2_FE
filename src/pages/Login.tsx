@@ -13,7 +13,7 @@ const Container = styled.div`
   min-height: 100dvh;
   background-color: ${({ theme }) => theme.colors.gray.gray0};
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px) {
     flex-direction: column;
   }
 `;
