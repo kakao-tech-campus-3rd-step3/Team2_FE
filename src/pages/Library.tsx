@@ -640,11 +640,11 @@ const Library = () => {
                 <FolderSelectLabel>폴더 이동</FolderSelectLabel>
                 <FolderSelect
                   disabled={isSelectedCellPending}
-                  defaultValue={selectedFolderId ?? ''}
+                  value={selectedCell?.commonFolderId ?? selectedFolderId ?? ''}
                   title={selectedFolderName}
                   onChange={(e) => {
                     const targetFolderId = Number(e.target.value);
-                    if (targetFolderId !== selectedFolderId) {
+                    if (targetFolderId !== selectedCell?.commonFolderId) {
                       handleMenuMoveToFolder(targetFolderId);
                     }
                   }}
