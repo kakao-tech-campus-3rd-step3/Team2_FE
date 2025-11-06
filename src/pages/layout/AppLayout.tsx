@@ -17,7 +17,7 @@ const AppLayoutWrapper = styled.div`
   display: flex;
   overflow: hidden;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     min-width: 100%;
     height: 100vh;
     flex-direction: column;
@@ -36,7 +36,7 @@ const AppLayoutVertical = styled.div<{ isOpen: boolean }>`
   margin-left: ${({ isOpen }) => (isOpen ? '240px' : '0')};
   transition: margin-left 0.4s ease;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     margin-left: 0;
     margin-top: 0;
     margin-bottom: 64px;
@@ -53,7 +53,7 @@ const Main = styled.div`
   flex: 1;
   height: calc(100% - 76px);
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     min-width: unset;
     width: 100%;
     height: 100%;

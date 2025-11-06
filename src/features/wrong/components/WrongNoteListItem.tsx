@@ -15,7 +15,7 @@ const WrongNoteListItemWrapper = styled.div`
     background-color: ${({ theme }) => theme.colors.gray.gray2};
   }
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -28,7 +28,7 @@ const WrongNoteInfoTitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
   }
 `;
@@ -53,7 +53,7 @@ const WrongCount = styled.span`
   line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
   text-align: center;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     text-align: left;
     display: none;
   }
@@ -66,7 +66,7 @@ const QuestionSetType = styled.span`
   border-radius: ${({ theme }) => theme.radius.radius2};
   text-align: center;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     text-align: left;
     display: none;
   }
@@ -77,7 +77,7 @@ const RetryBtnWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
     justify-content: stretch;
   }
@@ -93,7 +93,7 @@ const RetryBtn = styled.button`
   width: 100px;
   text-align: center;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
   }
 `;
@@ -101,7 +101,7 @@ const RetryBtn = styled.button`
 const MobileInfoRow = styled.div`
   display: none;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     display: flex;
     flex-wrap: wrap;
     gap: ${({ theme }) => theme.spacing.spacing3};

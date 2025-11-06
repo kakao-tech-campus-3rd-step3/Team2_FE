@@ -16,7 +16,7 @@ const QuestionAreaWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius2};
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     margin-right: 0;
   }
 `;

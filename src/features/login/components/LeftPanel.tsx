@@ -10,7 +10,7 @@ const LeftSide = styled.div`
   justify-content: center;
   padding: 2rem;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
     min-height: auto;
     padding: 3rem 1.5rem;
@@ -21,7 +21,7 @@ const LeftContent = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
     max-width: 500px;
   }

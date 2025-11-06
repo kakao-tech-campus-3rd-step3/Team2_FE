@@ -13,7 +13,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     padding: ${({ theme }) => theme.spacing.spacing4};
     justify-content: flex-start;
     padding-top: ${({ theme }) => theme.spacing.spacing6};
@@ -30,7 +30,7 @@ const InfoBox = styled.div`
   border-radius: ${({ theme }) => theme.radius.radius2};
   background-color: ${({ theme }) => theme.colors.gray.gray1};
 
-  @media (max-width: 1050px), (max-height: 800px) {
+  @media (max-width: 1050px), (max-height: 400px) {
     width: 100%;
     max-width: 500px;
     padding: ${({ theme }) => theme.spacing.spacing3};
