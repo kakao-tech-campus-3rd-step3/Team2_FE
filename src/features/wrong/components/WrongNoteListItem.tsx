@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-// import type { WrongNoteSetResponse } from '@/features/wrong/types/wrongNote';
 import { useNavigate } from 'react-router-dom';
 const WrongNoteListItemWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing6};

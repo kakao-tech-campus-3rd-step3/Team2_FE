@@ -1,10 +1,14 @@
+// External libraries
 import styled from '@emotion/styled';
-import WrongNoteListItem from '@/features/wrong/components/WrongNoteListItem';
+
+// feature components & hooks
 import SearchBar from '@/features/wrong/components/SearchBar';
+import WrongNoteTable from '@/features/wrong/components/WrongNoteTable';
 import { useWrongNoteFilter } from '@/features/wrong/hooks/useWrongNoteFilter';
 
-import Spinner from '@/shared/components/Spinner';
+// Shared components
 import FolderList from '@/shared/components/FolderList';
+import Spinner from '@/shared/components/Spinner';
 
 const WrongWrapper = styled.div`
   display: flex;
@@ -54,38 +58,6 @@ const WrongPageDescription = styled.p`
   text-align: left;
 `;
 
-// 오답노트 리스트 부분
-const WrongNoteList = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: ${({ theme }) => theme.radius.radius4};
-  background-color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-`;
-
-const WrongNoteListHeader = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr;
-  align-items: center;
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing6};
-  transition: background-color 0.2s ease-in-out;
-
-  @media (max-width: 1050px), (max-height: 400px) {
-    display: none;
-  }
-`;
-
-const WrongNoteListHeaderColumn = styled.span`
-  font-weight: 600;
-  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
-
-  &:not(:first-of-type) {
-    text-align: center;
-  }
-`;
-
 function Wrong() {
   const {
     searchTerm,
@@ -124,17 +96,7 @@ function Wrong() {
           addFolderDisabled={true}
           rightClickDisabled={true}
         />
-        <WrongNoteList>
-          <WrongNoteListHeader>
-            <WrongNoteListHeaderColumn>문제집</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>오답 수</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>유형</WrongNoteListHeaderColumn>
-            <WrongNoteListHeaderColumn>오답노트</WrongNoteListHeaderColumn>
-          </WrongNoteListHeader>
-          {filteredQuestionSets?.map((item) => (
-            <WrongNoteListItem key={item.questionSetId} item={item} />
-          ))}
-        </WrongNoteList>
+        <WrongNoteTable questionSets={filteredQuestionSets} />
       </ContentWrapper>
     </WrongWrapper>
   );
