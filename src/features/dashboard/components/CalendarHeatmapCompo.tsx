@@ -27,6 +27,19 @@ const CalendarHeatmapWrapper = styled.div`
   .react-calendar-heatmap .color-scale-3 {
     fill: ${({ theme }) => theme.colors.green.green6};
   }
+
+  @media (max-width: 1050px) {
+    overflow-x: auto;
+    
+    .react-calendar-heatmap {
+      font-size: 12px;
+      min-width: 800px;
+    }
+
+    .react-calendar-heatmap svg {
+      min-height: 150px;
+    }
+  }
 `;
 
 const CalendarHeatmapTitleWrapper = styled.div`
@@ -74,6 +87,7 @@ function CalendarHeatmapCompo({ values, startDate, endDate }: Props) {
         startDate={new Date(startDate)}
         endDate={new Date(endDate)}
         values={values}
+        gutterSize={0.5}
         titleForValue={(value: unknown) => {
           const v = value as DailyStatItem | undefined;
           if (!v) {
