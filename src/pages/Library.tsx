@@ -14,6 +14,7 @@ import RightClickMenuDivider from '@/features/library/components/RightClickMenu/
 import {
   type QuestionType,
   type QuestionSetContentType,
+  type LearningStatus,
 } from '@/features/library/types/questionSetResponse';
 import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
 
@@ -75,7 +76,7 @@ const ListBox = styled.div`
 
 const ListRow = styled.div<{ isDragging?: boolean; isDisabled?: boolean }>`
   display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 0.8fr 1.2fr;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 0.8fr 1.2fr;
   align-items: center;
   width: 100%;
   padding: 16px 24px;
@@ -359,6 +360,30 @@ const DesktopOnly = styled(ListCell)`
   @media (max-width: 1050px), (max-height: 400px) {
     display: none;
   }
+`;
+
+const LEARNING_STATUS_TEXT: Record<LearningStatus, string> = {
+  NOT_STARTED: '대기',
+  IN_PROGRESS: '진행 중',
+  COMPLETED: '완료',
+};
+
+const LEARNING_STATUS_STYLES: Record<LearningStatus, { background: string; color: string }> = {
+  NOT_STARTED: { background: '#f3f4f6', color: '#4b5563' }, // gray
+  IN_PROGRESS: { background: '#fffbeb', color: '#d97706' }, // amber
+  COMPLETED: { background: '#ecfdf5', color: '#059669' }, // green
+};
+
+const LearningStatusBadge = styled.span<{ status: LearningStatus }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: ${({ theme }) => theme.radius.radius2};
+  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
+  font-weight: 600;
+  background-color: ${({ status }) => LEARNING_STATUS_STYLES[status].background};
+  color: ${({ status }) => LEARNING_STATUS_STYLES[status].color};
 `;
 
 const TYPE_MAP: Record<QuestionType, string> = {
@@ -714,6 +739,7 @@ const Library = () => {
             <HeaderCell>문제 수</HeaderCell>
             <HeaderCell>생성일</HeaderCell>
             <HeaderCell>유형</HeaderCell>
+            <HeaderCell>학습 상태</HeaderCell>
             <HeaderCell>폴더</HeaderCell>
             <HeaderCell>문제풀기</HeaderCell>
           </ListRow>
@@ -789,6 +815,11 @@ const Library = () => {
                   <DesktopOnly isDisabled={isPending}>
                     {TYPE_MAP[item.questionType] ?? '생성 실패'}
                   </DesktopOnly>
+                  <DesktopOnly isDisabled={isPending}>
+                    <LearningStatusBadge status={item.learningStatus}>
+                      {LEARNING_STATUS_TEXT[item.learningStatus]}
+                    </LearningStatusBadge>
+                  </DesktopOnly>
                   <DesktopOnly
                     align="left"
                     isDisabled={isPending}
@@ -811,6 +842,9 @@ const Library = () => {
                     <MobileInfoItem>문제 수: {item.questionCount}개</MobileInfoItem>
                     <MobileInfoItem>
                       유형: {TYPE_MAP[item.questionType] ?? '생성 실패'}
+                    </MobileInfoItem>
+                    <MobileInfoItem>
+                      학습 상태: {LEARNING_STATUS_TEXT[item.learningStatus]}
                     </MobileInfoItem>
                     <MobileInfoItem>
                       생성일: {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
