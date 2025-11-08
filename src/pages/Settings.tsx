@@ -109,7 +109,7 @@ const Settings = () => {
           <PullItLogo />
           <Spacer width={'10px'} />
         </LogoContainer>
-        <Copyright>&copy; {new Date().getFullYear()} FULL IT. All rights reserved.</Copyright>
+        <Copyright>&copy; {new Date().getFullYear()} PULL IT. All rights reserved.</Copyright>
       </InfoBox>
     </Container>
   );
