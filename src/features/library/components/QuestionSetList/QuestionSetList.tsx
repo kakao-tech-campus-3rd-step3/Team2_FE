@@ -14,7 +14,10 @@ export interface QuestionSetListProps {
   draggedItem: QuestionSetContentType | null;
   onDragStart: (event: DragEvent<HTMLDivElement>, item: QuestionSetContentType) => void;
   onDragEnd: () => void;
-  onContextMenu: (event: ReactMouseEvent<HTMLDivElement, MouseEvent>, item: QuestionSetContentType) => void;
+  onContextMenu: (
+    event: ReactMouseEvent<HTMLDivElement, MouseEvent>,
+    item: QuestionSetContentType,
+  ) => void;
   onTouchStart: (event: TouchEvent<HTMLDivElement>, item: QuestionSetContentType) => void;
   onTouchEnd: () => void;
   onTouchMove: () => void;
@@ -153,7 +156,9 @@ const QuestionSetList = ({
               <FolderCellContent>
                 <FolderColorDot
                   color={
-                    item.commonFolderId ? getFolderColor(item.commonFolderId).bg : DEFAULT_FOLDER_COLOR
+                    item.commonFolderId
+                      ? getFolderColor(item.commonFolderId).bg
+                      : DEFAULT_FOLDER_COLOR
                   }
                 />
                 <FolderText>{item.commonFolderName ?? '-'}</FolderText>
@@ -174,7 +179,9 @@ const QuestionSetList = ({
             <MobileFolderInfo>
               <FolderColorDot
                 color={
-                  item.commonFolderId ? getFolderColor(item.commonFolderId).bg : DEFAULT_FOLDER_COLOR
+                  item.commonFolderId
+                    ? getFolderColor(item.commonFolderId).bg
+                    : DEFAULT_FOLDER_COLOR
                 }
               />
               <span title={item.commonFolderName ?? undefined}>
