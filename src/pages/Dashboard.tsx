@@ -87,10 +87,17 @@ function Dashboard() {
   });
 
   const today = new Date();
-  const to = today.toISOString().slice(0, 10);
+  const toYear = today.getFullYear();
+  const toMonth = String(today.getMonth() + 1).padStart(2, '0');
+  const toDay = String(today.getDate()).padStart(2, '0');
+  const to = `${toYear}-${toMonth}-${toDay}`;
+
   const fromDate = new Date(today);
   fromDate.setFullYear(fromDate.getFullYear() - 1);
-  const from = fromDate.toISOString().slice(0, 10);
+  const fromYear = fromDate.getFullYear();
+  const fromMonth = String(fromDate.getMonth() + 1).padStart(2, '0');
+  const fromDay = String(fromDate.getDate()).padStart(2, '0');
+  const from = `${fromYear}-${fromMonth}-${fromDay}`;
 
   const { data: dailyValues } = useQuery<DailyStatsResponse>({
     queryKey: ['dailyStatsValues', memberId, from, to],
