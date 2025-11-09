@@ -66,6 +66,17 @@
 > **잔디 그래프**  
 > 최근 1년간의 학습 현황을 시각화하여 학습 동기 부여
 
+<table>
+<tr>
+<td width="50%" align="center"><b>🖥️ PC 뷰</b></td>
+<td width="50%" align="center"><b>📱 모바일 뷰</b></td>
+</tr>
+<tr>
+<td width="50%"><img src="./public/gif/dashboard_pc.gif" alt="대시보드 PC" /></td>
+<td width="50%"><img src="./public/gif/dashboard_mobile.gif" alt="대시보드 모바일" /></td>
+</tr>
+</table>
+
 <br/>
 
 ### 2. 문제집 생성 - AI 자동 생성
@@ -78,6 +89,17 @@
 
 > **실시간 알림(SSE)**  
 > 문제 생성 중에도 다른 페이지 이용 가능, 완료 시 알림 제공
+
+<table>
+<tr>
+<td width="50%" align="center"><b>🖥️ PC 뷰</b></td>
+<td width="50%" align="center"><b>📱 모바일 뷰</b></td>
+</tr>
+<tr>
+<td width="50%"><img src="./public/gif/create_pc.gif" alt="문제집 생성 PC" /></td>
+<td width="50%"><img src="./public/gif/create_mobile.gif" alt="문제집 생성 모바일" /></td>
+</tr>
+</table>
 
 <br/>
 
@@ -95,6 +117,17 @@
 > **반복 학습**  
 > 생성된 문제집에 언제든 여러 번 접근 가능
 
+<table>
+<tr>
+<td width="50%" align="center"><b>🖥️ PC 뷰</b></td>
+<td width="50%" align="center"><b>📱 모바일 뷰</b></td>
+</tr>
+<tr>
+<td width="50%"><img src="./public/gif/solve_pc.gif" alt="문제 풀이 PC" /></td>
+<td width="50%"><img src="./public/gif/solve_mobile.gif" alt="문제 풀이 모바일" /></td>
+</tr>
+</table>
+
 <br/>
 
 ### 4. 나의 문제집 - 체계적 관리
@@ -107,6 +140,17 @@
 
 > **전체 문제 제공**  
 > 풀기 버튼으로 전체 문제 테스트 진행
+
+<table>
+<tr>
+<td width="50%" align="center"><b>🖥️ PC 뷰</b></td>
+<td width="50%" align="center"><b>📱 모바일 뷰</b></td>
+</tr>
+<tr>
+<td width="50%"><img src="./public/gif/library_pc.gif" alt="나의 문제집 PC" /></td>
+<td width="50%"><img src="./public/gif/library_mobile.gif" alt="나의 문제집 모바일" /></td>
+</tr>
+</table>
 
 <br/>
 
@@ -123,6 +167,17 @@
 
 > **효과적인 학습**  
 > 약점만 집중 공략하여 학습 효율 극대화
+
+<table>
+<tr>
+<td width="50%" align="center"><b>🖥️ PC 뷰</b></td>
+<td width="50%" align="center"><b>📱 모바일 뷰</b></td>
+</tr>
+<tr>
+<td width="50%"><img src="./public/gif/wrong_pc.gif" alt="오답노트 PC" /></td>
+<td width="50%"><img src="./public/gif/wrong_mobile.gif" alt="오답노트 모바일" /></td>
+</tr>
+</table>
 
 <!-- 주요 기능 -->
 
