@@ -31,8 +31,8 @@ export interface QuestionSetListProps {
 
 const LEARNING_STATUS_TEXT: Record<LearningStatus, string> = {
   NOT_STARTED: '학습 전',
-  IN_PROGRESS: '진행 중',
-  COMPLETED: '완료',
+  IN_PROGRESS: '학습 중',
+  COMPLETED: '학습 완료',
 };
 
 const LEARNING_STATUS_STYLES: Record<LearningStatus, { background: string; color: string }> = {
