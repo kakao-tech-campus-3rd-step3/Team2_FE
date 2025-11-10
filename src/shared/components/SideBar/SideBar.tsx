@@ -1,18 +1,17 @@
-import BrainIconWithBadge from '@/shared/assets/IconBadge';
-import { MIN_HEIGHT } from '@/shared/config/constants';
+// 필수 라이브러리
 import styled from '@emotion/styled';
-import { useNavigate, NavLink } from 'react-router-dom';
-import { ROUTES } from '@/app/routePaths';
-import { useAuth } from '@/app/auth/useAuth';
-
-import { Sidebar, LayoutDashboard, Plus, BookOpen, CircleX, Settings, LogOut } from 'lucide-react';
-
-import { MENUS } from '@/shared/config/constants';
 import { useState } from 'react';
-
+import { useNavigate, NavLink } from 'react-router-dom';
+import { Sidebar, LayoutDashboard, Plus, BookOpen, CircleX, Settings, LogOut } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+// 유저 정보
+import { useAuth } from '@/app/auth/useAuth';
 import { clearToken } from '@/shared/utils/tokenManager';
 import { administratorApi } from '@/shared/api/axiosClient';
-import { useLocation } from 'react-router-dom';
+// 에셋
+import BrainIconWithBadge from '@/shared/assets/IconBadge';
+import { MENUS } from '@/shared/config/constants';
+import { ROUTES } from '@/app/routePaths';
 
 // 사이드바
 const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
@@ -20,8 +19,7 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   top: 0;
   left: 0;
   width: 240px;
-  height: 100dvh;
-  min-height: ${MIN_HEIGHT};
+  height: 100vh;
 
   border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
@@ -31,6 +29,25 @@ const SideBarWrapper = styled.nav<{ isOpen: boolean }>`
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
   z-index: 100;
   transition: transform 0.4s ease;
+
+  background-color: ${({ theme }) => theme.colors.gray.gray0};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    width: 100%;
+    height: 64px;
+    min-height: 64px;
+    border-right: none;
+    border-top: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    border-bottom: none;
+    flex-direction: row;
+    transform: translateY(0);
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    background-color: ${({ theme }) => theme.colors.gray.gray0};
+  }
 `;
 
 // 사이드바 헤더
@@ -43,6 +60,10 @@ const SideBarHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    display: none;
+  }
 `;
 
 const SideBarHeaderItemWrapper = styled.div`
@@ -50,10 +71,19 @@ const SideBarHeaderItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.spacing1};
+  }
 `;
 
 const IconTitleWrapper = styled.div`
   display: flex;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    align-items: center;
+  }
 `;
 
 const ItemTitleWrapper = styled.div`
@@ -61,6 +91,10 @@ const ItemTitleWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   margin-left: ${({ theme }) => theme.spacing.spacing1};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
 `;
 
 const SideBarMainTitle = styled.h1`
@@ -76,16 +110,43 @@ const SideBarDescription = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray7};
 `;
 
+const ToggleButton = styled.div`
+  cursor: pointer;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    display: none; /* 모바일에서 접기 버튼 숨김 */
+  }
+`;
+
 // 사이드바 메인
 const SideBarMain = styled.div`
   width: 100%;
   flex: 1;
   padding: ${({ theme }) => theme.spacing.spacing5};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    width: auto;
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: ${({ theme }) => theme.spacing.spacing2};
+    border-right: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 `;
 
 const SideBarNav = styled.nav`
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    flex-direction: row;
+    gap: ${({ theme }) => theme.spacing.spacing1};
+    width: 100%;
+    justify-content: space-around;
+  }
 `;
 
 const SideBarNavItem = styled.div<{ active: boolean }>`
@@ -105,6 +166,16 @@ const SideBarNavItem = styled.div<{ active: boolean }>`
     background-color: ${({ active, theme }) =>
       active ? theme.colors.gray.gray3 : theme.colors.gray.gray1};
   }
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    margin-bottom: 0;
+    padding: ${({ theme }) => theme.spacing.spacing1};
+    flex-direction: column;
+    gap: 2px;
+    justify-content: center;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
 `;
 
 const SideBarNavTxt = styled.p`
@@ -113,6 +184,14 @@ const SideBarNavTxt = styled.p`
   line-height: ${({ theme }) => theme.typography.label1Regular.lineHeight};
 
   margin-left: ${({ theme }) => theme.spacing.spacing2};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    margin-left: 0;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+  }
 `;
 
 // 사이드바 유저 정보
@@ -123,6 +202,15 @@ const SideBarUserInfo = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   display: flex;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    width: auto;
+    height: 100%;
+    border-top: none;
+    border-left: 1px solid ${({ theme }) => theme.colors.gray.gray4};
+    border-bottom: none;
+    padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing5};
+  }
 `;
 
 const SideBarUserInfoItemWrapper = styled.div`
@@ -130,11 +218,22 @@ const SideBarUserInfoItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    flex-direction: column;
+    justify-content: center;
+    gap: ${({ theme }) => theme.spacing.spacing2};
+  }
 `;
 
 const SideBarUserInfoAvatarTextWrapper = styled.div`
   display: flex;
   align-items: center;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.spacing2};
+  }
 `;
 
 const SideBarUserInfoAvatar = styled.div`
@@ -146,9 +245,17 @@ const SideBarUserInfoAvatar = styled.div`
   border-radius: ${({ theme }) => theme.radius.radiusFull};
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  pointer-events: none;
+  @media (max-width: 1050px), (max-height: 400px) {
+    cursor: pointer;
+    pointer-events: auto;
+  }
 `;
 
 const SideBarUserInfoTextWrapper = styled.div`
@@ -156,6 +263,12 @@ const SideBarUserInfoTextWrapper = styled.div`
   flex-direction: column;
   margin-left: ${({ theme }) => theme.spacing.spacing2};
   width: 145px;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    display: none;
+    margin-left: 0;
+    width: auto;
+  }
 `;
 
 const SideBarUserInfoName = styled.p`
@@ -182,13 +295,21 @@ const DropdownWrapper = styled.div`
   position: absolute;
   bottom: 100%;
   right: 0;
-  margin-top: 8px;
+  margin-bottom: 8px;
   background: white;
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-width: 120px;
   z-index: 1000;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    bottom: 100%;
+    top: auto;
+    margin-bottom: 8px;
+    margin-top: 0;
+    right: 0;
+  }
 `;
 
 const DropdownItem = styled.div`
@@ -198,16 +319,38 @@ const DropdownItem = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 
   &:hover {
     background: ${({ theme }) => theme.colors.gray.gray1};
   }
+
+  &:first-of-type {
+    border-radius: 8px 8px 0 0;
+  }
+
+  &:last-of-type {
+    border-radius: 0 0 8px 8px;
+  }
+
   &.danger {
     color: ${({ theme }) => theme.colors.red.red4};
   }
 `;
 
 const DropdownItemTxt = styled.span``;
+
+const SettingsIconWrapper = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    display: none;
+  }
+`;
+
 interface SideBarProps {
   isOpen: boolean;
   closeSideBar: () => void;
@@ -215,10 +358,10 @@ interface SideBarProps {
 }
 
 function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
-  const { userInfo } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // 설정 드롭다운 열림, 닫힘 상태
   const navigate = useNavigate();
   const location = useLocation();
+  const { userInfo } = useAuth(); // 유저 정보 불러오기
 
   const handleLogout = async () => {
     try {
@@ -234,7 +377,6 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
   };
 
   const path = location.pathname;
-
   let selectedMenu = '페이지';
 
   if (path === ROUTES.CREATE) {
@@ -259,8 +401,9 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
               <SideBarDescription>AI 학습 도구</SideBarDescription>
             </ItemTitleWrapper>
           </IconTitleWrapper>
-          {/* TODO: 이 부분 페이지 컴포넌트랑 이름이 같네? 문제가 생길수도? */}
-          <Sidebar size={16} onClick={closeSideBar} />
+          <ToggleButton>
+            <Sidebar size={16} onClick={closeSideBar} />
+          </ToggleButton>
         </SideBarHeaderItemWrapper>
       </SideBarHeader>
 
@@ -300,19 +443,17 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
       <SideBarUserInfo>
         <SideBarUserInfoItemWrapper style={{ position: 'relative' }}>
           <SideBarUserInfoAvatarTextWrapper>
-            <SideBarUserInfoAvatar>
+            <SideBarUserInfoAvatar onClick={() => setOpen((prev) => !prev)}>
               {userInfo?.name ? userInfo.name.charAt(0) : '?'}
             </SideBarUserInfoAvatar>
             <SideBarUserInfoTextWrapper>
               <SideBarUserInfoName>{userInfo?.name || '로그인 필요'}</SideBarUserInfoName>
               <SideBarUserInfoEmail>{userInfo?.email || '로그인 필요'}</SideBarUserInfoEmail>
             </SideBarUserInfoTextWrapper>
+            <SettingsIconWrapper>
+              <Settings size={16} onClick={() => setOpen((prev) => !prev)} />
+            </SettingsIconWrapper>
           </SideBarUserInfoAvatarTextWrapper>
-          <Settings
-            size={16}
-            onClick={() => setOpen((prev) => !prev)}
-            style={{ cursor: 'pointer' }}
-          />
 
           {open && (
             <DropdownWrapper>

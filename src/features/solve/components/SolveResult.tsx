@@ -4,10 +4,8 @@ import type { QuestionSet } from '@/features/solve/types/question';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import DotLottiePlayer from '@aarsteinmedia/dotlottie-react';
-import LoadingDots from '@/shared/assets/lotties/loading_dots.lottie';
 import type { MarkingRequest } from '@/features/solve/types/MarkingRequest';
-
+import Spinner from '@/shared/components/Spinner';
 const SolveResultTitle = styled.h1`
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
@@ -103,7 +101,7 @@ const RetryButton = styled.button`
   color: ${({ theme }) => theme.colors.gray.gray10};
 `;
 
-const GoToDashboardButton = styled.button`
+const GoToAnswerButton = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   border-radius: ${({ theme }) => theme.radius.radius2};
   padding: ${({ theme }) => theme.spacing.spacing2};
@@ -132,26 +130,25 @@ function SolveResult({
     // TODO:
     return api.post(url, data);
   };
-  const mutation = useMutation({
+  const { mutate, isPending, isError } = useMutation({
     mutationFn: submitMarking,
     onSuccess: (data) => {
       const res: { correctCount: number } = data.data;
-      const correctCount = res.correctCount; // TODO: backend에서 correctQuestions에 맞은 문제가 아닌 틀린문제의 수를 반환함
+      const correctCount = res.correctCount;
       setCorrectCount(correctCount);
       setScore(Math.round((correctCount / questionLength) * 100));
     },
   });
 
   useEffect(() => {
-    mutation.mutate(solvedCheck);
-  }, []);
+    mutate(solvedCheck);
+  }, [mutate, solvedCheck]);
 
   return (
-    // TODO: 디자인 해주세요
     <>
-      {mutation.isPending ? (
-        <DotLottiePlayer src={LoadingDots} loop autoplay subframe={true} />
-      ) : mutation.isError ? (
+      {isPending ? (
+        <Spinner />
+      ) : isError ? (
         <p>점수 계산에 실패했습니다.</p>
       ) : (
         <>
@@ -190,16 +187,13 @@ function SolveResult({
             </ResultCard>
           </ResultCardsWrapper>
           <ResultActions>
+            <GoToAnswerButton onClick={goExplanationPage}>정답 확인</GoToAnswerButton>
             <Link to="/wrong">
               <ReviewWrongAnswersButton>오답노트 확인</ReviewWrongAnswersButton>
             </Link>
             <Link to="/">
               <RetryButton>다시 생성하기</RetryButton>
             </Link>
-            <Link to="/dashboard">
-              <GoToDashboardButton>대시보드로 이동</GoToDashboardButton>
-            </Link>
-            <GoToDashboardButton onClick={goExplanationPage}>정답 확인</GoToDashboardButton>
           </ResultActions>
         </>
       )}

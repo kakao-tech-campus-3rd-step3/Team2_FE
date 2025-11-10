@@ -9,11 +9,22 @@ const LeftSide = styled.div`
   align-items: center;
   justify-content: center;
   padding: 2rem;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    width: 100%;
+    min-height: auto;
+    padding: 3rem 1.5rem;
+  }
 `;
 
 const LeftContent = styled.div`
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    width: 100%;
+    max-width: 500px;
+  }
 `;
 
 const LogoWrapper = styled.div`

@@ -183,12 +183,23 @@ table {
   border-spacing: 0;
 }
 body {
-  min-width: 1024px;
   min-height: 640px;
   overflow: auto;
 }
+
+@media (min-width: 1051px) {
+  body {
+    min-width: 1024px;
+  }
+}
+
 #root,
 html,
 body {
   height: 100%;
+}
+
+/* react-toastify: hover 시 포인터 커서 보이게 함 */
+.Toastify__toast:hover {
+  cursor: pointer;
 }

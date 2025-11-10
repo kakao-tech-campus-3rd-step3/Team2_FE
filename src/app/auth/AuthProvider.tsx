@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           try {
             await refreshAccessToken();
           } catch {
-            // console.log('리프레시 토큰이 없거나 만료되었습니다');;
+            // 리프레시 토큰이 없거나 만료됨 (정상 동작)
           }
         }
 
@@ -26,8 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (tokenExists) {
           const userData = await getUserInfo();
           setUser(userData);
-        } else {
-          console.log('유효한 토큰이 없어 비로그인 상태로 처리합니다');
         }
       } catch (error) {
         // 사용자 정보 조회 실패 시에만 에러 로그 출력

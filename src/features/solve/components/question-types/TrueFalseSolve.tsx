@@ -2,10 +2,10 @@ import styled from '@emotion/styled';
 import { ArrowLeft } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
 
 import type { QuestionSet } from '@/features/solve/types/question';
 import type { MarkingRequest } from '../../types/MarkingRequest';
+import { showToast } from '@/shared/utils/toast';
 
 const QuestionAreaWrapper = styled.div`
   margin-right: ${({ theme }) => theme.spacing.spacing3};
@@ -15,6 +15,10 @@ const QuestionAreaWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.gray.gray4};
   padding: ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.radius.radius2};
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    margin-right: 0;
+  }
 `;
 
 const QuestionAreaHeader = styled.div`
@@ -33,9 +37,16 @@ const QuestionWrapper = styled.div``;
 
 const QuestionStem = styled.p`
   margin: ${({ theme }) => theme.spacing.spacing8} 0;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
 `;
 
-const OptionList = styled.div``;
+const OptionList = styled.div`
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+`;
 
 const OptionItem = styled.p<{ active?: boolean }>`
   cursor: pointer;
@@ -131,11 +142,10 @@ function TrueFalseSolve({
   const markSolved = (optionText: boolean) => {
     const question = questions.questions.at(currentQuestionIndex - 1);
     if (!question) {
-      toast('문제 id를 찾을 수 없습니다.');
+      showToast('문제 id를 찾을 수 없습니다.');
       return;
     }
 
-    // TDDO: 여기에 문제 타입별로 memberAnswerType을 다르게 줘야함 지금은 테스트용으로 string 넣어둠
     setSolvedCheck((prev) => {
       return [
         ...prev.filter((v) => v.questionId !== question.id),
@@ -162,7 +172,7 @@ function TrueFalseSolve({
       currentQuestionIndex === questions.questions.length &&
       solvedCheck.length !== questions.questions.length
     ) {
-      toast('모든 문제를 체크해야 넘어갈 수 있습니다');
+      showToast('모든 문제를 체크해야 넘어갈 수 있습니다');
     }
   };
 
@@ -219,18 +229,33 @@ function TrueFalseSolve({
         {isExplanationPage && (
           <ExplanationBox>
             <ExplanationBoxTitle>정답 및 해설</ExplanationBoxTitle>
-            <AnswerTxt>정답 : {questions.questions[currentQuestionIndex - 1].answer}</AnswerTxt>
+            <AnswerTxt>
+              정답 : {questions.questions[currentQuestionIndex - 1].answer ? '참' : '거짓'}
+            </AnswerTxt>
             <ExplanationTxt>
               {questions.questions[currentQuestionIndex - 1].explanation}
             </ExplanationTxt>
           </ExplanationBox>
         )}
         <QuestionNavigation>
-          <PrevButton onClick={goPrev} disabled={currentQuestionIndex === 1}>
+          <PrevButton
+            onClick={goPrev}
+            style={{
+              visibility: currentQuestionIndex === 1 ? 'hidden' : 'visible',
+              pointerEvents: currentQuestionIndex === 1 ? 'none' : 'auto',
+            }}
+          >
             <ArrowLeft size={20} />
             이전
           </PrevButton>
-          <NextButton onClick={goNext}>
+          <NextButton
+            onClick={goNext}
+            style={{
+              visibility:
+                currentQuestionIndex === questions.questions.length ? 'hidden' : 'visible',
+              pointerEvents: currentQuestionIndex === questions.questions.length ? 'none' : 'auto',
+            }}
+          >
             다음
             <ArrowRight size={20} />
           </NextButton>

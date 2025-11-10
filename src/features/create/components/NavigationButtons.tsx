@@ -22,11 +22,11 @@ const ButtonBox = styled.div`
 `;
 
 const PrevButton = styled.button<{ disabled?: boolean }>`
-  background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.colors.border.border0};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.gray.gray5 : theme.colors.semantic.primary};
   border-radius: ${({ theme }) => theme.radius.radius1};
   font-size: ${({ theme }) => theme.typography.body2Bold.fontSize};
-  color: ${({ theme, disabled }) => (disabled ? theme.colors.gray.gray5 : theme.colors.gray.gray6)};
+  color: ${({ theme }) => theme.colors.gray.gray0};
   width: 55px;
   padding: 5px;
   font-weight: ${({ theme }) => theme.typography.body2Bold.fontWeight};

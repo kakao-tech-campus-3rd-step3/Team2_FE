@@ -3,7 +3,7 @@ export type QuestionType = 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'SHORT_ANSWER' | '
 
 export interface Question {
   id: number; // 문제집내 각각의 문제 id
-  questionType: string; // TODO: 문제 타입인데 이후 QuestionSet으로 옴겨질수가있음
+  questionType: string; // 문제 타입인데 이후 QuestionSet으로 옴겨질수가있음
   questionText: string; // 질문
   options: string[]; // 항목
   answer: string; // 답
@@ -19,6 +19,6 @@ export interface QuestionSet {
   difficulty: DifficultyType;
   type: QuestionType;
   questionLength: number; // 문제수
-  createTime: string; // ISO 8601 문자열 (예: 2025-09-16T23:41:07.943491)
-  updateTime: string; // ISO 8601 문자열 (예: 2025-09-16T23:41:32.129409)
+  createTime: string;
+  updateTime: string;
 }

@@ -1,22 +1,23 @@
 import styled from '@emotion/styled';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/shared/api/axiosClient';
 import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
 import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
-import { type MyQuestionSetsResponse } from '@/features/library/types/questionSetResponse';
+import { type QuestionSetContentType } from '@/features/library/types/questionSetResponse';
+import { Check, FolderIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { getFolderColor } from '@/shared/constants/folderColors';
 
-interface Folder {
+// 폴더 이름 글자수 제한
+const MAX_LENGTH = 20;
+
+export interface Folder {
   id: number;
   name: string;
   type: 'QUESTION_SET';
+  scope: 'ALL' | 'CUSTOM';
   sortOrder: number;
 }
-
-type QuestionSetStatus = 'PENDING' | 'COMPLETE';
-type QuestionSetContentType = MyQuestionSetsResponse & {
-  status: QuestionSetStatus;
-};
 
 interface FolderListProps {
   folders: Folder[] | undefined;
@@ -24,6 +25,8 @@ interface FolderListProps {
   onFolderSelect: (id: number) => void;
   draggedItem: QuestionSetContentType | null;
   onItemDrop: (folderId: number, questionSetId: number) => void;
+  rightClickDisabled?: boolean;
+  addFolderDisabled?: boolean;
 }
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
@@ -36,6 +39,7 @@ const FolderContainer = styled.div`
   margin-bottom: 16px;
 `;
 
+// 폴더 선택시 강조되는 부분 -FolderTag
 const FolderTag = styled.div<{
   isDragOver?: boolean;
   folderColor: string;
@@ -46,23 +50,39 @@ const FolderTag = styled.div<{
   align-items: center;
   padding: 6px 12px;
   border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ isDragOver, folderColor, folderHoverColor, isActive }) =>
-    isDragOver || isActive ? folderHoverColor : folderColor};
-  border: 1px solid
-    ${({ isDragOver, folderHoverColor, isActive }) =>
-      isDragOver || isActive ? folderHoverColor : 'transparent'};
+  background-color: ${({ isDragOver, folderColor, folderHoverColor }) =>
+    isDragOver ? folderHoverColor : folderColor};
+  border: 1px solid transparent;
   font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
   color: white;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
   user-select: none;
   font-weight: ${({ isActive }) => (isActive ? '700' : '500')};
-  box-shadow: ${({ isActive }) => (isActive ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none')};
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
+
+  /* 선택 시 스타일 강조 */
+  ${({ isActive, folderHoverColor }) =>
+    isActive &&
+    `
+      background-color: ${folderHoverColor};
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
+      filter: brightness(1.1);
+      transform: none;
+  `}
 
   &:hover {
     background-color: ${({ folderHoverColor }) => folderHoverColor};
     border-color: ${({ folderHoverColor }) => folderHoverColor};
     color: white;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -132,30 +152,14 @@ const FolderActionButton = styled.button`
   }
 `;
 
-const FOLDER_COLORS = [
-  { bg: '#3b82f6', hover: '#2563eb' },
-  { bg: '#10b981', hover: '#059669' },
-  { bg: '#8b5cf6', hover: '#7c3aed' },
-  { bg: '#f59e0b', hover: '#d97706' },
-  { bg: '#ec4899', hover: '#db2777' },
-  { bg: '#06b6d4', hover: '#0891b2' },
-  { bg: '#ef4444', hover: '#dc2626' },
-  { bg: '#6366f1', hover: '#4f46e5' },
-  { bg: '#14b8a6', hover: '#0d9488' },
-  { bg: '#f97316', hover: '#ea580c' },
-];
-
-const getFolderColor = (folderId: number) => {
-  const index = folderId % FOLDER_COLORS.length;
-  return FOLDER_COLORS[index];
-};
-
 const FolderList = ({
   folders,
   selectedFolderId,
   onFolderSelect,
   draggedItem,
   onItemDrop,
+  rightClickDisabled,
+  addFolderDisabled,
 }: FolderListProps) => {
   const [dragOverFolderId, setDragOverFolderId] = useState<number | null>(null);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
@@ -164,6 +168,10 @@ const FolderList = ({
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [editingFolderId, setEditingFolderId] = useState<number | null>(null);
   const [editingFolderName, setEditingFolderName] = useState('');
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const addInputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
 
   const [folderMousePoint, setFolderMousePoint] = useState<{
     x: number;
@@ -182,6 +190,31 @@ const FolderList = ({
     setSelectedFolder(folder);
     setIsVisibleFolderMenu(true);
     setFolderMousePoint({ x: e.clientX, y: e.clientY });
+  };
+
+  // 모바일 길게 누르기 이벤트 핸들러
+  const handleFolderTouchStart = (e: React.TouchEvent<HTMLDivElement>, folder: Folder) => {
+    const touch = e.touches[0];
+    const timer = setTimeout(() => {
+      setSelectedFolder(folder);
+      setIsVisibleFolderMenu(true);
+      setFolderMousePoint({ x: touch.clientX, y: touch.clientY });
+    }, 500); // 500ms 길게 누르기
+    setLongPressTimer(timer);
+  };
+
+  const handleFolderTouchEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleFolderTouchMove = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
   };
 
   const createFolderMutation = useMutation({
@@ -219,11 +252,17 @@ const FolderList = ({
 
   const updateFolderNameMutation = useMutation({
     mutationFn: ({ id, name }: { id: number; name: string }) => {
-      if (!name.trim()) {
+      const trimmedName = name.trim();
+      if (!trimmedName) {
         throw new Error('폴더 이름은 비워둘 수 없습니다.');
       }
+
+      if (trimmedName.length > MAX_LENGTH) {
+        throw new Error(`폴더 이름은 ${MAX_LENGTH}자 이내여야 합니다.`);
+      }
+
       return api.patch(`/common-folders/${id}`, {
-        name,
+        name: trimmedName,
         type: QUESTION_SET_TYPE,
       });
     },
@@ -266,8 +305,13 @@ const FolderList = ({
   };
 
   const handleConfirmAddFolder = () => {
+    const trimmedName = newFolderName.trim();
     if (!newFolderName.trim()) {
       alert('폴더 이름을 입력해주세요.');
+      return;
+    }
+    if (trimmedName.length > MAX_LENGTH) {
+      alert(`폴더 이름은 ${MAX_LENGTH}자 이내로 입력해주세요.`);
       return;
     }
     createFolderMutation.mutate(newFolderName.trim());
@@ -285,15 +329,7 @@ const FolderList = ({
     setIsVisibleFolderMenu(false);
 
     try {
-      const response = await api.get<{ questionSetCount: number }>(
-        `/common-folders/${selectedFolder.id}/delete-warning`,
-      );
-
-      const questionSetCount = response.data.questionSetCount;
-      const confirmMessage =
-        questionSetCount > 0
-          ? `'${selectedFolder.name}' 폴더에 ${questionSetCount}개의 문제집이 있습니다.\n정말로 삭제하시겠습니까?`
-          : `'${selectedFolder.name}' 폴더를 정말 삭제하시겠습니까?`;
+      const confirmMessage = `'${selectedFolder.name}' 폴더를 정말 삭제하시겠습니까?`;
 
       if (window.confirm(confirmMessage)) {
         deleteFolderMutation.mutate(selectedFolder.id);
@@ -311,26 +347,24 @@ const FolderList = ({
     });
   };
 
+  const isDisabled = selectedFolder?.scope === 'ALL';
+
   return (
     <>
-      <RightClickMenu
-        isVisible={isVisibleFolderMenu}
-        setIsVisible={setIsVisibleFolderMenu}
-        point={folderMousePoint}
-      >
-        <RightClickMenuItem
-          icon="✏️"
-          title="폴더 이름 변경"
-          onClick={handleFolderMenuRename}
-          disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        />
-        <RightClickMenuItem
-          icon="❌"
-          title="폴더 삭제"
-          onClick={handleFolderMenuDelete}
-          disabled={selectedFolder?.id === ALL_FOLDER_ID}
-        />
-      </RightClickMenu>
+      {!rightClickDisabled && (
+        <RightClickMenu
+          isVisible={isVisibleFolderMenu}
+          setIsVisible={setIsVisibleFolderMenu}
+          point={folderMousePoint}
+        >
+          <RightClickMenuItem icon={Pencil} onClick={handleFolderMenuRename} disabled={isDisabled}>
+            폴더 이름 변경
+          </RightClickMenuItem>
+          <RightClickMenuItem icon={Trash2} onClick={handleFolderMenuDelete} disabled={isDisabled}>
+            폴더 삭제
+          </RightClickMenuItem>
+        </RightClickMenu>
+      )}
       <FolderContainer>
         {folders &&
           folders.map((folder) => {
@@ -345,16 +379,30 @@ const FolderList = ({
                 folderHoverColor={colors.hover}
                 onClick={() => onFolderSelect(folder.id)}
                 onContextMenu={(e) => handleFolderContextMenu(e, folder)}
+                onTouchStart={(e) => handleFolderTouchStart(e, folder)}
+                onTouchEnd={handleFolderTouchEnd}
+                onTouchMove={handleFolderTouchMove}
                 onDragOver={(e) => handleDragOver(e, folder.id)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, folder)}
               >
                 {isEditingThisFolder ? (
                   <>
-                    📁{' '}
+                    {' '}
                     <FolderInput
+                      ref={addInputRef}
                       value={editingFolderName}
-                      onChange={(e) => setEditingFolderName(e.target.value)}
+                      onChange={(e) => {
+                        const newName = e.target.value;
+                        if (newName.length > MAX_LENGTH) {
+                          alert(`폴더 이름은 ${MAX_LENGTH}자 이내로 입력해주세요.`);
+                          setTimeout(() => {
+                            addInputRef.current?.focus();
+                          }, 0);
+                        } else {
+                          setEditingFolderName(newName);
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           submitFolderNameEdit(folder);
@@ -372,7 +420,7 @@ const FolderList = ({
                         submitFolderNameEdit(folder);
                       }}
                     >
-                      ✔️
+                      <Check size={16} />
                     </FolderActionButton>
                     <FolderActionButton
                       onClick={(e) => {
@@ -380,21 +428,32 @@ const FolderList = ({
                         setEditingFolderId(null);
                       }}
                     >
-                      ❌
+                      <X size={16} />
                     </FolderActionButton>
                   </>
                 ) : (
-                  <>📁 {folder.name}</>
+                  <>{folder.name}</>
                 )}
               </FolderTag>
             );
           })}
         {isAddingFolder ? (
           <FolderInputContainer>
-            <span>📁</span>
+            <FolderIcon size={16} />
             <FolderInput
+              ref={editInputRef}
               value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
+              onChange={(e) => {
+                const newName = e.target.value;
+                if (newName.length > MAX_LENGTH) {
+                  alert(`폴더 이름은 ${MAX_LENGTH}자 이내로 입력해주세요.`);
+                  setTimeout(() => {
+                    editInputRef.current?.focus();
+                  }, 0);
+                } else {
+                  setNewFolderName(newName);
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleConfirmAddFolder();
@@ -406,11 +465,19 @@ const FolderList = ({
               placeholder="폴더 이름"
               autoFocus
             />
-            <FolderActionButton onClick={handleConfirmAddFolder}>✔️</FolderActionButton>
-            <FolderActionButton onClick={handleCancelAddFolder}>❌</FolderActionButton>
+            <FolderActionButton onClick={handleConfirmAddFolder}>
+              <Check size={16} />
+            </FolderActionButton>
+            <FolderActionButton onClick={handleCancelAddFolder}>
+              <X size={16} />
+            </FolderActionButton>
           </FolderInputContainer>
         ) : (
-          <AddFolderButton onClick={handleAddFolder}>➕</AddFolderButton>
+          !addFolderDisabled && (
+            <AddFolderButton onClick={handleAddFolder}>
+              <Plus size={16} />
+            </AddFolderButton>
+          )
         )}
       </FolderContainer>
     </>

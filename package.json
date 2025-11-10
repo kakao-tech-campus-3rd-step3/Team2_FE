@@ -18,6 +18,7 @@
     "@chakra-ui/react": "^2.10.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@sentry/react": "^10.22.0",
     "@tanstack/react-query": "^5.85.5",
     "axios": "^1.11.0",
     "event-source-polyfill": "^1.0.31",
@@ -28,7 +29,8 @@
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.8.2",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -38,6 +40,7 @@
     "@types/react": "^19.1.10",
     "@types/react-calendar-heatmap": "^1.9.0",
     "@types/react-dom": "^19.1.7",
+    "@types/uuid": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
     "@typescript-eslint/parser": "^8.41.0",
     "@vercel/node": "^5.3.23",

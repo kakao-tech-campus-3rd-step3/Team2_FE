@@ -34,8 +34,8 @@ const SelectPdf = ({ selectedFileId, onValidChange, onSelectFile }: Step1Props) 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pdfFiles'] });
     },
-    onError: (error) => {
-      alert(error instanceof Error ? error.message : '파일 업로드 실패');
+    onError: () => {
+      alert('파일 업로드에 실패하였습니다.');
     },
   });
 

@@ -1,239 +1,26 @@
-import styled from '@emotion/styled';
+// External libraries
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+// Feature components & types
+import LibraryLayout from '@/features/library/components/LibraryLayout';
+import LibrarySearchInput from '@/features/library/components/LibrarySearchInput';
+import LibraryContextMenu from '@/features/library/components/LibraryContextMenu';
+import QuestionSetList from '@/features/library/components/QuestionSetList';
 import LibraryTitle from '@/features/library/innerPages/LibraryTitle';
 import LibraryProgressSummary from '@/features/library/components/LibraryProgressSummary';
-import { useState, useEffect, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '@/shared/api/axiosClient';
+import { type QuestionSetContentType } from '@/features/library/types/questionSetResponse';
+import type { LearnStatsResponse } from '@/features/dashboard/types/learnStats';
+
+// Shared components & utils
+import FolderList, { type Folder as FolderRes } from '@/shared/components/FolderList';
 import Spacer from '@/shared/components/Spacer';
-
-import {
-  type MyQuestionSetsResponse,
-  type QuestionType,
-} from '@/features/library/types/questionSetResponse';
-
-import { useNavigate } from 'react-router-dom';
 import Spinner from '@/shared/components/Spinner';
-import RightClickMenu from '@/features/library/components/RightClickMenu/RightClickMenu';
-import RightClickMenuItem from '@/features/library/components/RightClickMenu/RightClickMenuItem';
-import RightClickMenuDivider from '@/features/library/components/RightClickMenu/RightClickMenuDivider';
-import FolderList from '@/shared/components/FolderList';
-
-interface Folder {
-  id: number;
-  name: string;
-  type: 'QUESTION_SET';
-  sortOrder: number;
-}
+import api from '@/shared/api/axiosClient';
 
 const QUESTION_SET_TYPE = 'QUESTION_SET';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: ${({ theme }) => theme.colors.background.background};
-  height: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
-  justify-content: flex-start;
-`;
-
-const LibraryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1000px;
-`;
-
-const FileListSearchInput = styled.input`
-  border: 1px solid ${({ theme }) => theme.colors.border.border1};
-  padding: 12px 16px;
-  width: 100%;
-  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
-  border-radius: ${({ theme }) => theme.radius.radius3};
-  background-color: ${({ theme }) => theme.colors.background.foreground};
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.semantic.primary};
-  }
-`;
-
-const ListBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: ${({ theme }) => theme.radius.radius4};
-  background-color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-`;
-
-const ListRow = styled.div<{ isDragging?: boolean }>`
-  display: grid;
-  grid-template-columns: 3fr 1fr 1.2fr 1fr 1fr 1.2fr;
-  align-items: center;
-  width: 100%;
-  padding: 16px 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border.border1};
-  transition: background-color 0.2s ease-in-out;
-  opacity: ${({ isDragging }) => (isDragging ? 0.5 : 1)};
-
-  &:last-of-type {
-    border-bottom: none;
-  }
-
-  &:not(:first-of-type):hover {
-    background-color: #f5f5f5;
-  }
-
-  &:not(:first-of-type) {
-    cursor: grab;
-  }
-
-  &:not(:first-of-type):active {
-    cursor: grabbing;
-  }
-`;
-
-const ListCell = styled.div<{ align?: 'left' | 'center' | 'right' }>`
-  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
-  color: ${({ theme }) => theme.colors.text.default};
-  text-align: ${({ align }) => align || 'center'};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const HeaderCell = styled(ListCell)`
-  font-weight: 600;
-  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
-`;
-
-type QuestionSetStatus = 'PENDING' | 'COMPLETE';
-
-const StatusCell = styled(ListCell)<{ status: QuestionSetStatus }>`
-  font-weight: 500;
-`;
-
-const ActionButton = styled.button`
-  border: 1px solid ${({ theme }) => theme.colors.border.border1};
-  background-color: white;
-  color: ${({ theme }) => theme.colors.text.default};
-  padding: 6px 12px;
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  font-size: ${({ theme }) => theme.typography.body3Regular.fontSize};
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.semantic.primary};
-    border-color: ${({ theme }) => theme.colors.semantic.primary};
-    color: white;
-  }
-`;
-
-const PrimaryButton = styled(ActionButton)`
-  background-color: ${({ theme }) => theme.colors.semantic.primary};
-  border-color: ${({ theme }) => theme.colors.semantic.primary};
-  color: white;
-  font-weight: 600;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 100%;
-`;
-
-const TitleText = styled.span`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const TitleEditInput = styled.input`
-  border: 1px solid ${({ theme }) => theme.colors.border.border1};
-  padding: 4px 8px;
-  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  background-color: ${({ theme }) => theme.colors.background.foreground};
-  width: 100%;
-  flex-grow: 1;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.semantic.primary};
-  }
-`;
-
-const EditIconButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  margin-left: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.colors.text.default};
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.semantic.primary};
-  }
-`;
-
-const FolderSelectWrapper = styled.div`
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const FolderSelectLabel = styled.span`
-  font-size: 14px;
-  color: #333;
-  white-space: nowrap;
-`;
-
-const FolderSelect = styled.select`
-  flex: 1;
-  padding: 6px 8px;
-  border: 1px solid ${({ theme }) => theme.colors.border.border1};
-  border-radius: ${({ theme }) => theme.radius.radius2};
-  font-size: 14px;
-  background-color: ${({ theme }) => theme.colors.background.foreground};
-  color: ${({ theme }) => theme.colors.text.default};
-  cursor: pointer;
-  outline: none;
-
-  &:hover:not(:disabled) {
-    border-color: ${({ theme }) => theme.colors.semantic.primary};
-  }
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.semantic.primary};
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-`;
-
-const TYPE_MAP: Record<QuestionType, string> = {
-  MULTIPLE_CHOICE: '객관식',
-  SHORT_ANSWER: '단답형',
-  TRUE_FALSE: '참/거짓',
-};
-
-const STATUS_MAP: Record<QuestionSetStatus, string> = {
-  PENDING: '생성 중',
-  COMPLETE: '생성완료',
-};
-
-type QuestionSetContentType = MyQuestionSetsResponse & { status: QuestionSetStatus };
 interface QuestionSets {
   content: QuestionSetContentType[];
   nextCursor: number;
@@ -241,7 +28,7 @@ interface QuestionSets {
   size: number;
 }
 interface QuestionSetApiResponse {
-  learningProgress: number;
+  learnStats: LearnStatsResponse;
   questionSets: QuestionSets;
 }
 
@@ -254,6 +41,7 @@ const Library = () => {
   const [selectedCell, setSelectedCell] = useState<QuestionSetContentType | null>(null);
   const [draggedItem, setDraggedItem] = useState<QuestionSetContentType | null>(null);
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   const [mousePoint, setMousePoint] = useState<{
     x: number;
@@ -272,6 +60,31 @@ const Library = () => {
     setSelectedCell(item);
     setIsVisibleMenu(true);
     setMousePoint({ x: e.clientX, y: e.clientY });
+  };
+
+  // 모바일 길게 누르기 이벤트 핸들러
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, item: QuestionSetContentType) => {
+    const touch = e.touches[0];
+    const timer = setTimeout(() => {
+      setSelectedCell(item);
+      setIsVisibleMenu(true);
+      setMousePoint({ x: touch.clientX, y: touch.clientY });
+    }, 500); // 500ms 길게 누르기
+    setLongPressTimer(timer);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleTouchMove = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
   };
 
   const updateTitleMutation = useMutation({
@@ -369,8 +182,12 @@ const Library = () => {
   const { data: folders, isPending: isFoldersPending } = useQuery({
     queryKey: ['folders'],
     queryFn: async () => {
-      const res = await api.get<Folder[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
-      return res.data.sort((a, b) => a.sortOrder - b.sortOrder);
+      const res = await api.get<FolderRes[]>(`/common-folders?type=${QUESTION_SET_TYPE}`);
+      return res.data.sort((a, b) => {
+        if (a.scope === 'ALL' && b.scope !== 'ALL') return -1;
+        if (a.scope !== 'ALL' && b.scope === 'ALL') return 1;
+        return a.sortOrder - b.sortOrder;
+      });
     },
   });
 
@@ -385,7 +202,7 @@ const Library = () => {
     queryFn: async () => {
       if (selectedFolderId === null) {
         return {
-          learningProgress: 0,
+          learnStats: { totalCorrectQuestionCount: 0, totalQuestionCount: 0 },
           questionSets: { content: [], nextCursor: 0, hasNext: false, size: 0 },
         };
       }
@@ -450,150 +267,79 @@ const Library = () => {
 
   const filteredQuestionSets =
     data?.questionSets.content.filter((item) =>
-      item.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+      item.title
+        ?.normalize('NFC') // macOS NFD → NFC 변환
+        .toLowerCase()
+        .includes(debouncedSearchTerm.trim().normalize('NFC').toLowerCase()),
     ) ?? [];
 
-  return (
-    <Container>
-      <RightClickMenu isVisible={isVisibleMenu} setIsVisible={setIsVisibleMenu} point={mousePoint}>
-        <RightClickMenuItem
-          icon="✏️"
-          title="문제집 이름 변경"
-          onClick={handleMenuRename}
-          disabled={selectedCell?.status !== 'COMPLETE'}
-        />
-        <RightClickMenuItem
-          icon="❌"
-          title="삭제"
-          onClick={handleMenuDelete}
-          disabled={selectedCell?.status !== 'COMPLETE'}
-        />
-        <RightClickMenuDivider />
-        {folders && folders.length > 0 && (
-          <>
-            <FolderSelectWrapper>
-              <FolderSelectLabel>📁 폴더 이동</FolderSelectLabel>
-              <FolderSelect
-                disabled={selectedCell?.status !== 'COMPLETE'}
-                defaultValue={selectedFolderId ?? ''}
-                onChange={(e) => {
-                  const targetFolderId = Number(e.target.value);
-                  if (targetFolderId !== selectedFolderId) {
-                    handleMenuMoveToFolder(targetFolderId);
-                  }
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {folders.map((folder) => (
-                  <option key={folder.id} value={folder.id}>
-                    {folder.name}
-                  </option>
-                ))}
-              </FolderSelect>
-            </FolderSelectWrapper>
-            <RightClickMenuDivider />
-          </>
-        )}
-        <RightClickMenuItem
-          icon="📝"
-          title="문제집 풀기"
-          onClick={handleMenuSolve}
-          disabled={selectedCell?.status !== 'COMPLETE'}
-        />
-      </RightClickMenu>
+  const displayedQuestionSets = [...filteredQuestionSets]
+    .filter((item) => item.status !== 'FAILED')
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-      <LibraryWrapper>
-        <LibraryTitle />
-        <LibraryProgressSummary percent={data?.learningProgress ?? 0} />
-        <Spacer height="12px" />
-        <FileListSearchInput
-          placeholder="문제집 제목으로 검색"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <Spacer height="12px" />
-        <FolderList
+  return (
+    <LibraryLayout
+      contextMenu={
+        <LibraryContextMenu
+          isVisible={isVisibleMenu}
+          setIsVisible={setIsVisibleMenu}
+          point={mousePoint}
+          selectedCell={selectedCell}
           folders={folders}
           selectedFolderId={selectedFolderId}
-          onFolderSelect={setSelectedFolderId}
-          draggedItem={draggedItem}
-          onItemDrop={(folderId, questionSetId) => {
-            moveFolderMutation.mutate({ questionSetId, folderId });
-          }}
+          onRename={handleMenuRename}
+          onDelete={handleMenuDelete}
+          onSolve={handleMenuSolve}
+          onMove={handleMenuMoveToFolder}
         />
-        <Spacer height="12px" />
-        <ListBox>
-          <ListRow>
-            <HeaderCell align="left">문제집</HeaderCell>
-            <HeaderCell>문제 수</HeaderCell>
-            <HeaderCell>생성일</HeaderCell>
-            <HeaderCell>유형</HeaderCell>
-            <HeaderCell>상태</HeaderCell>
-            <HeaderCell>문제풀기</HeaderCell>
-          </ListRow>
-
-          {[...filteredQuestionSets]
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .map((item) => {
-              const isEditing = editingItemId === item.questionSetId;
-
-              return (
-                <ListRow
-                  key={item.questionSetId}
-                  draggable={item.status === 'COMPLETE'}
-                  isDragging={draggedItem?.questionSetId === item.questionSetId}
-                  onDragStart={(e) => handleDragStart(e, item)}
-                  onDragEnd={handleDragEnd}
-                  onContextMenu={(e) => handleContextMenu(e, item)}
-                >
-                  <ListCell align="left">
-                    {isEditing ? (
-                      <TitleContainer>
-                        <TitleEditInput
-                          value={editingTitle}
-                          onChange={(e) => setEditingTitle(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              submitTitleEdit(item);
-                            }
-                            if (e.key === 'Escape') {
-                              setEditingItemId(null);
-                            }
-                          }}
-                          autoFocus
-                        />
-                        <div>
-                          <EditIconButton onClick={() => submitTitleEdit(item)}>✔️</EditIconButton>
-                          <EditIconButton onClick={() => setEditingItemId(null)}>❌</EditIconButton>
-                        </div>
-                      </TitleContainer>
-                    ) : (
-                      <TitleContainer>
-                        <TitleText title={item.title}>{item.title}</TitleText>
-                      </TitleContainer>
-                    )}
-                  </ListCell>
-                  <ListCell>{item.questionCount}</ListCell>
-                  <ListCell>
-                    {new Intl.DateTimeFormat('sv-SE').format(new Date(item.createdAt))}
-                  </ListCell>
-                  <ListCell>{TYPE_MAP[item.questionType] ?? '생성 실패'}</ListCell>
-                  <StatusCell status={item.status}>
-                    {STATUS_MAP[item.status] ?? '생성 실패'}
-                  </StatusCell>
-                  <ListCell>
-                    {item.status === 'COMPLETE' && (
-                      <PrimaryButton onClick={() => handleSolveClick(item.questionSetId)}>
-                        풀기
-                      </PrimaryButton>
-                    )}
-                  </ListCell>
-                </ListRow>
-              );
-            })}
-        </ListBox>
-      </LibraryWrapper>
-    </Container>
+      }
+    >
+      <LibraryTitle />
+      <Spacer height="10px" />
+      <LibraryProgressSummary
+        percent={
+          data
+            ? Math.floor(
+                (data.learnStats.totalCorrectQuestionCount / data.learnStats.totalQuestionCount) *
+                  100,
+              )
+            : 0
+        }
+      />
+      <Spacer height="12px" />
+      <LibrarySearchInput
+        placeholder="문제집 제목으로 검색"
+        value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
+      />
+      <Spacer height="12px" />
+      <FolderList
+        folders={folders}
+        selectedFolderId={selectedFolderId}
+        onFolderSelect={setSelectedFolderId}
+        draggedItem={draggedItem}
+        onItemDrop={(folderId, questionSetId) => {
+          moveFolderMutation.mutate({ questionSetId, folderId });
+        }}
+      />
+      <Spacer height="12px" />
+      <QuestionSetList
+        questionSets={displayedQuestionSets}
+        draggedItem={draggedItem}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onContextMenu={handleContextMenu}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
+        editingItemId={editingItemId}
+        editingTitle={editingTitle}
+        onEditingTitleChange={(value) => setEditingTitle(value)}
+        onSubmitTitleEdit={submitTitleEdit}
+        onCancelTitleEdit={() => setEditingItemId(null)}
+        onSolve={handleSolveClick}
+      />
+    </LibraryLayout>
   );
 };
 

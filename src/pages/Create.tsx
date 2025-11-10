@@ -1,15 +1,20 @@
+// External libraries
 import { useState, useCallback } from 'react';
-import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
-import PageLayout from '@/shared/components/Layout/PageLayout';
-import SelectPdf from '@/features/create/innerPages/SelectPdf';
-import CreateSummary from '@/features/create/innerPages/CreateSummary';
-import NavigationButtons from '@/features/create/components/NavigationButtons';
-import styled from '@emotion/styled';
-import CreateRequest from '@/features/create/innerPages/CreateRequest';
-import Spacer from '@/shared/components/Spacer';
 import { useOutletContext } from 'react-router-dom';
+import styled from '@emotion/styled';
+
+// Feature components & types
+import SelectPdf from '@/features/create/innerPages/SelectPdf';
 import ChooseType from '@/features/create/innerPages/ChooseType';
+import CreateSummary from '@/features/create/innerPages/CreateSummary';
+import CreateRequest from '@/features/create/innerPages/CreateRequest';
+import NavigationButtons from '@/features/create/components/NavigationButtons';
 import type { QuestionType } from '@/features/create/constants/questionTypeConstants';
+
+// Shared components
+import PageLayout from '@/shared/components/Layout/PageLayout';
+import CommonProgress from '@/shared/components/ProgressBar/CommonProgress';
+import Spacer from '@/shared/components/Spacer';
 
 const stepLabels = ['PDF 선택', '문제 유형', '생성 요약', '생성하기'];
 const Container = styled.div`
@@ -29,6 +34,11 @@ const CreateWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 1000px;
+
+  @media (max-width: 1050px), (max-height: 400px) {
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.spacing3};
+  }
 `;
 
 const CreateContainer = styled.div`
