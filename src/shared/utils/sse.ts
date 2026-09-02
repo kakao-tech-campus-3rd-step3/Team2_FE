@@ -1,7 +1,8 @@
 import { EventSourcePolyfill, type Event } from 'event-source-polyfill';
 import { getToken } from './tokenManager';
+import { API_ORIGIN, joinRuntimeUrl } from '@/shared/config/runtimePaths';
 
-const SSE_SUB_URL = `${import.meta.env.VITE_API_BASE_URL}/api/notifications/subscribe`;
+const SSE_SUB_URL = joinRuntimeUrl(API_ORIGIN, '/api/notifications/subscribe');
 
 interface onQuestionSetCreationCompletePayload {
   success: boolean;

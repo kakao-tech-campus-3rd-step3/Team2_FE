@@ -5,10 +5,54 @@ import svgr from 'vite-plugin-svgr';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  // .env 파일 로드를 위해 다음 줄을 추가합니다.
   const env = loadEnv(mode, process.cwd(), '');
+  const publicBasePath = env.VITE_PUBLIC_BASE_PATH || (mode === 'production' ? '/pull-it/' : '/');
+  const developmentApiOrigin = env.PULLIT_DEV_API_ORIGIN?.trim();
+  const publicBasePrefix = publicBasePath.replace(/\/$/, '');
+
+  const isLocalDevelopmentOrigin = (origin: string) => {
+    const hostname = new URL(origin).hostname;
+    return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+  };
+
+  const proxyPath = (suffix: string) => `${publicBasePrefix}${suffix}`;
+  const stripPublicBasePrefix = (requestPath: string) =>
+    requestPath.startsWith(publicBasePrefix)
+      ? requestPath.slice(publicBasePrefix.length) || '/'
+      : requestPath;
+
+  const developmentApiProxy = developmentApiOrigin
+    ? {
+        [proxyPath('/api')]: {
+          target: developmentApiOrigin,
+          changeOrigin: true,
+          secure: !isLocalDevelopmentOrigin(developmentApiOrigin),
+          rewrite: stripPublicBasePrefix,
+          ws: true,
+        },
+        [proxyPath('/auth')]: {
+          target: developmentApiOrigin,
+          changeOrigin: true,
+          secure: !isLocalDevelopmentOrigin(developmentApiOrigin),
+          rewrite: stripPublicBasePrefix,
+        },
+        [proxyPath('/oauth2')]: {
+          target: developmentApiOrigin,
+          changeOrigin: true,
+          secure: !isLocalDevelopmentOrigin(developmentApiOrigin),
+          rewrite: stripPublicBasePrefix,
+        },
+        [proxyPath('/login/oauth2')]: {
+          target: developmentApiOrigin,
+          changeOrigin: true,
+          secure: !isLocalDevelopmentOrigin(developmentApiOrigin),
+          rewrite: stripPublicBasePrefix,
+        },
+      }
+    : undefined;
 
   const config: UserConfig = {
+    base: publicBasePath,
     plugins: [react(), svgr()],
     resolve: {
       alias: {
@@ -23,19 +67,10 @@ export default defineConfig(({ mode }) => {
         key: path.resolve(__dirname, 'localhost-key.pem'),
         cert: path.resolve(__dirname, 'localhost.pem'),
       },
-      // 아래 proxy 객체를 추가합니다.
-      proxy: {
-        '/api/notifications/subscribe': {
-          target: env.VITE_API_BASE_URL,
-          changeOrigin: true,
-          secure: false, // SSL 인증서 검증 무시
-          ws: true, // SSE/웹소켓을 위한 옵션입니다.
-        },
-      },
+      proxy: developmentApiProxy,
     },
   };
 
-  // 프로덕션 모드일 때만 빌드 설정을 추가합니다.
   if (mode === 'production') {
     config.build = {
       minify: 'terser',

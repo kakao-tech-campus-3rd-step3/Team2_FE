@@ -1,0 +1,26 @@
+services:
+  pullit-frontend:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/pullit/frontend/current
+        target: /usr/share/nginx/html
+        read_only: true
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      pullit-internal:
+      yeon-edge:
+        aliases: [pullit-frontend]
+
+networks:
+  pullit-internal:
+    external: true
+    name: pullit-portfolio-internal
+  yeon-edge:
+    external: true

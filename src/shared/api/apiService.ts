@@ -1,6 +1,13 @@
 import api, { administratorApi, issueNewToken } from './axiosClient';
 import { clearToken } from '../utils/tokenManager';
 import { type UserInfo } from '@/app/auth/AuthContext';
+import { ROUTES } from '@/app/routePaths';
+import {
+  API_ORIGIN,
+  joinRuntimeUrl,
+  toAbsoluteAppUrl,
+  withAppBasePath,
+} from '@/shared/config/runtimePaths';
 
 export const getUserInfo = async (): Promise<UserInfo> => {
   try {
@@ -26,7 +33,7 @@ export const logout = async () => {
   try {
     await administratorApi.post('/auth/logout');
     clearToken(); // API 호출 성공 시 토큰 제거
-    window.location.href = '/login';
+    window.location.href = withAppBasePath(ROUTES.LOGIN);
   } catch (error) {
     console.error('로그아웃 실패:', error);
     throw error;
@@ -48,11 +55,10 @@ export const refreshAccessToken = async () => {
  * @returns 전체 카카오 로그인 URL
  */
 export const getKakaoLoginUrl = (): string => {
-  const oauthBaseUrl = import.meta.env.VITE_API_BASE_URL;
-  const finalRedirectUri = `${window.location.origin}/login-success`;
+  const finalRedirectUri = toAbsoluteAppUrl(ROUTES.LOGIN_SUCCESS);
 
   const params = new URLSearchParams();
   params.append('redirect_uri', finalRedirectUri);
 
-  return `${oauthBaseUrl}/oauth2/authorization/kakao?${params.toString()}`;
+  return `${joinRuntimeUrl(API_ORIGIN, '/oauth2/authorization/kakao')}?${params.toString()}`;
 };

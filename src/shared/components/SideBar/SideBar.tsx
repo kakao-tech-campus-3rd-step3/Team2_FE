@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 // 유저 정보
 import { useAuth } from '@/app/auth/useAuth';
 import { clearToken } from '@/shared/utils/tokenManager';
+import { withAppBasePath } from '@/shared/config/runtimePaths';
 import { administratorApi } from '@/shared/api/axiosClient';
 // 에셋
 import BrainIconWithBadge from '@/shared/assets/IconBadge';
@@ -370,7 +371,7 @@ function SideBar({ isOpen, closeSideBar, esClose }: SideBarProps) {
       esClose();
       clearToken(); // 클로저에서 토큰 제거
 
-      window.location.href = '/login';
+      window.location.href = withAppBasePath(ROUTES.LOGIN);
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }

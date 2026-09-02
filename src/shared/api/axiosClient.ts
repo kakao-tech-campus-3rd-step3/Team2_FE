@@ -1,8 +1,8 @@
 import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { clearToken, getToken, setToken } from '../utils/tokenManager';
+import { API_ORIGIN, joinRuntimeUrl } from '@/shared/config/runtimePaths';
 
-const baseURL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api`;
-const baseUrLWithoutApi = `${import.meta.env.VITE_API_BASE_URL ?? ''}`;
+const baseURL = joinRuntimeUrl(API_ORIGIN, '/api');
 
 const api = axios.create({
   baseURL,
@@ -10,7 +10,7 @@ const api = axios.create({
 });
 
 export const administratorApi = axios.create({
-  baseURL: baseUrLWithoutApi,
+  baseURL: API_ORIGIN || '/',
   withCredentials: true,
 });
 
